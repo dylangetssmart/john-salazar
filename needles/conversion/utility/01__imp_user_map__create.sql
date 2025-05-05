@@ -138,7 +138,7 @@ insert into conversion.imp_user_map
 	from sma_mst_users u
 	join sma_MST_IndvContacts smic
 		on smic.cinnContactID = u.usrnContactID
-	left join Needles..staff s
+	left join JohnSalazar_Needles..staff s
 		on s.full_name = smic.cinsFirstName + ' ' + smic.cinsLastName
 
 select

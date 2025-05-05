@@ -1,14 +1,15 @@
 /*---
 group: setup
 order: 
-description: Update contact types for attorneys
+description:
 ---*/
 
 use [JohnSalazar_SA]
 go
-------------------------------------------------------------------------------------------------------
--- [0.0] Temporary table to store variable values
-------------------------------------------------------------------------------------------------------
+
+/* ------------------------------------------------------------------------------
+Create conversion schema table to store office related variables
+*/ ------------------------------------------------------------------------------
 begin
 
 	if OBJECT_ID('conversion.office', 'U') is not null
@@ -25,78 +26,96 @@ begin
 	);
 	insert into conversion.office
 		(
-		OfficeName,
-		StateName,
-		PhoneNumber,
-		CaseGroup,
-		VenderCaseType
+			OfficeName,
+			StateName,
+			PhoneNumber,
+			CaseGroup,
+			VenderCaseType
 		)
-values (
-'Vance Law Firm',
-'Virginia',
-'4192447885',
-'Needles',
-'SkolroodCaseType'
-);
+		select
+			smo.office_name	  as OfficeName,
+			(
+				select
+					sms.sttsDescription
+				from sma_MST_States
+				where sttsCode = smo.state_id
+			)				  as StateName,
+			smo.PhoneNumber	  as PhoneNumber,
+			'Needles'		  as CaseGroup,
+			'SalazarCaseType' as VenderCaseType
+		from sma_mst_offices smo
+		where
+			smo.is_default = 1
+--values (
+--'Vance Law Firm',
+--'Virginia',
+--'4192447885',
+--'Needles',
+--'SalazarCaseType'
+--);
 end
+
+--select
+--	*
+--from sma_mst_offices smo
 
 ------------------------------------------------------------------------------------------------------
 -- [1.0] Office
 ------------------------------------------------------------------------------------------------------
-begin
-	if not exists (
-			select
-				*
-			from [sma_mst_offices]
-			where office_name = (
-					select
-						OfficeName
-					from conversion.office 
-				)
-		)
-	begin
-		insert into [sma_mst_offices]
-			(
-			[office_status],
-			[office_name],
-			[state_id],
-			[is_default],
-			[date_created],
-			[user_created],
-			[date_modified],
-			[user_modified],
-			[Letterhead],
-			[UniqueContactId],
-			[PhoneNumber]
-			)
-			select
-				1					as [office_status],
-				(
-					select
-						OfficeName
-					from conversion.office
-				)					as [office_name],
-				(
-					select
-						sttnStateID
-					from sma_MST_States
-					where sttsDescription = (
-							select
-								StateName
-							from conversion.office
-						)
-				)					as [state_id],
-				1					as [is_default],
-				GETDATE()			as [date_created],
-				'dsmith'			as [user_created],
-				GETDATE()			as [date_modified],
-				'dbo'				as [user_modified],
-				'LetterheadUt.docx' as [letterhead],
-				null				as [uniquecontactid],
-				(
-					select
-						phonenumber
-					from conversion.office
-				)					as [phonenumber]
-	end
-end
+--begin
+--	if not exists (
+--			select
+--				*
+--			from [sma_mst_offices]
+--			where office_name = (
+--					select
+--						OfficeName
+--					from conversion.office 
+--				)
+--		)
+--	begin
+--		insert into [sma_mst_offices]
+--			(
+--			[office_status],
+--			[office_name],
+--			[state_id],
+--			[is_default],
+--			[date_created],
+--			[user_created],
+--			[date_modified],
+--			[user_modified],
+--			[Letterhead],
+--			[UniqueContactId],
+--			[PhoneNumber]
+--			)
+--			select
+--				1					as [office_status],
+--				(
+--					select
+--						OfficeName
+--					from conversion.office
+--				)					as [office_name],
+--				(
+--					select
+--						sttnStateID
+--					from sma_MST_States
+--					where sttsDescription = (
+--							select
+--								StateName
+--							from conversion.office
+--						)
+--				)					as [state_id],
+--				1					as [is_default],
+--				GETDATE()			as [date_created],
+--				'dsmith'			as [user_created],
+--				GETDATE()			as [date_modified],
+--				'dbo'				as [user_modified],
+--				'LetterheadUt.docx' as [letterhead],
+--				null				as [uniquecontactid],
+--				(
+--					select
+--						phonenumber
+--					from conversion.office
+--				)					as [phonenumber]
+--	end
+--end

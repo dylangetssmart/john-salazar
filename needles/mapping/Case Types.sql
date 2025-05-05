@@ -23,12 +23,12 @@ SELECT
     CASE WHEN show_user_tab8 = 'Y' THEN tab8_title  ELSE 'N/A' END AS user_tab_8,
     CASE WHEN show_user_tab9 = 'Y' THEN tab9_title  ELSE 'N/A' END AS user_tab_9,
     CASE WHEN show_user_tab10 = 'Y' THEN tab10_title else 'N/A' END AS user_tab_10
-FROM [Needles]..matter m
+FROM [JohnSalazar_Needles]..matter m
 INNER JOIN (
     SELECT
         ci.matcode,
         COUNT(*) AS [count]
-    FROM [Needles]..cases_indexed ci
+    FROM [JohnSalazar_Needles]..cases_indexed ci
     GROUP BY ci.matcode
 ) c
     ON m.matcode = c.matcode
