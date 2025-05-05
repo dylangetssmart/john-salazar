@@ -3,11 +3,11 @@ This repository serves as both the single source of truth for conversion scripts
 Scripts are documented in each system directory's respective Readme
 
 ## Installation
-
+``` bash
 PS D:\kurt-young> python -m venv _venv
 PS D:\kurt-young> .\_venv\Scripts\activate
 (_venv) PS D:\kurt-young> pip install -e C:\LocalConv\sa-conversion-utils\
-
+```
 ## Methodology
 This repo uses a "runlist" approach to decouple script ordering from filenaming convention, which allows source control because I am checking in and out the same files. why am I manually numbering 100 files?
 
