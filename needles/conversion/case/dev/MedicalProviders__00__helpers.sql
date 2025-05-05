@@ -1,4 +1,4 @@
-use [[JohnSalazar_SA]]
+use [JohnSalazar_SA]
 go
 
 -------------------------------------------------------------------------------
@@ -97,7 +97,7 @@ insert into value_tab_MedicalProvider_Helper
 		IOC.AID		   as ProviderAID,
 		CAS.casnCaseID as casnCaseID,
 		null		   as PlaintiffID
-	from [[JohnSalazar_Needles]].[dbo].[value_Indexed] V
+	from [JohnSalazar_Needles].[dbo].[value_Indexed] V
 	join [sma_TRN_cases] CAS
 		on CAS.cassCaseNumber = V.case_id
 	join IndvOrgContacts_Indexed IOC
@@ -137,7 +137,7 @@ select
 	V.value_id as vid,
 	T.plnnPlaintiffID
 into value_tab_Multi_Party_Helper_Temp
-from [[JohnSalazar_Needles]].[dbo].[value_Indexed] V
+from [JohnSalazar_Needles].[dbo].[value_Indexed] V
 join [sma_TRN_cases] CAS
 	on CAS.cassCaseNumber = V.case_id
 join IndvOrgContacts_Indexed IOC
@@ -172,12 +172,12 @@ select
 	(
 		select
 			plnnPlaintiffID
-		from [[JohnSalazar_SA]].[dbo].[sma_TRN_Plaintiff]
+		from [JohnSalazar_SA].[dbo].[sma_TRN_Plaintiff]
 		where plnnCaseID = CAS.casnCaseID
 			and plnbIsPrimary = 1
 	)		   as plnnPlaintiffID
 into value_tab_Multi_Party_Helper_Temp
-from [[JohnSalazar_Needles]].[dbo].[value_Indexed] V
+from [JohnSalazar_Needles].[dbo].[value_Indexed] V
 join [sma_TRN_cases] CAS
 	on CAS.cassCaseNumber = V.case_id
 join [IndvOrgContacts_Indexed] IOC

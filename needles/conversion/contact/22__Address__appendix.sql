@@ -13,8 +13,8 @@ delete from [sma_MST_Address]
 DBCC CHECKIDENT ('[sma_MST_Address]', RESEED, 0);
 alter table [sma_MST_Address] enable trigger all
 */
--- select distinct addr_Type from  [[JohnSalazar_Needles]].[dbo].[multi_addresses]
--- select * from  [[JohnSalazar_Needles]].[dbo].[multi_addresses] where addr_type not in ('Home','business', 'other')
+-- select distinct addr_Type from  [JohnSalazar_Needles].[dbo].[multi_addresses]
+-- select * from  [JohnSalazar_Needles].[dbo].[multi_addresses] where addr_type not in ('Home','business', 'other')
 
 alter table [sma_MST_Address] disable trigger all
 go

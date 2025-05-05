@@ -74,8 +74,8 @@ insert into [sma_TRN_PlaintiffAttorney]
 		ISNULL('comments : ' + NULLIF(CONVERT(VARCHAR(MAX), c.comments), '') + CHAR(13), '') +
 		ISNULL('Attorney for party : ' + NULLIF(CONVERT(VARCHAR(MAX), iocp.name), '') + CHAR(13), '') +
 		''				  as [plascomments]
-	from [[JohnSalazar_Needles]]..[counsel_Indexed] c
-	left join [[JohnSalazar_Needles]].[dbo].[user_counsel_data] ud
+	from [JohnSalazar_Needles]..[counsel_Indexed] c
+	left join [JohnSalazar_Needles].[dbo].[user_counsel_data] ud
 		on ud.counsel_id = c.counsel_id
 			and c.case_num = ud.casenum
 	join [sma_TRN_Cases] cas
@@ -199,8 +199,8 @@ insert into [sma_TRN_LawFirms]
 		ISNULL('comments : ' + NULLIF(CONVERT(VARCHAR(MAX), c.comments), '') + CHAR(13), '') +
 		ISNULL('Attorney for party : ' + NULLIF(CONVERT(VARCHAR(MAX), iocd.name), '') + CHAR(13), '') +
 		''				  as [lwfscomments]
-	from [[JohnSalazar_Needles]].[dbo].[counsel_Indexed] c
-	left join [[JohnSalazar_Needles]].[dbo].[user_counsel_data] ud
+	from [JohnSalazar_Needles].[dbo].[counsel_Indexed] c
+	left join [JohnSalazar_Needles].[dbo].[user_counsel_data] ud
 		on ud.counsel_id = c.counsel_id
 			and c.case_num = ud.casenum
 	join [sma_TRN_Cases] cas
@@ -277,8 +277,8 @@ SET cinnContactTypeID = (
 FROM (
 	SELECT
 		I.cinnContactID AS ID
-	FROM [[JohnSalazar_Needles]].[dbo].[counsel] C
-	JOIN [[JohnSalazar_Needles]].[dbo].[names] L
+	FROM [JohnSalazar_Needles].[dbo].[counsel] C
+	JOIN [JohnSalazar_Needles].[dbo].[names] L
 		ON C.counsel_id = L.names_id
 	JOIN [dbo].[sma_MST_IndvContacts] I
 		ON saga = L.names_id

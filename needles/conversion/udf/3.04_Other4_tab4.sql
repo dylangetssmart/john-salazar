@@ -139,7 +139,7 @@ begin
 		from [sma_MST_CaseType] cst
 		join CaseTypeMixture mix
 			on mix.[SmartAdvocate Case Type] = cst.cstsType
-		join [[JohnSalazar_Needles]].[dbo].[user_tab4_matter] m
+		join [JohnSalazar_Needles].[dbo].[user_tab4_matter] m
 			on m.mattercode = mix.matcode
 				and m.field_type <> 'label'
 		join (
@@ -154,7 +154,7 @@ begin
 			select distinct
 				table_Name,
 				column_name
-			from [[JohnSalazar_Needles]].[dbo].[document_merge_params]
+			from [JohnSalazar_Needles].[dbo].[document_merge_params]
 			where table_Name = 'user_tab4_data'
 		) dmp
 			on dmp.column_name = ucf.field_Title

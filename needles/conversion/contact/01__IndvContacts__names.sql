@@ -17,7 +17,7 @@ insert into sma_MST_ContactRace
 	)
 	select distinct
 		race_name
-	from [[JohnSalazar_Needles]]..race
+	from [JohnSalazar_Needles]..race
 	except
 	select
 		RaceDesc
@@ -115,7 +115,7 @@ insert into [sma_MST_IndvContacts]
 			when exists (
 					select
 						*
-					from [[JohnSalazar_Needles]].[dbo].[party_Indexed] p
+					from [JohnSalazar_Needles].[dbo].[party_Indexed] p
 					where p.party_id = n.names_id
 						and p.incapacitated = 'Y'
 				)
@@ -130,7 +130,7 @@ insert into [sma_MST_IndvContacts]
 			when exists (
 					select
 						*
-					from [[JohnSalazar_Needles]].[dbo].[party_Indexed] p
+					from [JohnSalazar_Needles].[dbo].[party_Indexed] p
 					where p.party_id = n.names_id
 						and p.minor = 'Y'
 				)
@@ -168,8 +168,8 @@ insert into [sma_MST_IndvContacts]
 		null									 as source_id,
 		'needles'								 as source_db,
 		'names'									 as source_ref
-	from [[JohnSalazar_Needles]].[dbo].[names] n
-	left join [[JohnSalazar_Needles]].[dbo].[Race] r
+	from [JohnSalazar_Needles].[dbo].[names] n
+	left join [JohnSalazar_Needles].[dbo].[Race] r
 		on r.race_id = case
 				when ISNUMERIC(n.race) = 1
 					then CONVERT(INT, n.race)

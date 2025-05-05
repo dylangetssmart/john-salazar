@@ -115,8 +115,8 @@ insert into [sma_MST_DisbursmentType]
 	select distinct
 		'CONVERSION',
 		vc.[description]
-	from [[JohnSalazar_Needles]].[dbo].[value] v
-	join [[JohnSalazar_Needles]].[dbo].[value_code] vc
+	from [JohnSalazar_Needles].[dbo].[value] v
+	join [JohnSalazar_Needles].[dbo].[value_code] vc
 		on vc.code = v.code
 	where ISNULL(v.code, '') in (
 			select
@@ -191,7 +191,7 @@ insert into value_tab_Disbursement_Helper
 		ioc.UNQCID	   as provideruid,
 		cas.casncaseid as casncaseid,
 		null		   as plaintiffid
-	from [[JohnSalazar_Needles]].[dbo].[value_Indexed] v
+	from [JohnSalazar_Needles].[dbo].[value_Indexed] v
 	join [sma_TRN_cases] cas
 		on cas.cassCaseNumber = v.case_id
 	join IndvOrgContacts_Indexed ioc
@@ -226,7 +226,7 @@ select
 	v.value_id as vid,
 	t.plnnPlaintiffID
 into value_tab_Multi_Party_Helper_Temp
-from [[JohnSalazar_Needles]].[dbo].[value_Indexed] v
+from [JohnSalazar_Needles].[dbo].[value_Indexed] v
 join [sma_TRN_cases] cas
 	on cas.cassCaseNumber = v.case_id
 join IndvOrgContacts_Indexed ioc
@@ -266,7 +266,7 @@ select
 			and plnbIsPrimary = 1
 	)		   as plnnplaintiffid
 into value_tab_Multi_Party_Helper_Temp
-from [[JohnSalazar_Needles]].[dbo].[value_Indexed] v
+from [JohnSalazar_Needles].[dbo].[value_Indexed] v
 join [sma_TRN_cases] cas
 	on cas.cassCaseNumber = v.case_id
 join [IndvOrgContacts_Indexed] ioc
@@ -329,7 +329,7 @@ insert into [sma_TRN_Disbursement]
 			where dissTypeName = (
 					select
 						[description]
-					from [[JohnSalazar_Needles]].[dbo].[value_code]
+					from [JohnSalazar_Needles].[dbo].[value_code]
 					where [code] = v.code
 				)
 		)				as dissdisbursementtype,
@@ -403,7 +403,7 @@ insert into [sma_TRN_Disbursement]
 		null			as source_id,
 		null			as source_db,
 		null			as source_ref
-	from [[JohnSalazar_Needles]].[dbo].[value_Indexed] v
+	from [JohnSalazar_Needles].[dbo].[value_Indexed] v
 	join value_tab_Disbursement_Helper map
 		on map.case_id = v.case_id
 			and map.value_id = v.value_id

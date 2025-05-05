@@ -1,4 +1,4 @@
-use [[JohnSalazar_SA]]
+use [JohnSalazar_SA]
 go
 
 ---------------------------------------------------

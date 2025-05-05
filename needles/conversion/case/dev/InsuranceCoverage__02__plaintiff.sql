@@ -11,7 +11,7 @@ notes:
 	-
 */
 
-use [[JohnSalazar_SA]]
+use [JohnSalazar_SA]
 go
 
 alter table [sma_TRN_InsuranceCoverage] disable trigger all

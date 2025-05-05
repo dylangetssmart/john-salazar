@@ -98,7 +98,7 @@ create table conversion.imp_user_map (
 --		   ,''							   AS SAMiddle
 --		   ,dbo.get_lastword(s.full_name)  AS SALast
 --		   ,suffix						   AS Suffix
---		FROM [[JohnSalazar_Needles]].[dbo].[staff] s;
+--		FROM [JohnSalazar_Needles].[dbo].[staff] s;
 --END
 --ELSE
 --IF @Phase = 2

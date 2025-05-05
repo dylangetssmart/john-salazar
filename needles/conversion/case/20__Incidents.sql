@@ -60,7 +60,7 @@ insert into [sma_TRN_Incidents]
 		GETDATE()	   as [dtcreated],
 		null		   as [modifyuserid],
 		null		   as [dtmodified]
-	from [[JohnSalazar_Needles]].[dbo].[cases_Indexed] c
+	from [JohnSalazar_Needles].[dbo].[cases_Indexed] c
 	join [sma_TRN_cases] cas
 		on cas.cassCaseNumber = CONVERT(VARCHAR, c.casenum)
 

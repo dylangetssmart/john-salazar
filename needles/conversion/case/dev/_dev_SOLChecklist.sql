@@ -10,7 +10,7 @@ replace:
 ##########################################################################################################################
 */
 
-use [[JohnSalazar_SA]]
+use [JohnSalazar_SA]
 GO
 /*
 alter table [sma_TRN_SOLs] disable trigger all
@@ -98,7 +98,7 @@ alter table [sma_TRN_SOLs] enable trigger all
 /*
 ---------------------
 select count(*)
-  from [[JohnSalazar_SA]].[dbo].[sma_TRN_Defendants] D
+  from [JohnSalazar_SA].[dbo].[sma_TRN_Defendants] D
   inner join [sma_TRN_Cases] CAS on CAS.casnCaseID = D.defnCaseID and D.defbIsPrimary=1
   inner join [sma_MST_SOLDetails] S on S.sldnCaseTypeID=CAS.casnOrgCaseTypeID and S.sldnStateID=CAS.casnStateID and S.sldnDefRole=D.defnSubRole
   inner join [JohnSalazar_Needles].[dbo].[case_checklist] CKL on CKL.case_id=CAS.cassCaseNumber

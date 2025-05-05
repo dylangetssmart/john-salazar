@@ -10,7 +10,7 @@ replace:
 ##########################################################################################################################
 */
 
-USE [[JohnSalazar_SA]]
+USE [JohnSalazar_SA]
 GO
 /*
 alter table [sma_TRN_PlaintiffAttorney] disable trigger all

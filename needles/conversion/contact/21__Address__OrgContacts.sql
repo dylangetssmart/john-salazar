@@ -13,8 +13,8 @@ delete from [sma_MST_Address]
 DBCC CHECKIDENT ('[sma_MST_Address]', RESEED, 0);
 alter table [sma_MST_Address] enable trigger all
 */
--- select distinct addr_Type from  [[JohnSalazar_Needles]].[dbo].[multi_addresses]
--- select * from  [[JohnSalazar_Needles]].[dbo].[multi_addresses] where addr_type not in ('Home','business', 'other')
+-- select distinct addr_Type from  [JohnSalazar_Needles].[dbo].[multi_addresses]
+-- select * from  [JohnSalazar_Needles].[dbo].[multi_addresses] where addr_type not in ('Home','business', 'other')
 
 alter table [sma_MST_Address] disable trigger all
 go
@@ -76,7 +76,7 @@ insert into [sma_MST_Address]
 		null				   as [source_id],
 		'needles'			   as [source_db],
 		'multi_addresses.home' as [source_ref]
-	from [[JohnSalazar_Needles]].[dbo].[multi_addresses] a
+	from [JohnSalazar_Needles].[dbo].[multi_addresses] a
 	join [sma_MST_Orgcontacts] o
 		on o.saga = a.names_id
 	join [sma_MST_AddressTypes] t
@@ -142,7 +142,7 @@ insert into [sma_MST_Address]
 		null					   as [source_id],
 		'needles'				   as [source_db],
 		'multi_addresses.business' as [source_ref]
-	from [[JohnSalazar_Needles]].[dbo].[multi_addresses] a
+	from [JohnSalazar_Needles].[dbo].[multi_addresses] a
 	join [sma_MST_Orgcontacts] o
 		on o.saga = a.names_id
 	join [sma_MST_AddressTypes] t
@@ -210,7 +210,7 @@ insert into [sma_MST_Address]
 		null					as [source_id],
 		'needles'				as [source_db],
 		'multi_addresses.other' as [source_ref]
-	from [[JohnSalazar_Needles]].[dbo].[multi_addresses] a
+	from [JohnSalazar_Needles].[dbo].[multi_addresses] a
 	join [sma_MST_Orgcontacts] o
 		on o.saga = a.names_id
 	join [sma_MST_AddressTypes] t

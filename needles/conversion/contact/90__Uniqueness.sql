@@ -4,7 +4,7 @@ order: 90
 description:
 ---*/
 
-USE [[JohnSalazar_SA]]
+USE [JohnSalazar_SA]
 GO
 ---(1)--- Phone number uniqueness
 

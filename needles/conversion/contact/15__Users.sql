@@ -240,7 +240,7 @@ insert into [sma_MST_Users]
 		'needles'		   as [source_db],
 		'staff'			   as [source_ref]
 	--select *
-	from [[JohnSalazar_Needles]]..staff s
+	from [JohnSalazar_Needles]..staff s
 	join sma_MST_IndvContacts indv
 		on indv.source_id = s.staff_code
 		and indv.source_ref = 'staff'

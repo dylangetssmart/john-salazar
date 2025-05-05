@@ -96,7 +96,7 @@ insert into value_tab_Settlement_Helper
 		ioc.AID		   as provideraid,
 		cas.casncaseid as casncaseid,
 		null		   as plaintiffid
-	from [[JohnSalazar_Needles]].[dbo].[value_Indexed] v
+	from [JohnSalazar_Needles].[dbo].[value_Indexed] v
 	join [sma_TRN_cases] cas
 		on cas.cassCaseNumber = CONVERT(VARCHAR, v.case_id)
 	join IndvOrgContacts_Indexed ioc
@@ -133,7 +133,7 @@ select
 	v.value_id as vid,
 	t.plnnPlaintiffID
 into value_tab_Multi_Party_Helper_Temp
-from [[JohnSalazar_Needles]].[dbo].[value_Indexed] v
+from [JohnSalazar_Needles].[dbo].[value_Indexed] v
 join [sma_TRN_cases] cas
 	on cas.cassCaseNumber = CONVERT(VARCHAR, v.case_id)
 join [IndvOrgContacts_Indexed] ioc
@@ -175,7 +175,7 @@ select
 			and plnbIsPrimary = 1
 	)		   as plnnplaintiffid
 into value_tab_Multi_Party_Helper_Temp
-from [[JohnSalazar_Needles]].[dbo].[value_Indexed] v
+from [JohnSalazar_Needles].[dbo].[value_Indexed] v
 join [sma_TRN_cases] cas
 	on cas.cassCaseNumber = CONVERT(VARCHAR, v.case_id)
 join [IndvOrgContacts_Indexed] ioc
@@ -199,7 +199,7 @@ Create missing Settlement Types from value_code.description
 */
 
 --SELECT * FROM [JohnSalazar_SA]..sma_MST_SettlementType smst
---SELECT * FROM [[JohnSalazar_Needles]]..value_code vc
+--SELECT * FROM [JohnSalazar_Needles]..value_code vc
 
 insert into [sma_MST_SettlementType]
 	(
@@ -207,7 +207,7 @@ insert into [sma_MST_SettlementType]
 	)
 	select
 		vc.description
-	from [[JohnSalazar_Needles]]..value_code vc
+	from [JohnSalazar_Needles]..value_code vc
 	--select
 	--	'Settlement Recovery'
 	--union
@@ -294,7 +294,7 @@ insert into [sma_TRN_Settlements]
 			where SettlTypeName = (
 					select
 						vc.description
-					from [[JohnSalazar_Needles]]..value_code vc
+					from [JohnSalazar_Needles]..value_code vc
 					where vc.code = v.code
 				)
 		)				as stlTypeID,
@@ -313,7 +313,7 @@ insert into [sma_TRN_Settlements]
 		null			as [source_id],
 		'needles'		as [source_db],
 		'value_Indexed' as [source_ref]
-	from [[JohnSalazar_Needles]].[dbo].[value_Indexed] v
+	from [JohnSalazar_Needles].[dbo].[value_Indexed] v
 	join value_tab_Settlement_Helper map
 		on map.case_id = v.case_id
 			and map.value_id = v.value_id

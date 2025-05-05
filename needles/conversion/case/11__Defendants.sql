@@ -57,7 +57,7 @@ insert into [sma_TRN_Defendants]
 		null,
 		null,
 		p.TableIndex  as [saga_party]
-	from [[JohnSalazar_Needles]].[dbo].[party_indexed] p
+	from [JohnSalazar_Needles].[dbo].[party_indexed] p
 	join [sma_TRN_Cases] cas
 		on cas.cassCaseNumber = CONVERT(VARCHAR, p.case_id)
 	join IndvOrgContacts_Indexed acio
@@ -151,7 +151,7 @@ from (
 		ROW_NUMBER() over (partition by d.defnCaseID order by p.record_num) as rownumber,
 		d.defnDefendentID													as id
 	from sma_TRN_Defendants d
-	left join [[JohnSalazar_Needles]].[dbo].[party_indexed] p
+	left join [JohnSalazar_Needles].[dbo].[party_indexed] p
 		on p.TableIndex = d.saga_party
 ) a
 where a.rownumber = 1

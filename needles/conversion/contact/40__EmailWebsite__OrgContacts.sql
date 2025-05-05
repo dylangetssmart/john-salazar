@@ -56,7 +56,7 @@ insert into [sma_MST_EmailWebsite]
 		null			 as [source_id],
 		'needles'		 as [source_db],
 		'names.email'	 as [source_ref]
-	from [[JohnSalazar_Needles]].[dbo].[names] n
+	from [JohnSalazar_Needles].[dbo].[names] n
 	join [sma_MST_OrgContacts] c
 		on c.saga = n.names_id
 	where ISNULL(email, '') <> ''
@@ -82,7 +82,7 @@ insert into [sma_MST_EmailWebsite]
 		null			   as [source_id],
 		'needles'		   as [source_db],
 		'names.email_work' as [source_ref]
-	from [[JohnSalazar_Needles]].[dbo].[names] n
+	from [JohnSalazar_Needles].[dbo].[names] n
 	join [sma_MST_OrgContacts] c
 		on c.saga = n.names_id
 	where ISNULL(email_work, '') <> ''
@@ -108,7 +108,7 @@ insert into [sma_MST_EmailWebsite]
 		null				as [source_id],
 		'needles'			as [source_db],
 		'names.other_email' as [source_ref]
-	from [[JohnSalazar_Needles]].[dbo].[names] n
+	from [JohnSalazar_Needles].[dbo].[names] n
 	join [sma_MST_OrgContacts] c
 		on c.saga = n.names_id
 	where ISNULL(other_email, '') <> ''
@@ -133,7 +133,7 @@ insert into [sma_MST_EmailWebsite]
 		null			 as [source_id],
 		'needles'		 as [source_db],
 		'names.website'	 as [source_ref]
-	from [[JohnSalazar_Needles]].[dbo].[names] n
+	from [JohnSalazar_Needles].[dbo].[names] n
 	join [sma_MST_OrgContacts] c
 		on c.saga = n.names_id
 	where ISNULL(website, '') <> ''

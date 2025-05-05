@@ -73,7 +73,7 @@ insert into conversion.insurance_contacts_helper
 		cas.casnCaseID		 as caseid,
 		null				 as plaintiffdefendantid
 	--select *
-	from [[JohnSalazar_Needles]].[dbo].[insurance_Indexed] ins
+	from [JohnSalazar_Needles].[dbo].[insurance_Indexed] ins
 	join [sma_TRN_Cases] cas
 		on cas.cassCaseNumber = CONVERT(VARCHAR, ins.case_num)
 	join IndvOrgContacts_Indexed ioc1
@@ -111,7 +111,7 @@ select
 	t.plnnPlaintiffID
 into conversion.multi_party_helper
 --select *
-from [[JohnSalazar_Needles]].[dbo].[insurance_Indexed] ins
+from [JohnSalazar_Needles].[dbo].[insurance_Indexed] ins
 join [sma_TRN_cases] cas
 	on cas.cassCaseNumber = ins.case_num
 join [IndvOrgContacts_Indexed] ioc
@@ -143,7 +143,7 @@ select
 	ins.insurance_id as ins_id,
 	d.defnDefendentID
 into conversion.multi_party_helper
-from [[JohnSalazar_Needles]].[dbo].[insurance_Indexed] ins
+from [JohnSalazar_Needles].[dbo].[insurance_Indexed] ins
 join [sma_TRN_cases] cas
 	on cas.cassCaseNumber = ins.case_num
 join [IndvOrgContacts_Indexed] ioc
@@ -175,7 +175,7 @@ insert into [sma_MST_InsuranceType]
 	union
 	select distinct
 		policy_type
-	from [[JohnSalazar_Needles]].[dbo].[insurance] ins
+	from [JohnSalazar_Needles].[dbo].[insurance] ins
 	where
 		ISNULL(policy_type, '') <> ''
 	except
@@ -285,8 +285,8 @@ insert into [sma_TRN_InsuranceCoverage]
 		0						 as [incbprimary],
 		ins.insurance_id		 as [saga]
 	--select *
-	from [[JohnSalazar_Needles]].[dbo].[insurance_Indexed] ins
-	left join [[JohnSalazar_Needles]].[dbo].[user_insurance_data] ud
+	from [JohnSalazar_Needles].[dbo].[insurance_Indexed] ins
+	left join [JohnSalazar_Needles].[dbo].[user_insurance_data] ud
 		on ins.insurance_id = ud.insurance_id
 	--LEFT JOIN InsuranceLimMap LIM on LIM.case_num = ins.case_num and LIM.insurer_ID = ins.insurer_id
 	join conversion.insurance_contacts_helper map
@@ -390,8 +390,8 @@ insert into [sma_TRN_InsuranceCoverage]
 		null					 as [incnauthtodefcoundt],
 		0						 as [incbprimary],
 		ins.insurance_id		 as [saga]
-	from [[JohnSalazar_Needles]].[dbo].[insurance_Indexed] ins
-	left join [[JohnSalazar_Needles]].[dbo].[user_insurance_data] ud
+	from [JohnSalazar_Needles].[dbo].[insurance_Indexed] ins
+	left join [JohnSalazar_Needles].[dbo].[user_insurance_data] ud
 		on ins.insurance_id = ud.insurance_id
 	--LEFT JOIN InsuranceLimMap LIM on LIM.case_num = ins.case_num and LIM.insurer_ID = ins.insurer_id
 	join conversion.insurance_contacts_helper map

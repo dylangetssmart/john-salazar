@@ -30,7 +30,7 @@ go
 --		select top 1
 --			s.staff_code
 --		from Skolrood_Needles..staff s
---		join [[JohnSalazar_SA]]..sma_MST_IndvContacts indv
+--		join [JohnSalazar_SA]..sma_MST_IndvContacts indv
 --			on s.full_name = indv.cinsFirstName + ' ' + indv.cinsLastName
 --		where indv.cinnContactID = sma_MST_Users.usrnContactID
 --	),
@@ -84,8 +84,8 @@ drop table #ContactSourceMap;
 --SELECT smu.usrsLoginID, smu.source_id FROM [JohnSalazar_SA]..sma_MST_Users smu order by smu.usrsLoginID
 
 --select s.staff_code, u.*
---	FROM [[JohnSalazar_SA]]..sma_mst_users u
---		JOIN [[JohnSalazar_SA]]..sma_MST_IndvContacts smic
+--	FROM [JohnSalazar_SA]..sma_mst_users u
+--		JOIN [JohnSalazar_SA]..sma_MST_IndvContacts smic
 --			ON smic.cinnContactID = u.usrnContactID
 --		LEFT JOIN Skolrood_Needles..staff s
 --			ON s.full_name = smic.cinsFirstName + ' ' + smic.cinsLastName

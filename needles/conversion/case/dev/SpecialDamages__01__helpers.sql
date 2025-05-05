@@ -98,7 +98,7 @@ insert into [value_tab_spDamages_Helper]
 		IOC.AID		   as ProviderAID,
 		CAS.casnCaseID as casnCaseID,
 		null		   as PlaintiffID
-	from [[JohnSalazar_Needles]].[dbo].[value_Indexed] V
+	from [JohnSalazar_Needles].[dbo].[value_Indexed] V
 	join [sma_TRN_cases] CAS
 		on CAS.NeedlesCasenum = V.case_id
 	-- on CAS.cassCaseNumber = V.case_id
@@ -136,7 +136,7 @@ select
 	V.value_id as vid,
 	T.plnnPlaintiffID
 into value_tab_Multi_Party_Helper_Temp
-from [[JohnSalazar_Needles]].[dbo].[value_Indexed] V
+from [JohnSalazar_Needles].[dbo].[value_Indexed] V
 join [sma_TRN_cases] CAS
 	on CAS.NeedlesCasenum = V.case_id
 -- on CAS.cassCaseNumber = V.case_id
@@ -178,7 +178,7 @@ select
 			and plnbIsPrimary = 1
 	)		   as plnnPlaintiffID
 into value_tab_Multi_Party_Helper_Temp
-from [[JohnSalazar_Needles]].[dbo].[value_Indexed] V
+from [JohnSalazar_Needles].[dbo].[value_Indexed] V
 join [sma_TRN_cases] CAS
 	on CAS.NeedlesCasenum = V.case_id
 -- on CAS.cassCaseNumber = V.case_id

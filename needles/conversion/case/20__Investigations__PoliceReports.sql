@@ -68,7 +68,7 @@ insert into conversion.officer_helper
 		a.addnAddressID	 as officeraid,
 		i.source_id		 as saga
 	--select *
-	from [[JohnSalazar_Needles]].[dbo].[police] p
+	from [JohnSalazar_Needles].[dbo].[police] p
 	join [sma_MST_IndvContacts] i
 		--ON I.cinsGrade = P.officer
 		--	AND I.cinsPrefix = 'Officer'
@@ -147,7 +147,7 @@ insert into conversion.police_helper
 			--WHERE H.cinsGrade = P.officer
 			where h.saga = p.officer
 		)			   as officeraid
-	from [[JohnSalazar_Needles]].[dbo].[police] p
+	from [JohnSalazar_Needles].[dbo].[police] p
 	join [sma_TRN_cases] cas
 		on cas.cassCaseNumber = p.case_num
 	join [IndvOrgContacts_Indexed] ioc
@@ -181,7 +181,7 @@ insert into [sma_TRN_PoliceReports]
 		map.PoliceCID		   as [pornpocontactid],
 		map.PoliceCTG		   as [pornpoctgid],
 		map.PoliceAID		   as [pornpoaddressid]
-	from [[JohnSalazar_Needles]].[dbo].[police] p
+	from [JohnSalazar_Needles].[dbo].[police] p
 	join conversion.Police_Helper map
 		on map.police_id = p.police_id
 			and map.case_num = p.case_num

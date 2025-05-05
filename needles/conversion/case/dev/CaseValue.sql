@@ -10,7 +10,7 @@ notes:
 	-
 */
 
-USE [[JohnSalazar_SA]]
+USE [JohnSalazar_SA]
 GO
 
 ALTER TABLE sma_trn_Casevalue DISABLE TRIGGER ALL

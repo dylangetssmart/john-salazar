@@ -11,7 +11,7 @@ notes:
 	-
 */
 
-USE [[JohnSalazar_SA]]
+USE [JohnSalazar_SA]
 GO
 
 

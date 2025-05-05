@@ -127,7 +127,7 @@ insert into [sma_MST_IndvContacts]
 		p.officer					 as [source_id],
 		'needles'					 as [source_db],
 		'police'					 as [source_ref]
-	from [[JohnSalazar_Needles]].[dbo].[police] p
+	from [JohnSalazar_Needles].[dbo].[police] p
 	where ISNULL(officer, '') <> ''
 go
 

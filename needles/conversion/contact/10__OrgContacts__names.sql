@@ -62,6 +62,6 @@ insert into [sma_MST_OrgContacts]
 		null			   as [source_id],
 		'needles'		   as [source_db],
 		'names'			   as [source_ref]
-	from [[JohnSalazar_Needles]].[dbo].[names] n
+	from [JohnSalazar_Needles].[dbo].[names] n
 	where n.[person] <> 'Y'
 go

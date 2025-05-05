@@ -33,7 +33,7 @@ insert into [sma_MST_NoteTypes]
 	select distinct
 		vn.topic,
 		vn.topic
-	from [[JohnSalazar_Needles]]..value_notes vn
+	from [JohnSalazar_Needles]..value_notes vn
 	except
 	select
 		nttsDscrptn,
@@ -109,8 +109,8 @@ insert into [sma_TRN_Notes]
 		null		  as [source_id],
 		'needles'	  as [source_db],
 		'value_notes' as [source_ref]
-	from [[JohnSalazar_Needles]].[dbo].[value_notes] n
-	join [[JohnSalazar_Needles]].[dbo].[value_Indexed] v
+	from [JohnSalazar_Needles].[dbo].[value_notes] n
+	join [JohnSalazar_Needles].[dbo].[value_Indexed] v
 		on v.value_id = n.value_num
 	join [sma_TRN_Cases] c
 		on c.cassCaseNumber = CONVERT(VARCHAR, v.case_id)
@@ -134,8 +134,8 @@ insert into sma_TRN_NoteContacts
 		note.notnNoteID,
 		ioc.UNQCID
 	--select v.provider, ioc.*, n.note, note.*
-	from [[JohnSalazar_Needles]]..[value_notes] n
-	join [[JohnSalazar_Needles]]..value_Indexed v
+	from [JohnSalazar_Needles]..[value_notes] n
+	join [JohnSalazar_Needles]..value_Indexed v
 		on v.value_id = n.value_num
 	join sma_trn_Cases cas
 		on cas.cassCaseNumber = v.case_id

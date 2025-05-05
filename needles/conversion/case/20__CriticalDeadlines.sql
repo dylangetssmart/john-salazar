@@ -62,7 +62,7 @@ insert into [sma_MST_CriticalDeadlineTypes]
 	select distinct
 		dbo.GMACaseDate(M.case_date_1),
 		1
-	from [[JohnSalazar_Needles]].[dbo].[matter] M
+	from [JohnSalazar_Needles].[dbo].[matter] M
 	where ISNULL(dbo.GMACaseDate(M.case_date_1), '') <> ''
 
 	union
@@ -70,7 +70,7 @@ insert into [sma_MST_CriticalDeadlineTypes]
 	select distinct
 		dbo.GMACaseDate(M.case_date_2),
 		1
-	from [[JohnSalazar_Needles]].[dbo].[Matter] M
+	from [JohnSalazar_Needles].[dbo].[Matter] M
 	where ISNULL(dbo.GMACaseDate(M.case_date_2), '') <> ''
 
 	union
@@ -78,7 +78,7 @@ insert into [sma_MST_CriticalDeadlineTypes]
 	select distinct
 		dbo.GMACaseDate(M.case_date_3),
 		1
-	from [[JohnSalazar_Needles]].[dbo].[Matter] M
+	from [JohnSalazar_Needles].[dbo].[Matter] M
 	where ISNULL(dbo.GMACaseDate(M.case_date_3), '') <> ''
 
 	union
@@ -86,7 +86,7 @@ insert into [sma_MST_CriticalDeadlineTypes]
 	select distinct
 		dbo.GMACaseDate(M.case_date_4),
 		1
-	from [[JohnSalazar_Needles]].[dbo].[Matter] M
+	from [JohnSalazar_Needles].[dbo].[Matter] M
 	where ISNULL(dbo.GMACaseDate(M.case_date_4), '') <> ''
 
 	union
@@ -94,7 +94,7 @@ insert into [sma_MST_CriticalDeadlineTypes]
 	select distinct
 		dbo.GMACaseDate(M.case_date_5),
 		1
-	from [[JohnSalazar_Needles]].[dbo].[Matter] M
+	from [JohnSalazar_Needles].[dbo].[Matter] M
 	where ISNULL(dbo.GMACaseDate(M.case_date_5), '') <> ''
 
 	union
@@ -102,7 +102,7 @@ insert into [sma_MST_CriticalDeadlineTypes]
 	select distinct
 		dbo.GMACaseDate(M.case_date_6),
 		1
-	from [[JohnSalazar_Needles]].[dbo].[Matter] M
+	from [JohnSalazar_Needles].[dbo].[Matter] M
 	where ISNULL(dbo.GMACaseDate(M.case_date_6), '') <> ''
 
 	union
@@ -110,7 +110,7 @@ insert into [sma_MST_CriticalDeadlineTypes]
 	select distinct
 		dbo.GMACaseDate(M.case_date_7),
 		1
-	from [[JohnSalazar_Needles]].[dbo].[Matter] M
+	from [JohnSalazar_Needles].[dbo].[Matter] M
 	where ISNULL(dbo.GMACaseDate(M.case_date_7), '') <> ''
 
 	union
@@ -118,7 +118,7 @@ insert into [sma_MST_CriticalDeadlineTypes]
 	select distinct
 		dbo.GMACaseDate(M.case_date_8),
 		1
-	from [[JohnSalazar_Needles]].[dbo].[Matter] M
+	from [JohnSalazar_Needles].[dbo].[Matter] M
 	where ISNULL(dbo.GMACaseDate(M.case_date_8), '') <> ''
 
 	union
@@ -126,7 +126,7 @@ insert into [sma_MST_CriticalDeadlineTypes]
 	select distinct
 		dbo.GMACaseDate(M.case_date_9),
 		1
-	from [[JohnSalazar_Needles]].[dbo].[Matter] M
+	from [JohnSalazar_Needles].[dbo].[Matter] M
 	where ISNULL(dbo.GMACaseDate(M.case_date_9), '') <> ''
 
 	---- ds 6/20/2024 // for user_case_data.date_application_filed
@@ -245,8 +245,8 @@ set @sql = '
             FROM criticalDeadline_Helper MAP
             WHERE MAP.casnCaseID = CAS.casnCaseID
         ) as [ResponderUID]
-    FROM [[JohnSalazar_Needles]].[dbo].[cases] C
-    JOIN [[JohnSalazar_Needles]].[dbo].[matter] M
+    FROM [JohnSalazar_Needles].[dbo].[cases] C
+    JOIN [JohnSalazar_Needles].[dbo].[matter] M
         ON M.matcode = C.matcode
     JOIN [sma_TRN_cases] CAS
         ON CAS.cassCaseNumber = casenum
@@ -304,7 +304,7 @@ insert into [sma_TRN_SOLs]
 		null			  as [soldtoprocessserverdt],
 		null			  as [soldrcvddate],
 		'D'				  as [solstype]
-	from [[JohnSalazar_Needles]].[dbo].[cases_Indexed] c
+	from [JohnSalazar_Needles].[dbo].[cases_Indexed] c
 	join [sma_TRN_Cases] cas
 		on cas.cassCaseNumber = CONVERT(VARCHAR, c.casenum)
 	join [sma_TRN_Defendants] d
