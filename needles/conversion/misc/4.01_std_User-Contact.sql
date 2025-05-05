@@ -10,7 +10,7 @@ requires_mapping:
 #########################################################################################
 */
 
-USE [SA]
+USE [JohnSalazar_SA]
 GO
 /*
 update sma_MST_IndvContacts set cinsComments = NULL
@@ -30,8 +30,8 @@ GO
 --select  
 --    party_id as PartyID,    
 --case
---    when P.Marital_Status='Significant Other' then (select mtsnMaritalStatusID FROM [SA].[dbo].[sma_MST_MaritalStatus] where mtssDscrptn = 'Other')
---    else (select mtsnMaritalStatusID FROM [SA].[dbo].[sma_MST_MaritalStatus] where mtssDscrptn = P.Marital_Status)
+--    when P.Marital_Status='Significant Other' then (select mtsnMaritalStatusID FROM [JohnSalazar_SA].[dbo].[sma_MST_MaritalStatus] where mtssDscrptn = 'Other')
+--    else (select mtsnMaritalStatusID FROM [JohnSalazar_SA].[dbo].[sma_MST_MaritalStatus] where mtssDscrptn = P.Marital_Status)
 --end	   as StatusID
 --FROM TestNeedles.[dbo].[user_party_data] P
 --where isnull(P.Marital_Status,'')<>''
@@ -47,7 +47,7 @@ FROM
 (	SELECT
 		P.party_id as PartyID,    
 		P.Spouse as Spouse_Name
-	FROM [Needles].[dbo].[user_party_data] P
+	FROM [JohnSalazar_Needles].[dbo].[user_party_data] P
 	WHERE isnull(P.Spouse,'')<>''
 ) A
 WHERE A.PartyID  = saga

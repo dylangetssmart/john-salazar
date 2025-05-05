@@ -1,4 +1,4 @@
-use KurtYoung_SA
+use [JohnSalazar_SA]
 go
 
 ------------------------------------------------------------------------------------------------------
@@ -80,7 +80,7 @@ insert into value_tab_Settlement_Helper
 		ioc.AID		   as provideraid,
 		cas.casncaseid as casncaseid,
 		null		   as plaintiffid
-	from KurtYoung_Needles.[dbo].[value_Indexed] v
+	from [JohnSalazar_Needles].[dbo].[value_Indexed] v
 	join [sma_TRN_cases] cas
 		on cas.cassCaseNumber = v.case_id
 	join IndvOrgContacts_Indexed ioc
@@ -116,7 +116,7 @@ select
 	v.value_id as vid,
 	t.plnnPlaintiffID
 into value_tab_Multi_Party_Helper_Temp
-from KurtYoung_Needles.[dbo].[value_Indexed] v
+from [JohnSalazar_Needles].[dbo].[value_Indexed] v
 join [sma_TRN_cases] cas
 	on cas.cassCaseNumber = v.case_id
 join [IndvOrgContacts_Indexed] ioc
@@ -157,7 +157,7 @@ select
 			and plnbIsPrimary = 1
 	)		   as plnnplaintiffid
 into value_tab_Multi_Party_Helper_Temp
-from KurtYoung_Needles.[dbo].[value_Indexed] v
+from [JohnSalazar_Needles].[dbo].[value_Indexed] v
 join [sma_TRN_cases] cas
 	on cas.cassCaseNumber = v.case_id
 join [IndvOrgContacts_Indexed] ioc

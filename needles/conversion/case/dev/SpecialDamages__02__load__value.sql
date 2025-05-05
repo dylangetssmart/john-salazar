@@ -1,4 +1,4 @@
-use KurtYoung_SA
+use [JohnSalazar_SA]
 go
 
 ----------------------------------------------------------------------------
@@ -46,7 +46,7 @@ insert into sma_MST_SpecialDamageSubType
 		vc.[description],
 		GETDATE(),
 		368
-	from KurtYoung_Needles..value_code vc
+	from [JohnSalazar_Needles]..value_code vc
 	where
 		code in (
 			select
@@ -125,8 +125,8 @@ insert into [sma_TRN_SpDamages]
 		null			as [source_id],
 		null			as [source_db],
 		'value'			as [source_ref]
-	from [KurtYoung_Needles].[dbo].[value_Indexed] V
-	join [KurtYoung_Needles].[dbo].[value_Code] VC
+	from [[JohnSalazar_Needles]].[dbo].[value_Indexed] V
+	join [[JohnSalazar_Needles]].[dbo].[value_Code] VC
 		on V.code = VC.code
 	join [value_tab_spDamages_Helper] SDH
 		on V.value_id = SDH.value_id

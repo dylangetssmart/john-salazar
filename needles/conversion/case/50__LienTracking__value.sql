@@ -1,4 +1,4 @@
-use [SA]
+use [JohnSalazar_SA]
 go
 
 
@@ -56,11 +56,11 @@ insert into value_tab_Liencheckbox_Helper
 	)
 	select
 		VP1.value_id
-	from [VanceLawFirm_Needles].[dbo].[value_payment] VP1
+	from [[JohnSalazar_Needles]].[dbo].[value_payment] VP1
 	left join (
 		select distinct
 			value_id
-		from [VanceLawFirm_Needles].[dbo].[value_payment]
+		from [[JohnSalazar_Needles]].[dbo].[value_payment]
 		where lien = 'Y'
 	) VP2
 		on VP1.value_id = VP2.value_id
@@ -133,7 +133,7 @@ insert into value_tab_Lien_Helper
 		CAS.casnCaseID as casnCaseID,
 		null		   as PlaintiffID,
 		null		   as Paid
-	from [VanceLawFirm_Needles].[dbo].[value_Indexed] V
+	from [[JohnSalazar_Needles]].[dbo].[value_Indexed] V
 	inner join [sma_TRN_cases] CAS
 		on CAS.cassCaseNumber = CONVERT(VARCHAR, V.case_id)
 	inner join [IndvOrgContacts_Indexed] IOC
@@ -178,13 +178,13 @@ select
 	CONVERT(VARCHAR, ((
 		select
 			SUM(payment_amount)
-		from [VanceLawFirm_Needles].[dbo].[value_payment]
+		from [[JohnSalazar_Needles]].[dbo].[value_payment]
 		where value_id = V.value_id
 	))
 	)		   as Paid,
 	T.plnnPlaintiffID
 into value_tab_Multi_Party_Helper_Temp
-from [VanceLawFirm_Needles].[dbo].[value_Indexed] V
+from [[JohnSalazar_Needles]].[dbo].[value_Indexed] V
 inner join [sma_TRN_cases] CAS
 	on CAS.cassCaseNumber = CONVERT(VARCHAR, V.case_id)
 inner join [IndvOrgContacts_Indexed] IOC
@@ -223,7 +223,7 @@ select
 	CONVERT(VARCHAR, ((
 		select
 			SUM(payment_amount)
-		from [VanceLawFirm_Needles].[dbo].[value_payment]
+		from [[JohnSalazar_Needles]].[dbo].[value_payment]
 		where value_id = V.value_id
 	))
 	)		   as Paid,
@@ -235,7 +235,7 @@ select
 			and plnbIsPrimary = 1
 	)		   as plnnPlaintiffID
 into value_tab_Multi_Party_Helper_Temp
-from [VanceLawFirm_Needles].[dbo].[value_Indexed] V
+from [[JohnSalazar_Needles]].[dbo].[value_Indexed] V
 inner join [sma_TRN_cases] CAS
 	on CAS.cassCaseNumber = CONVERT(VARCHAR, V.case_id)
 inner join [IndvOrgContacts_Indexed] IOC
@@ -270,8 +270,8 @@ insert into sma_MST_LienType
 	select distinct
 		'CONVERSION',
 		VC.[description]
-	from [VanceLawFirm_Needles].[dbo].[value] V
-	inner join [VanceLawFirm_Needles].[dbo].[value_code] VC
+	from [[JohnSalazar_Needles]].[dbo].[value] V
+	inner join [[JohnSalazar_Needles]].[dbo].[value_code] VC
 		on VC.code = V.code
 	where ISNULL(V.code, '') in (
 			select
@@ -321,7 +321,7 @@ insert into [sma_TRN_Lienors]
 			where lntsDscrptn = (
 					select
 						[description]
-					from [VanceLawFirm_Needles].[dbo].[value_code]
+					from [[JohnSalazar_Needles]].[dbo].[value_code]
 					where [code] = V.code
 				)
 		)								 as [lnrnLienorTypeID],
@@ -345,7 +345,7 @@ insert into [sma_TRN_Lienors]
 		null							 as [source_id],
 		'needles'						 as [source_db],
 		'value_indexed'					 as [source_ref]
-	from [VanceLawFirm_Needles].[dbo].[value_Indexed] V
+	from [[JohnSalazar_Needles]].[dbo].[value_Indexed] V
 	inner join [value_tab_Lien_Helper] MAP
 		on MAP.case_id = V.case_id
 			and MAP.value_id = V.value_id

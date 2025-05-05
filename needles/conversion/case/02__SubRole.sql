@@ -4,7 +4,7 @@ order: 3
 description: Update contact types for attorneys
 ---*/
 
-use [SA]
+use [JohnSalazar_SA]
 go
 
 -- (3.0) sma_MST_SubRole -----------------------------------------------------

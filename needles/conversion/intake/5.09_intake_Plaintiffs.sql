@@ -1,10 +1,10 @@
-USE KurtYoung_SA
+USE [JohnSalazar_SA]
 GO
 
 --Plaintiffs
 /*
 select name_id, first_name, last_name, name_id_2, First_Name_Party_2, Last_Name_Party_2
-From KurtYoung_Needles..case_intake
+From [JohnSalazar_Needles]..case_intake
 where isnull(name_id,0)<>0
 */
 
@@ -88,7 +88,7 @@ INSERT INTO [sma_TRN_Plaintiff]
 	   ,1			   AS [plnnPrimaryContact]
 	   ,NULL		   AS [saga_party]
 	--select *
-	FROM KurtYoung_Needles..case_intake c
+	FROM [JohnSalazar_Needles]..case_intake c
 	JOIN [sma_TRN_Cases] CAS
 		ON CAS.saga = c.ROW_ID
 	JOIN IndvOrgContacts_Indexed CIO

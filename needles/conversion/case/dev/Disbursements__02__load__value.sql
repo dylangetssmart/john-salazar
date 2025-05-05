@@ -1,4 +1,4 @@
-use KurtYoung_SA
+use [JohnSalazar_SA]
 go
 
 
@@ -22,8 +22,8 @@ insert into [sma_MST_DisbursmentType]
 	select distinct
 		'CONVERSION',
 		vc.[description]
-	from [KurtYoung_Needles].[dbo].[value] v
-	join [KurtYoung_Needles].[dbo].[value_code] vc
+	from [[JohnSalazar_Needles]].[dbo].[value] v
+	join [[JohnSalazar_Needles]].[dbo].[value_code] vc
 		on vc.code = v.code
 	where ISNULL(v.code, '') in (
 			select
@@ -82,7 +82,7 @@ insert into [sma_TRN_Disbursement]
 			where dissTypeName = (
 					select
 						[description]
-					from [KurtYoung_Needles].[dbo].[value_code]
+					from [[JohnSalazar_Needles]].[dbo].[value_code]
 					where [code] = v.code
 				)
 		)				as dissdisbursementtype,
@@ -156,11 +156,11 @@ insert into [sma_TRN_Disbursement]
 		null			as source_id,
 		null			as source_db,
 		null			as source_ref
-	from [KurtYoung_Needles].[dbo].[value_Indexed] v
+	from [[JohnSalazar_Needles]].[dbo].[value_Indexed] v
 	join value_tab_Disbursement_Helper map
 		on map.case_id = v.case_id
 			and map.value_id = v.value_id
---join KurtYoung_Needles..user_tab2_data u
+--join [JohnSalazar_Needles]..user_tab2_data u
 --	on u.case_id = v.case_id
 go
 

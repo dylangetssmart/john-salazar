@@ -1,4 +1,4 @@
-use KurtYoung_SA
+use [JohnSalazar_SA]
 go
 
 ------------------------------------------------
@@ -99,7 +99,7 @@ insert into [sma_TRN_Settlements]
 				then 1
 			else 0
 		end				as stlbtakemedpay		-- ds 2024-11-07 "Take Fee"
-	from KurtYoung_Needles.[dbo].[value_Indexed] v
+	from [JohnSalazar_Needles].[dbo].[value_Indexed] v
 	join value_tab_Settlement_Helper map
 		on map.case_id = v.case_id
 			and map.value_id = v.value_id

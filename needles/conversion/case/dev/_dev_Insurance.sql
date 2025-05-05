@@ -10,7 +10,7 @@ replace:
 ##########################################################################################################################
 */
 
-use [KurtYoung_SA]
+use [[JohnSalazar_SA]]
 go
 
 /*
@@ -114,7 +114,7 @@ insert into Insurance_Contacts_Helper
 		cas.casnCaseID		 as caseid,
 		null				 as plaintiffdefendantid
 	--select *
-	from KurtYoung_Needles.[dbo].[insurance_Indexed] ins
+	from [JohnSalazar_Needles].[dbo].[insurance_Indexed] ins
 	join [sma_TRN_Cases] cas
 		on cas.cassCaseNumber = ins.case_num
 	join IndvOrgContacts_Indexed ioc1
@@ -152,7 +152,7 @@ select
 	ins.insurance_id as ins_id,
 	t.plnnPlaintiffID into [multi_party_helper_temp]
 --select *
-from KurtYoung_Needles.[dbo].[insurance_Indexed] ins
+from [JohnSalazar_Needles].[dbo].[insurance_Indexed] ins
 join [sma_TRN_cases] cas
 	on cas.cassCaseNumber = ins.case_num
 join [IndvOrgContacts_Indexed] ioc
@@ -184,7 +184,7 @@ go
 select
 	ins.insurance_id as ins_id,
 	d.defnDefendentID into [multi_party_helper_temp]
-from KurtYoung_Needles.[dbo].[insurance_Indexed] ins
+from [JohnSalazar_Needles].[dbo].[insurance_Indexed] ins
 join [sma_TRN_cases] cas
 	on cas.cassCaseNumber = ins.case_num
 join [IndvOrgContacts_Indexed] ioc
@@ -214,7 +214,7 @@ insert into [sma_MST_InsuranceType]
 	union
 	select distinct
 		policy_type
-	from KurtYoung_Needles.[dbo].[insurance] ins
+	from [JohnSalazar_Needles].[dbo].[insurance] ins
 	where ISNULL(policy_type, '') <> ''
 	except
 	select
@@ -351,8 +351,8 @@ insert into [sma_TRN_InsuranceCoverage]
 		0						 as [incbprimary],
 		ins.insurance_id		 as [saga]
 	--select *
-	from KurtYoung_Needles.[dbo].[insurance_Indexed] ins
-	left join KurtYoung_Needles.[dbo].[user_insurance_data] ud
+	from [JohnSalazar_Needles].[dbo].[insurance_Indexed] ins
+	left join [JohnSalazar_Needles].[dbo].[user_insurance_data] ud
 		on ins.insurance_id = ud.insurance_id
 	--LEFT JOIN InsuranceLimMap LIM on LIM.case_num = ins.case_num and LIM.insurer_ID = ins.insurer_id
 	join [Insurance_Contacts_Helper] map
@@ -435,8 +435,8 @@ go
 --    null			    as [incnauthtodefcounDt],
 --    0					as [incbPrimary],
 --	INS.insurance_id	as [saga]
---FROM KurtYoung_Needles.[dbo].[insurance_Indexed] INS
---LEFT JOIN KurtYoung_Needles.[dbo].[user_insurance_data] UD on INS.insurance_id=UD.insurance_id
+--FROM [JohnSalazar_Needles].[dbo].[insurance_Indexed] INS
+--LEFT JOIN [JohnSalazar_Needles].[dbo].[user_insurance_data] UD on INS.insurance_id=UD.insurance_id
 --LEFT JOIN InsuranceLimMap LIM on LIM.case_num = ins.case_num and LIM.insurer_ID = ins.insurer_id
 --JOIN [Insurance_Contacts_Helper] MAP on INS.insurance_id=MAP.insurance_id and MAP.pord='D'
 go

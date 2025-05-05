@@ -4,7 +4,7 @@ order:
 description: Update contact types for attorneys
 ---*/
 
-use [SA]
+use [JohnSalazar_SA]
 go
 ------------------------------------------------------------------------------------------------------
 -- [0.0] Temporary table to store variable values

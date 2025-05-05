@@ -1,4 +1,4 @@
-use [SA]
+use [JohnSalazar_SA]
 go
 
 alter table [sma_MST_IndvContacts] disable trigger all
@@ -115,7 +115,7 @@ insert into [sma_MST_IndvContacts]
 		upd.witness_1					 as [source_id],
 		'needles'						 as [source_db],
 		'user_party_data.witness_1'		 as [source_ref]
-	from [Needles].[dbo].[user_party_data] upd
+	from [JohnSalazar_Needles].[dbo].[user_party_data] upd
 	where
 		ISNULL(upd.Witness_1, '') <> ''
 go
@@ -231,7 +231,7 @@ insert into [sma_MST_IndvContacts]
 		upd.witness_2					 as [source_id],
 		'needles'						 as [source_db],
 		'user_party_data.witness_2'		 as [source_ref]
-	from [Needles].[dbo].[user_party_data] upd
+	from [JohnSalazar_Needles].[dbo].[user_party_data] upd
 	where
 		ISNULL(upd.Witness_2, '') <> ''
 go
@@ -347,7 +347,7 @@ insert into [sma_MST_IndvContacts]
 		upd.witness_3					 as [source_id],
 		'needles'						 as [source_db],
 		'user_party_data.witness_3'		 as [source_ref]
-	from [Needles].[dbo].[user_party_data] upd
+	from [JohnSalazar_Needles].[dbo].[user_party_data] upd
 	where
 		ISNULL(upd.Witness_3, '') <> ''
 go
@@ -595,7 +595,7 @@ insert into [sma_MST_IndvContacts]
 		upd.Spouse					  as [source_id],
 		'needles'					  as [source_db],
 		'user_party_data.spouse'	  as [source_ref]
-	from [Needles].[dbo].[user_party_data] upd
+	from [JohnSalazar_Needles].[dbo].[user_party_data] upd
 	where
 		ISNULL(upd.Spouse, '') <> ''
 

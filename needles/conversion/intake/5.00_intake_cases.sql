@@ -1,10 +1,10 @@
-use KurtYoung_SA
+use [JohnSalazar_SA]
 go
 
 
 --SELECT
 --	*
---FROM KurtYoung_Needles..case_intake
+--FROM [JohnSalazar_Needles]..case_intake
 --WHERE ISNULL(date_opened, '') <> ''--order by intake_taken
 --sp_help sma_trn_Cases
 
@@ -249,7 +249,7 @@ insert into [sma_TRN_Cases]
 		null													 as [casnclientrecovereddt],
 		0														 as [closereason]
 	select *
-	from KurtYoung_Needles.[dbo].[Case_intake] c
+	from [JohnSalazar_Needles].[dbo].[Case_intake] c
 	left join [CaseTypeMixture] mix
 		on mix.matcode = REPLACE(c.matcode, ' ', '')
 	left join sma_MST_CaseType cst
@@ -258,7 +258,7 @@ insert into [sma_TRN_Cases]
 		and ISNULL(c.date_opened, '') <> ''
 
 
---select * FROM KurtYoung_Needles.[dbo].[Case_intake] C
+--select * FROM [JohnSalazar_Needles].[dbo].[Case_intake] C
 
 ------------------------------------------
 --INTAKE STATUS
@@ -321,7 +321,7 @@ insert into [sma_TRN_CaseStatus]
 		null,
 		null
 	from [sma_trn_cases] cas
-	join KurtYoung_Needles..case_intake c
+	join [JohnSalazar_Needles]..case_intake c
 		on c.ROW_ID = cas.saga
 go
 
@@ -374,7 +374,7 @@ go
 --		null		   as [modifyuserid],
 --		null		   as [dtmodified]
 --	--Select *
---	from KurtYoung_Needles..case_intake c
+--	from [JohnSalazar_Needles]..case_intake c
 --	join [sma_TRN_cases] cas
 --		on c.ROW_ID = cas.saga
 
@@ -473,5 +473,5 @@ go
 --    null					  as [udvdDtModified],
 --    null					  as [udvnLevelNo]
 --FROM [sma_TRN_Cases] CAS
---JOIN KurtYoung_Needles..case_intake C on C.ROW_ID = CAS.saga 
+--JOIN [JohnSalazar_Needles]..case_intake C on C.ROW_ID = CAS.saga 
 --WHERE isnull(convert(varchar(max),c.Location_Case),'')<>''

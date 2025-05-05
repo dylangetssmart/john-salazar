@@ -10,7 +10,7 @@ replace:
 ##########################################################################################################################
 */
 
-use [SA]
+use [JohnSalazar_SA]
 go
 
 /*
@@ -108,7 +108,7 @@ insert into [sma_MST_NoteTypes]
 	select distinct
 		topic as nttsdscrptn,
 		topic as nttsnotetext
-	from [VanceLawFirm_Needles].[dbo].[case_notes_Indexed]
+	from [[JohnSalazar_Needles]].[dbo].[case_notes_Indexed]
 	except
 	select
 		nttsdscrptn,
@@ -179,7 +179,7 @@ insert into [sma_TRN_Notes]
 		null							as [source_id],
 		'needles'						as [source_db],
 		'case_notes_indexed'			as [source_ref]
-	from [VanceLawFirm_Needles].[dbo].[case_notes_Indexed] n
+	from [[JohnSalazar_Needles]].[dbo].[case_notes_Indexed] n
 	join [sma_TRN_Cases] c
 		on c.cassCaseNumber = CONVERT(VARCHAR, n.case_num)
 	left join [sma_MST_Users] u

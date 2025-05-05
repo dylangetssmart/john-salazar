@@ -10,7 +10,7 @@ replace:
 ##########################################################################################################################
 */
 
-use [SA]
+use [JohnSalazar_SA]
 go
 
 
@@ -61,7 +61,7 @@ insert into [sma_TRN_Courts]
 			ioc.CID,
 			ioc.AID,
 			c.judge_link
-		from [Needles].[dbo].[cases] c
+		from [JohnSalazar_Needles].[dbo].[cases] c
 		join [sma_TRN_cases] cas
 			on cas.cassCaseNumber = convert(varchar,c.casenum)
 		join IndvOrgContacts_Indexed ioc
@@ -75,7 +75,7 @@ insert into [sma_TRN_Courts]
 			ioc.CID,
 			ioc.AID,
 			c.judge_link
-		from [Needles].[dbo].[cases] c
+		from [JohnSalazar_Needles].[dbo].[cases] c
 		join [sma_TRN_cases] cas
 			on cas.cassCaseNumber = convert(varchar,c.casenum)
 		join IndvOrgContacts_Indexed ioc
@@ -122,7 +122,7 @@ insert into [sma_TRN_CourtDocket]
 	from [sma_TRN_Courts] crt
 	join [sma_TRN_cases] cas
 		on cas.casnCaseID = crt.crtnCaseID
-	join [Needles].[dbo].[cases] c
+	join [JohnSalazar_Needles].[dbo].[cases] c
 		on convert(varchar,c.casenum) = cas.cassCaseNumber
 go
 

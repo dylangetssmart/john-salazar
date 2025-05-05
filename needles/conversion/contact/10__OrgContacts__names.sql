@@ -4,7 +4,7 @@ order: 1
 description: Update contact types for attorneys
 ---*/
 
-use VanceLawFirm_SA
+use [JohnSalazar_SA]
 go
 
 /* --------------------------------------------------------------------------------------------------------------
@@ -62,6 +62,6 @@ insert into [sma_MST_OrgContacts]
 		null			   as [source_id],
 		'needles'		   as [source_db],
 		'names'			   as [source_ref]
-	from [VanceLawFirm_Needles].[dbo].[names] n
+	from [[JohnSalazar_Needles]].[dbo].[names] n
 	where n.[person] <> 'Y'
 go

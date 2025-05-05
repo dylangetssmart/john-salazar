@@ -11,7 +11,7 @@ notes:
 	-
 */
 
-USE [KurtYoung_SA]
+USE [[JohnSalazar_SA]]
 GO
 
 
@@ -27,8 +27,8 @@ SET cinnContactTypeID = (
 FROM (
 	SELECT
 		I.cinnContactID AS ID
-	FROM KurtYoung_Needles.[dbo].[counsel] C
-	JOIN KurtYoung_Needles.[dbo].[names] L
+	FROM [JohnSalazar_Needles].[dbo].[counsel] C
+	JOIN [JohnSalazar_Needles].[dbo].[names] L
 		ON C.counsel_id = L.names_id
 	JOIN [dbo].[sma_MST_IndvContacts] I
 		ON saga = L.names_id

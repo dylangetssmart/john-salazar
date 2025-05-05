@@ -11,7 +11,7 @@ notes:
 	-
 */
 
-use [SA]
+use [JohnSalazar_SA]
 go
 
 /* ------------------------------------------------------------------------------
@@ -100,7 +100,7 @@ Use this block to jardcode staff_1 through staff_10 with "Staff"
 --        null                        as [cssnModifyUserID],
 --        null                        as [cssdDtModified],
 --        0                           as cssnLevelNo
---    FROM VanceLawFirm_Needles.[dbo].[cases_Indexed] C
+--    FROM [JohnSalazar_Needles].[dbo].[cases_Indexed] C
 --    JOIN [sma_TRN_cases] CAS on CAS.cassCaseNumber = C.casenum
 --    JOIN [sma_MST_Users] U on ( U.saga = C.' + @staffColumn + ' )
 --    ';
@@ -149,7 +149,7 @@ insert into sma_TRN_caseStaff
 		null			as [cssnModifyUserID],
 		null			as [cssdDtModified],
 		0				as cssnLevelNo
-	from VanceLawFirm_Needles.[dbo].[cases_Indexed] C
+	from [JohnSalazar_Needles].[dbo].[cases_Indexed] C
 	inner join [sma_TRN_cases] CAS
 		on CAS.cassCaseNumber = C.casenum
 	inner join [sma_MST_Users] U
@@ -191,7 +191,7 @@ insert into sma_TRN_caseStaff
 		null			as [cssnModifyUserID],
 		null			as [cssdDtModified],
 		0				as cssnLevelNo
-	from VanceLawFirm_Needles.[dbo].[cases_Indexed] C
+	from [JohnSalazar_Needles].[dbo].[cases_Indexed] C
 	join [sma_TRN_cases] CAS
 		on CAS.cassCaseNumber = C.casenum
 	join [sma_MST_Users] U
@@ -233,7 +233,7 @@ insert into sma_TRN_caseStaff
 		null			as [cssnModifyUserID],
 		null			as [cssdDtModified],
 		0				as cssnLevelNo
-	from VanceLawFirm_Needles.[dbo].[cases_Indexed] C
+	from [JohnSalazar_Needles].[dbo].[cases_Indexed] C
 	join [sma_TRN_cases] CAS
 		on CAS.cassCaseNumber = C.casenum
 	join [sma_MST_Users] U
@@ -275,7 +275,7 @@ insert into sma_TRN_caseStaff
 		null			as [cssnModifyUserID],
 		null			as [cssdDtModified],
 		0				as cssnLevelNo
-	from VanceLawFirm_Needles.[dbo].[cases_Indexed] C
+	from [JohnSalazar_Needles].[dbo].[cases_Indexed] C
 	inner join [sma_TRN_cases] CAS
 		on CAS.cassCaseNumber = C.casenum
 	inner join [sma_MST_Users] U
@@ -311,9 +311,9 @@ staff_5 =
 --	null					  as [cssnModifyUserID],
 --	null					  as [cssdDtModified],
 --	0					  as cssnLevelNo
---FROM VanceLawFirm_Needles.[dbo].[cases_Indexed] C
---inner join [SA].[dbo].[sma_TRN_cases] CAS on CAS.cassCaseNumber = C.casenum
---inner join [SA].[dbo].[sma_MST_Users] U on ( U.saga = C.staff_5 )
+--FROM [JohnSalazar_Needles].[dbo].[cases_Indexed] C
+--inner join [JohnSalazar_SA].[dbo].[sma_TRN_cases] CAS on CAS.cassCaseNumber = C.casenum
+--inner join [JohnSalazar_SA].[dbo].[sma_MST_Users] U on ( U.saga = C.staff_5 )
 --*/
 
 /* ------------------------------------------------------------------------------
@@ -351,7 +351,7 @@ insert into sma_TRN_caseStaff
 		null			as [cssnModifyUserID],
 		null			as [cssdDtModified],
 		0				as cssnLevelNo
-	from VanceLawFirm_Needles.[dbo].[cases_Indexed] C
+	from [JohnSalazar_Needles].[dbo].[cases_Indexed] C
 	join [sma_TRN_cases] CAS
 		on CAS.cassCaseNumber = C.casenum
 	join [sma_MST_Users] U
@@ -388,9 +388,9 @@ staff_7 =
 --	null					  as [cssnModifyUserID],
 --	null					  as [cssdDtModified],
 --	0					  as cssnLevelNo
---FROM VanceLawFirm_Needles.[dbo].[cases_Indexed] C
---inner join [SA].[dbo].[sma_TRN_cases] CAS on CAS.cassCaseNumber = C.casenum
---inner join [SA].[dbo].[sma_MST_Users] U on ( U.saga = C.staff_7 )
+--FROM [JohnSalazar_Needles].[dbo].[cases_Indexed] C
+--inner join [JohnSalazar_SA].[dbo].[sma_TRN_cases] CAS on CAS.cassCaseNumber = C.casenum
+--inner join [JohnSalazar_SA].[dbo].[sma_MST_Users] U on ( U.saga = C.staff_7 )
 
 
 /* ------------------------------------------------------------------------------
@@ -422,9 +422,9 @@ staff_8 =
 --	null					  as [cssnModifyUserID],
 --	null					  as [cssdDtModified],
 --	0					  as cssnLevelNo
---FROM VanceLawFirm_Needles.[dbo].[cases_Indexed] C
---inner join [SA].[dbo].[sma_TRN_cases] CAS on CAS.cassCaseNumber = C.casenum
---inner join [SA].[dbo].[sma_MST_Users] U on ( U.saga = C.staff_8 )
+--FROM [JohnSalazar_Needles].[dbo].[cases_Indexed] C
+--inner join [JohnSalazar_SA].[dbo].[sma_TRN_cases] CAS on CAS.cassCaseNumber = C.casenum
+--inner join [JohnSalazar_SA].[dbo].[sma_MST_Users] U on ( U.saga = C.staff_8 )
 --*/
 
 /* ------------------------------------------------------------------------------
@@ -456,7 +456,7 @@ staff_9 =
 --	null					  as [cssnModifyUserID],
 --	null					  as [cssdDtModified],
 --	0					  as cssnLevelNo
---FROM VanceLawFirm_Needles.[dbo].[cases_Indexed] C
+--FROM [JohnSalazar_Needles].[dbo].[cases_Indexed] C
 --JOIN sma_TRN_cases CAS on CAS.cassCaseNumber = C.casenum
 --JOIN sma_MST_Users U on ( U.saga = C.staff_9 )
 
@@ -489,9 +489,9 @@ staff_10 =
 --	null					  as [cssnModifyUserID],
 --	null					  as [cssdDtModified],
 --	0					  as cssnLevelNo
---FROM VanceLawFirm_Needles.[dbo].[cases_Indexed] C
---inner join [SA].[dbo].[sma_TRN_cases] CAS on CAS.cassCaseNumber = C.casenum
---inner join [SA].[dbo].[sma_MST_Users] U on ( U.saga = C.staff_10 )
+--FROM [JohnSalazar_Needles].[dbo].[cases_Indexed] C
+--inner join [JohnSalazar_SA].[dbo].[sma_TRN_cases] CAS on CAS.cassCaseNumber = C.casenum
+--inner join [JohnSalazar_SA].[dbo].[sma_MST_Users] U on ( U.saga = C.staff_10 )
 
 alter table [sma_TRN_caseStaff] enable trigger all
 go

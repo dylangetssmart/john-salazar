@@ -6,7 +6,7 @@ https://smartadvocate.atlassian.net/wiki/spaces/Conversion/pages/2436366355/Smar
 */
 
 
-use KurtYoung_SA
+use [JohnSalazar_SA]
 go
 
 /* ####################################
@@ -182,7 +182,7 @@ from (
 		CONVERT(VARCHAR(MAX), [Where_Seated])			   as [Where Seated],
 		CONVERT(VARCHAR(MAX), [Zip])					   as [Zip]
 	--select *
-	from KurtYoung_Needles..user_party_data ud
+	from [JohnSalazar_Needles]..user_party_data ud
 	join sma_TRN_Cases cas
 		on cas.cassCaseNumber = CONVERT(VARCHAR, ud.case_id)
 ) pv
@@ -363,7 +363,7 @@ insert into [sma_MST_UDFDefinition]
 	from [sma_MST_CaseType] CST
 	join CaseTypeMixture mix
 		on mix.[SmartAdvocate Case Type] = cst.cstsType
-	join [KurtYoung_Needles].[dbo].[user_party_matter] M
+	join [[JohnSalazar_Needles]].[dbo].[user_party_matter] M
 		on M.mattercode = mix.matcode
 			and M.field_type <> 'label'
 	join (
@@ -376,7 +376,7 @@ insert into [sma_MST_UDFDefinition]
 		on ucf.field_num = M.ref_num
 	--LEFT JOIN	(
 	--				SELECT DISTINCT table_Name, column_name
-	--				FROM [KurtYoung_Needles].[dbo].[document_merge_params]
+	--				FROM [[JohnSalazar_Needles]].[dbo].[document_merge_params]
 	--				WHERE table_Name = 'user_case_data'
 	--			) dmp
 	--ON dmp.column_name = ucf.field_Title
@@ -425,7 +425,7 @@ insert into [sma_TRN_UDFValues]
 		on pln.plnnCaseID = udf.casnCaseID
 
 	-- get caseID for [udvnRelatedID]
-	--join [KurtYoung_Needles].[dbo].user_case_data cd
+	--join [[JohnSalazar_Needles]].[dbo].user_case_data cd
 	--	on udf.party_id = pd.party_id
 	--join sma_TRN_Cases cas
 	--	on convert(varchar, pd.case_id) = cas.cassCaseNumber

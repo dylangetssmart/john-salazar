@@ -11,7 +11,7 @@ notes:
 	-
 */
 
-use [SA]
+use [JohnSalazar_SA]
 go
 
 alter table [sma_TRN_LawFirms] disable trigger all

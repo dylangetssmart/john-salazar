@@ -10,7 +10,7 @@ replace:
 ##########################################################################################################################
 */
 
-use [KurtYoung_SA]
+use [[JohnSalazar_SA]]
 go
 
 
@@ -178,10 +178,10 @@ insert into [dbo].[sma_TRN_Employment]
 		null			 as [empnstatusid],		--status  sma_MST_EmploymentStatuses.ID
 		null			 as [empnworksiteid]
 	--select employer_ind.CID, employer_org.CID, v.party_id, v.provider
-	from KurtYoung_Needles..value_indexed v
+	from [JohnSalazar_Needles]..value_indexed v
 	join sma_trn_Cases cas
 		on cas.cassCaseNumber = CONVERT(VARCHAR, v.case_id)
-	join KurtYoung_Needles..names n
+	join [JohnSalazar_Needles]..names n
 		on v.provider = n.names_id
 	-- Individual Employer
 	left join IndvOrgContacts_Indexed employer_ind
@@ -260,13 +260,13 @@ insert into [sma_TRN_LostWages]
 		null			   as [ltwddtmodified],
 		null			   as [ltwnlevelno]
 	-- employment record id: case > plaintiff > employment (value has caseid)
-	from KurtYoung_Needles..value_indexed v
+	from [JohnSalazar_Needles]..value_indexed v
 	join sma_trn_Cases cas
 		on CONVERT(VARCHAR, cas.cassCaseNumber) = v.case_id
 	join sma_trn_plaintiff p
 		on p.plnnCaseID = cas.casnCaseID
 			and p.plnbIsPrimary = 1
-	join KurtYoung_Needles..names n
+	join [JohnSalazar_Needles]..names n
 		on v.provider = n.names_id
 	-- Individual Employer
 	left join IndvOrgContacts_Indexed employer_ind
@@ -287,7 +287,7 @@ insert into [sma_TRN_LostWages]
 
 
 
--- FROM KurtYoung_Needles..user_tab4_data ud
+-- FROM [JohnSalazar_Needles]..user_tab4_data ud
 -- JOIN EmployerTemp et on et.employer = ud.employer and et.employer_address = ud.Employer_Address
 -- JOIN IndvOrgContacts_Indexed ioc on ioc.SAGA = et.empID and ioc.[Name] = et.employer
 -- JOIN [sma_TRN_Employment] e on  e.empnPlaintiffID = p.plnnPlaintiffID and empnEmployerID = ioc.CID

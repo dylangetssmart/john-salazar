@@ -2,7 +2,7 @@
 This script populates UDF Other1 with all columns from user_tab_data
 */
 
-USE KurtYoung_SA
+USE [JohnSalazar_SA]
 GO
 
 IF EXISTS (
@@ -53,13 +53,13 @@ VALUES (
 );
 GO
 
--- Dynamically get all columns from KurtYoung_Needles..user_tab_data for unpivoting
+-- Dynamically get all columns from [JohnSalazar_Needles]..user_tab_data for unpivoting
 DECLARE @sql NVARCHAR(MAX) = N'';
 SELECT
 	@sql = STRING_AGG(CONVERT(VARCHAR(MAX),
 	N'CONVERT(VARCHAR(MAX), ' + QUOTENAME(column_name) + N') AS ' + QUOTENAME(column_name)
 	), ', ')
-FROM KurtYoung_Needles.INFORMATION_SCHEMA.COLUMNS
+FROM [JohnSalazar_Needles].INFORMATION_SCHEMA.COLUMNS
 WHERE table_name = 'user_tab_data'
 	AND column_name NOT IN (
 		SELECT
@@ -72,7 +72,7 @@ WHERE table_name = 'user_tab_data'
 DECLARE @unpivot_list NVARCHAR(MAX) = N'';
 SELECT
 	@unpivot_list = STRING_AGG(QUOTENAME(column_name), ', ')
-FROM KurtYoung_Needles.INFORMATION_SCHEMA.COLUMNS
+FROM [JohnSalazar_Needles].INFORMATION_SCHEMA.COLUMNS
 WHERE table_name = 'user_tab_data'
 	AND column_name NOT IN (
 		SELECT
@@ -89,8 +89,8 @@ FROM (
     SELECT 
         cas.casnCaseID, 
         cas.casnOrgCaseTypeID, ' + @sql + N'
-    FROM KurtYoung_Needles..user_tab_data ud
-    JOIN KurtYoung_Needles..cases_Indexed c ON c.casenum = ud.case_id
+    FROM [JohnSalazar_Needles]..user_tab_data ud
+    JOIN [JohnSalazar_Needles]..cases_Indexed c ON c.casenum = ud.case_id
     JOIN sma_TRN_Cases cas ON cas.cassCaseNumber = CONVERT(VARCHAR, ud.case_id)
 ) pv
 UNPIVOT (FieldVal FOR FieldTitle IN (' + @unpivot_list + N')) AS unpvt;';
@@ -139,7 +139,7 @@ BEGIN
 		FROM [sma_MST_CaseType] CST
 		JOIN CaseTypeMixture mix
 			ON mix.[SmartAdvocate Case Type] = CST.cstsType
-		JOIN [KurtYoung_Needles].[dbo].[user_tab_matter] M
+		JOIN [[JohnSalazar_Needles]].[dbo].[user_tab_matter] M
 			ON M.mattercode = mix.matcode
 				AND M.field_type <> 'label'
 		JOIN (
@@ -154,7 +154,7 @@ BEGIN
 			SELECT DISTINCT
 				table_Name
 			   ,column_name
-			FROM [KurtYoung_Needles].[dbo].[document_merge_params]
+			FROM [[JohnSalazar_Needles]].[dbo].[document_merge_params]
 			WHERE table_Name = 'user_tab_data'
 		) dmp
 			ON dmp.column_name = ucf.field_Title

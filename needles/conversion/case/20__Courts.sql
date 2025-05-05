@@ -5,7 +5,7 @@ description: Create office record
 data-source:
 ---*/
 
-use [SA]
+use [JohnSalazar_SA]
 go
 
 
@@ -56,7 +56,7 @@ insert into [sma_TRN_Courts]
 			ioc.CID,
 			ioc.AID,
 			c.judge_link
-		from [VanceLawFirm_Needles].[dbo].[cases] c
+		from [[JohnSalazar_Needles]].[dbo].[cases] c
 		join [sma_TRN_cases] cas
 			on cas.cassCaseNumber = CONVERT(VARCHAR, c.casenum)
 		join IndvOrgContacts_Indexed ioc
@@ -70,7 +70,7 @@ insert into [sma_TRN_Courts]
 			ioc.CID,
 			ioc.AID,
 			c.judge_link
-		from [VanceLawFirm_Needles].[dbo].[cases] c
+		from [[JohnSalazar_Needles]].[dbo].[cases] c
 		join [sma_TRN_cases] cas
 			on cas.cassCaseNumber = CONVERT(VARCHAR, c.casenum)
 		join IndvOrgContacts_Indexed ioc
@@ -117,7 +117,7 @@ insert into [sma_TRN_CourtDocket]
 	from [sma_TRN_Courts] crt
 	join [sma_TRN_cases] cas
 		on cas.casnCaseID = crt.crtnCaseID
-	join [VanceLawFirm_Needles].[dbo].[cases] c
+	join [[JohnSalazar_Needles]].[dbo].[cases] c
 		on cas.cassCaseNumber = CONVERT(VARCHAR, c.casenum)
 go
 

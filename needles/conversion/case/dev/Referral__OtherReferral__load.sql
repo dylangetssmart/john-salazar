@@ -1,4 +1,4 @@
-use [SA]
+use [JohnSalazar_SA]
 go
 
 insert into [sma_TRN_OtherReferral]
@@ -21,7 +21,7 @@ insert into [sma_TRN_OtherReferral]
 		null		   as [otrscomments],
 		368			   as [otrnuserid],
 		GETDATE()	   as [otrddtcreated]
-	from KurtYoung_Needles.[dbo].[cases_indexed] c
+	from [JohnSalazar_Needles].[dbo].[cases_indexed] c
 	join [sma_TRN_cases] cas
 		on cas.cassCaseNumber = convert(varchar,c.casenum)
 	join [IndvOrgContacts_Indexed] ioci

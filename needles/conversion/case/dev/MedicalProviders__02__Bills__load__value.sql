@@ -1,4 +1,4 @@
-use [SA]
+use [JohnSalazar_SA]
 go
 
 insert into [sma_TRN_SpDamages]
@@ -47,7 +47,7 @@ insert into [sma_TRN_SpDamages]
 		0																 as spdbLienConfirmed,
 		0																 as spdbDocAttached,
 		V.value_id														 as saga_bill_id  -- one bill one value
-	from [Needles].[dbo].[value_Indexed] V
+	from [JohnSalazar_Needles].[dbo].[value_Indexed] V
 	join value_tab_MedicalProvider_Helper MAP
 		on MAP.case_id = V.case_id
 			and MAP.value_id = V.value_id
@@ -100,13 +100,13 @@ insert into [sma_TRN_SpecialDamageAmountPaid]
 		ISNULL('paid by:' + NULLIF(VP.paid_by, '') + CHAR(13), '')
 		+ ISNULL('paid to:' + NULLIF(VP.paid_to, '') + CHAR(13), '')
 		+ ''			   as [AmountPaidComments]
-	from [Needles].[dbo].[value_Indexed] V
+	from [JohnSalazar_Needles].[dbo].[value_Indexed] V
 	join value_tab_MedicalProvider_Helper MAP
 		on MAP.case_id = V.case_id
 			and MAP.value_id = V.value_id
 	join [sma_TRN_SpDamages] SPD
 		on SPD.saga_bill_id = V.value_id
-	join [Needles].[dbo].[value_payment] VP
+	join [JohnSalazar_Needles].[dbo].[value_payment] VP
 		on VP.value_id = V.value_id -- multiple payment per value_id
 go
 

@@ -1,5 +1,5 @@
 
-use [SA]
+use [JohnSalazar_SA]
 GO
 /*
 alter table [sma_TRN_CalendarAppointments] disable trigger all
@@ -71,7 +71,7 @@ SELECT
 	   else '1900-01-01'
     end					  as [ToDate],
 
-	(select ID FROM [SA].[dbo].[sma_MST_CalendarAppointmentType] where AppointmentType='Non-Case related Office') 
+	(select ID FROM [JohnSalazar_SA].[dbo].[sma_MST_CalendarAppointmentType] where AppointmentType='Non-Case related Office') 
 						  as [AppointmentTypeID],
 	case
 	   when isnull(CAL.appointment_type,'') <> '' then 

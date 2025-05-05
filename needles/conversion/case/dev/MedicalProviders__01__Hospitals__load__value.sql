@@ -1,4 +1,4 @@
-use [SA]
+use [JohnSalazar_SA]
 go
 
 /*
@@ -56,7 +56,7 @@ insert into [sma_TRN_Hospitals]
 			MAP.ProviderCID,
 			MAP.ProviderCTG,
 			MAP.ProviderAID
-		from [Needles].[dbo].[value_Indexed] V
+		from [JohnSalazar_Needles].[dbo].[value_Indexed] V
 		inner join value_tab_MedicalProvider_Helper MAP
 			on MAP.case_id = V.case_id
 			and MAP.value_id = V.value_id

@@ -10,7 +10,7 @@ requires_mapping:
 #########################################################################################
 */
 
-use [SA]
+use [JohnSalazar_SA]
 GO
 
 TRUNCATE TABLE sma_TRN_RoleCaseStuffMainRoles

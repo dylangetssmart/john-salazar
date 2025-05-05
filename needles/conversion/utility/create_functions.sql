@@ -16,7 +16,7 @@
  *	dbo.Dworkin_LastName_FromText
  **************************************************/
 
-use [SA]
+use [JohnSalazar_SA]
 go
 
 -----

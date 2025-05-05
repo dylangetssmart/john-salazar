@@ -10,7 +10,7 @@ replace:
 ##########################################################################################################################
 */
 
-USE [KurtYoung_SA]
+USE [[JohnSalazar_SA]]
 GO
 /*
 alter table [sma_TRN_PlaintiffAttorney] disable trigger all
@@ -34,7 +34,7 @@ alter table [sma_TRN_LawFirmAttorneys] enable trigger all
 --INSERT ATTORNEY TYPES
 -----------------------------------------------------------------------------------
 INSERT INTO sma_MST_AttorneyTypes (atnsAtorneyDscrptn)
-SELECT Distinct Type_OF_Attorney From KurtYoung_Needles..user_counsel_data where isnull(Type_of_attorney,'')<>''
+SELECT Distinct Type_OF_Attorney From [JohnSalazar_Needles]..user_counsel_data where isnull(Type_of_attorney,'')<>''
 EXCEPT
 SELECT atnsAtorneydscrptn from sma_MST_AttorneyTypes
 */
@@ -106,8 +106,8 @@ INSERT INTO [sma_TRN_PlaintiffAttorney]
 	   ,ISNULL('comments : ' + NULLIF(CONVERT(VARCHAR(MAX), C.comments), '') + CHAR(13), '') +
 		ISNULL('Attorney for party : ' + NULLIF(CONVERT(VARCHAR(MAX), IOCP.name), '') + CHAR(13), '') +
 		''				  AS [plasComments]
-	FROM KurtYoung_Needles..[counsel_Indexed] C
-	LEFT JOIN KurtYoung_Needles.[dbo].[user_counsel_data] UD
+	FROM [JohnSalazar_Needles]..[counsel_Indexed] C
+	LEFT JOIN [JohnSalazar_Needles].[dbo].[user_counsel_data] UD
 		ON UD.counsel_id = C.counsel_id
 			AND C.case_num = UD.casenum
 	JOIN [sma_TRN_Cases] CAS
@@ -171,8 +171,8 @@ INSERT INTO [sma_TRN_LawFirms]
 	   ,ISNULL('comments : ' + NULLIF(CONVERT(VARCHAR(MAX), C.comments), '') + CHAR(13), '') +
 		ISNULL('Attorney for party : ' + NULLIF(CONVERT(VARCHAR(MAX), IOCD.name), '') + CHAR(13), '') +
 		''				  AS [lwfsComments]
-	FROM KurtYoung_Needles.[dbo].[counsel_Indexed] C
-	LEFT JOIN KurtYoung_Needles.[dbo].[user_counsel_data] UD
+	FROM [JohnSalazar_Needles].[dbo].[counsel_Indexed] C
+	LEFT JOIN [JohnSalazar_Needles].[dbo].[user_counsel_data] UD
 		ON UD.counsel_id = C.counsel_id
 			AND C.case_num = UD.casenum
 	JOIN [sma_TRN_Cases] CAS
@@ -259,8 +259,8 @@ SET cinnContactTypeID = (
 FROM (
 	SELECT
 		I.cinnContactID AS ID
-	FROM KurtYoung_Needles.[dbo].[counsel] C
-	JOIN KurtYoung_Needles.[dbo].[names] L
+	FROM [JohnSalazar_Needles].[dbo].[counsel] C
+	JOIN [JohnSalazar_Needles].[dbo].[names] L
 		ON C.counsel_id = L.names_id
 	JOIN [dbo].[sma_MST_IndvContacts] I
 		ON saga = L.names_id

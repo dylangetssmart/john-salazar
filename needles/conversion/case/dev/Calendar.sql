@@ -10,7 +10,7 @@ replace:
 ##########################################################################################################################
 */
 
-use [KurtYoung_SA]
+use [[JohnSalazar_SA]]
 go
 
 set quoted_identifier on;
@@ -63,7 +63,7 @@ select
 	0				as court_address,
 	0				as party_contact
 into CalendarJudgeStaffCourt
-from KurtYoung_Needles.[dbo].[calendar] cal
+from [JohnSalazar_Needles].[dbo].[calendar] cal
 join [sma_TRN_Cases] cas
 	on cas.cassCaseNumber = cal.casenum
 where ISNULL(cal.casenum, 0) <> 0
@@ -72,7 +72,7 @@ where ISNULL(cal.casenum, 0) <> 0
 -- calendar.judge_link = on [sma_MST_IndvContacts].saga
 update CalendarJudgeStaffCourt
 set Judge_Contact = I.cinnContactID
-from KurtYoung_Needles.[dbo].[calendar] cal
+from [JohnSalazar_Needles].[dbo].[calendar] cal
 join [sma_TRN_Cases] cas
 	on cas.cassCaseNumber = cal.casenum
 join [sma_MST_IndvContacts] i
@@ -84,7 +84,7 @@ where cal.calendar_id = CalendarId
 -- calendar.staff_id = [sma_MST_IndvContacts].cinsGrade
 update CalendarJudgeStaffCourt
 set Staff_Contact = J.cinnContactID
-from KurtYoung_Needles.[dbo].[calendar] cal
+from [JohnSalazar_Needles].[dbo].[calendar] cal
 join [sma_TRN_Cases] cas
 	on cas.cassCaseNumber = cal.casenum
 join [sma_MST_IndvContacts] j
@@ -97,7 +97,7 @@ where cal.calendar_id = CalendarId
 update CalendarJudgeStaffCourt
 set Court_Contact = O.connContactID,
 	Court_Address = A.addnAddressID
-from KurtYoung_Needles.[dbo].[calendar] cal
+from [JohnSalazar_Needles].[dbo].[calendar] cal
 join [sma_TRN_Cases] cas
 	on cas.cassCaseNumber = cal.casenum
 join [sma_MST_OrgContacts] o
@@ -111,7 +111,7 @@ where cal.calendar_id = CalendarId
 -- Set Party_Contact to [sma_MST_IndvContacts].cinnContactID
 update CalendarJudgeStaffCourt
 set Party_Contact = J.cinnContactID
-from KurtYoung_Needles.[dbo].[calendar] cal
+from [JohnSalazar_Needles].[dbo].[calendar] cal
 join [sma_TRN_Cases] cas
 	on cas.cassCaseNumber = cal.casenum
 join [sma_MST_IndvContacts] j
@@ -136,7 +136,7 @@ insert into [sma_MST_ActivityType]
 	from (
 		select distinct
 			appointment_type as activitytype
-		from KurtYoung_Needles.[dbo].[calendar] cal
+		from [JohnSalazar_Needles].[dbo].[calendar] cal
 		where ISNULL(appointment_type, '') <> ''
 		except
 		select
@@ -316,7 +316,7 @@ insert into [sma_TRN_CalendarAppointments]
 		null,
 		null,
 		'Case-related:' + CONVERT(VARCHAR, cal.calendar_id) as [saga]
-	from KurtYoung_Needles.[dbo].[calendar] cal
+	from [JohnSalazar_Needles].[dbo].[calendar] cal
 	join [sma_TRN_Cases] cas
 		on cas.cassCaseNumber = cal.casenum
 	join CalendarJudgeStaffCourt map
@@ -336,7 +336,7 @@ insert into [sma_trn_AppointmentStaff]
 		app.AppointmentID,
 		map.Staff_Contact
 	from [sma_TRN_CalendarAppointments] app
-	join KurtYoung_Needles.[dbo].[calendar] cal
+	join [JohnSalazar_Needles].[dbo].[calendar] cal
 		on app.saga = 'Case-related:' + CONVERT(VARCHAR, cal.calendar_id)
 	join CalendarJudgeStaffCourt map
 		on map.CalendarId = cal.calendar_id
@@ -344,9 +344,9 @@ insert into [sma_trn_AppointmentStaff]
 
 /*
 ----(3)-----
-insert into [KurtYoung_SA].[dbo].[sma_trn_AppointmentStaff] ( [AppointmentId] ,[StaffContactId] ) 
+insert into [[JohnSalazar_SA]].[dbo].[sma_trn_AppointmentStaff] ( [AppointmentId] ,[StaffContactId] ) 
 select APP.AppointmentID, MAP.Party_Contact
-from [KurtYoung_SA].[dbo].[sma_TRN_CalendarAppointments] APP
-inner join KurtYoung_Needles.[dbo].[calendar] CAL on APP.saga='Case-related:'+convert(varchar,CAL.calendar_id)
+from [[JohnSalazar_SA]].[dbo].[sma_TRN_CalendarAppointments] APP
+inner join [JohnSalazar_Needles].[dbo].[calendar] CAL on APP.saga='Case-related:'+convert(varchar,CAL.calendar_id)
 inner join CalendarJudgeStaffCourt MAP on MAP.CalendarId=CAL.calendar_id
 */

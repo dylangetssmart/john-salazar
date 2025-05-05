@@ -12,7 +12,7 @@ notes:
 */
 
 
-USE [KurtYoung_SA]
+USE [[JohnSalazar_SA]]
 GO
 /*
 delete from [sma_TRN_PlaintiffDeath] 

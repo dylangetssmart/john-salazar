@@ -10,7 +10,7 @@ replace:
 ##########################################################################################################################
 */
 
-use [KurtYoung_SA]
+use [[JohnSalazar_SA]]
 go
 
 /*
@@ -51,8 +51,8 @@ select
 	A.SubRole			   as [sldnDefRole],
 	A.StateID			   as [sldnStateID],
 	case
-	   when exists (select repeat_days from KurtYoung_Needles.[dbo].[checklist_dir] where lim='Y' and matcode=A.cstsCode) 
-		  then ( select max( floor(( repeat_days + 360 ) / 365 )) FROM KurtYoung_Needles.[dbo].[checklist_dir] where lim='Y' and matcode=A.cstsCode)
+	   when exists (select repeat_days from [JohnSalazar_Needles].[dbo].[checklist_dir] where lim='Y' and matcode=A.cstsCode) 
+		  then ( select max( floor(( repeat_days + 360 ) / 365 )) FROM [JohnSalazar_Needles].[dbo].[checklist_dir] where lim='Y' and matcode=A.cstsCode)
 	   else 
 		  (select 1)
 	end				   as [sldnYears],
@@ -129,7 +129,7 @@ insert into [sma_TRN_SOLs]
 		null			  as [soldtoprocessserverdt],
 		null			  as [soldrcvddate],
 		'D'				  as [solstype]
-	from KurtYoung_Needles.[dbo].[cases_Indexed] c
+	from [JohnSalazar_Needles].[dbo].[cases_Indexed] c
 	join [sma_TRN_Cases] cas
 		on cas.cassCaseNumber = c.casenum
 	join [sma_TRN_Defendants] d

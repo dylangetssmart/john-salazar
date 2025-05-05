@@ -7,7 +7,7 @@ Description: Create employment records and corresponding lost wage records
 */
 
 
-use KurtYoung_SA
+use [JohnSalazar_SA]
 go
 
 /* ##############################################
@@ -49,7 +49,7 @@ DBCC CHECKIDENT ('[sma_TRN_Settlements]', RESEED, 1);
 alter table [sma_TRN_Settlements] enable trigger all
 */
 
---select distinct code, description from KurtYoung_Needles.[dbo].[value] order by code
+--select distinct code, description from [JohnSalazar_Needles].[dbo].[value] order by code
 ---(0)---
 if not exists (
 		select
@@ -144,7 +144,7 @@ insert into value_tab_Settlement_Helper
 		ioc.AID		   as provideraid,
 		cas.casncaseid as casncaseid,
 		null		   as plaintiffid
-	from KurtYoung_Needles.[dbo].[value_Indexed] v
+	from [JohnSalazar_Needles].[dbo].[value_Indexed] v
 	join [sma_TRN_cases] cas
 		on cas.cassCaseNumber = v.case_id
 	join IndvOrgContacts_Indexed ioc
@@ -179,7 +179,7 @@ select
 	v.value_id as vid,
 	t.plnnPlaintiffID
 into value_tab_Multi_Party_Helper_Temp
-from KurtYoung_Needles.[dbo].[value_Indexed] v
+from [JohnSalazar_Needles].[dbo].[value_Indexed] v
 join [sma_TRN_cases] cas
 	on cas.cassCaseNumber = v.case_id
 join [IndvOrgContacts_Indexed] ioc
@@ -220,7 +220,7 @@ select
 			and plnbIsPrimary = 1
 	)		   as plnnplaintiffid
 into value_tab_Multi_Party_Helper_Temp
-from KurtYoung_Needles.[dbo].[value_Indexed] v
+from [JohnSalazar_Needles].[dbo].[value_Indexed] v
 join [sma_TRN_cases] cas
 	on cas.cassCaseNumber = v.case_id
 join [IndvOrgContacts_Indexed] ioc
@@ -313,7 +313,7 @@ insert into [sma_TRN_Settlements]
 				then 1
 			else 0
 		end				as stlbtakemedpay		-- ds 2024-11-07 "Take Fee"
-	from KurtYoung_Needles.[dbo].[value_Indexed] v
+	from [JohnSalazar_Needles].[dbo].[value_Indexed] v
 	join value_tab_Settlement_Helper map
 		on map.case_id = v.case_id
 			and map.value_id = v.value_id

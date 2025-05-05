@@ -10,7 +10,7 @@ replace:
 ##########################################################################################################################
 */
 
-use [KurtYoung_SA]
+use [[JohnSalazar_SA]]
 go
 
 /*
@@ -93,8 +93,8 @@ insert into [sma_TRN_Incidents]
 		GETDATE()	   as [dtcreated],
 		null		   as [modifyuserid],
 		null		   as [dtmodified]
-	from KurtYoung_Needles.[dbo].[cases_Indexed] c
-	join KurtYoung_Needles.[dbo].[user_case_data] u
+	from [JohnSalazar_Needles].[dbo].[cases_Indexed] c
+	join [JohnSalazar_Needles].[dbo].[user_case_data] u
 		on u.casenum = c.casenum
 	join [sma_TRN_cases] cas
 		on cas.cassCaseNumber = CONVERT(VARCHAR, c.casenum)

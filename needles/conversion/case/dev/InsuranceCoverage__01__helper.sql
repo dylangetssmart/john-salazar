@@ -3,7 +3,7 @@ description: Insert defendants
 steps:
 	- Update schema > [sma_TRN_InsuranceCoverage]
 	- Construct [conversion].[insurance_contacts_helper]
-	- Create insurance types from [needles].[insurance].[policy_type] > [sma_MST_InsuranceType]
+	- Create insurance types from [JohnSalazar_Needles].[insurance].[policy_type] > [sma_MST_InsuranceType]
 usage_instructions:
 	- 
 dependencies:
@@ -12,7 +12,7 @@ notes:
 	-
 */
 
-use [KurtYoung_SA]
+use [[JohnSalazar_SA]]
 go
 
 -------------------------------------------------------------------------------
@@ -153,7 +153,7 @@ insert into conversion.insurance_contacts_helper
 		cas.casnCaseID		 as caseid,
 		null				 as plaintiffdefendantid
 	--select *
-	from KurtYoung_Needles.[dbo].[insurance_Indexed] ins
+	from [JohnSalazar_Needles].[dbo].[insurance_Indexed] ins
 	join [sma_TRN_Cases] cas
 		on cas.cassCaseNumber = ins.case_num
 	join IndvOrgContacts_Indexed ioc1
@@ -190,7 +190,7 @@ select
 	t.plnnPlaintiffID
 into conversion.multi_party_helper
 --select *
-from KurtYoung_Needles.[dbo].[insurance_Indexed] ins
+from [JohnSalazar_Needles].[dbo].[insurance_Indexed] ins
 join [sma_TRN_cases] cas
 	on cas.cassCaseNumber = ins.case_num
 join [IndvOrgContacts_Indexed] ioc
@@ -221,7 +221,7 @@ select
 	ins.insurance_id as ins_id,
 	d.defnDefendentID
 into conversion.multi_party_helper
-from KurtYoung_Needles.[dbo].[insurance_Indexed] ins
+from [JohnSalazar_Needles].[dbo].[insurance_Indexed] ins
 join [sma_TRN_cases] cas
 	on cas.cassCaseNumber = ins.case_num
 join [IndvOrgContacts_Indexed] ioc
@@ -252,7 +252,7 @@ insert into [sma_MST_InsuranceType]
 	union
 	select distinct
 		policy_type
-	from KurtYoung_Needles.[dbo].[insurance] ins
+	from [JohnSalazar_Needles].[dbo].[insurance] ins
 	where ISNULL(policy_type, '') <> ''
 	except
 	select
@@ -261,4 +261,4 @@ insert into [sma_MST_InsuranceType]
 go
 
 --select * from [sma_MST_InsuranceType]
---select distinct i.policy_type from KurtYoung_Needles..insurance i
+--select distinct i.policy_type from [JohnSalazar_Needles]..insurance i

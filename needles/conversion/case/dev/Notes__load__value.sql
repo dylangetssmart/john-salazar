@@ -19,7 +19,7 @@ notes:
 #########################################################################################
 */
 
-use [SA]
+use [JohnSalazar_SA]
 go
 
 -- Create note types that don't yet exist

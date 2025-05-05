@@ -1,4 +1,4 @@
-use [SA]
+use [JohnSalazar_SA]
 go
 
 ------------------------------------------------------------------------------------------------------
@@ -48,7 +48,7 @@ create table value_tab_Liencheckbox_Helper (
 	value_id   INT,
 	constraint IOC_Clustered_Index_value_tab_Liencheckbox_Helper primary key clustered (TableIndex)
 ) on [PRIMARY]
-create nonclustered index IX_NonClustered_Index_value_tab_Liencheckbox_Helper_value_id on [Needles].[dbo].[value_tab_Liencheckbox_Helper] (value_id);
+create nonclustered index IX_NonClustered_Index_value_tab_Liencheckbox_Helper_value_id on [JohnSalazar_Needles].[dbo].[value_tab_Liencheckbox_Helper] (value_id);
 go
 
 ---(0)---
@@ -58,11 +58,11 @@ insert into value_tab_Liencheckbox_Helper
 	)
 	select
 		VP1.value_id
-	from [Needles].[dbo].[value_payment] VP1
+	from [JohnSalazar_Needles].[dbo].[value_payment] VP1
 	left join (
 		select distinct
 			value_id
-		from [Needles].[dbo].[value_payment]
+		from [JohnSalazar_Needles].[dbo].[value_payment]
 		where lien = 'Y'
 	) VP2
 		on VP1.value_id = VP2.value_id
@@ -136,7 +136,7 @@ insert into value_tab_Lien_Helper
 		CAS.casnCaseID as casnCaseID,
 		null		   as PlaintiffID,
 		null		   as Paid
-	from [Needles].[dbo].[value_Indexed] V
+	from [JohnSalazar_Needles].[dbo].[value_Indexed] V
 	inner join [sma_TRN_cases] CAS
 		on CAS.cassCaseNumber = CONVERT(VARCHAR, V.case_id)
 	inner join [IndvOrgContacts_Indexed] IOC
@@ -181,13 +181,13 @@ select
 	CONVERT(VARCHAR, ((
 		select
 			SUM(payment_amount)
-		from [Needles].[dbo].[value_payment]
+		from [JohnSalazar_Needles].[dbo].[value_payment]
 		where value_id = V.value_id
 	))
 	)		   as Paid,
 	T.plnnPlaintiffID
 into value_tab_Multi_Party_Helper_Temp
-from [Needles].[dbo].[value_Indexed] V
+from [JohnSalazar_Needles].[dbo].[value_Indexed] V
 inner join [sma_TRN_cases] CAS
 	on CAS.cassCaseNumber = CONVERT(VARCHAR, V.case_id)
 inner join [IndvOrgContacts_Indexed] IOC
@@ -226,7 +226,7 @@ select
 	CONVERT(VARCHAR, ((
 		select
 			SUM(payment_amount)
-		from [Needles].[dbo].[value_payment]
+		from [JohnSalazar_Needles].[dbo].[value_payment]
 		where value_id = V.value_id
 	))
 	)		   as Paid,
@@ -238,7 +238,7 @@ select
 			and plnbIsPrimary = 1
 	)		   as plnnPlaintiffID
 into value_tab_Multi_Party_Helper_Temp
-from [Needles].[dbo].[value_Indexed] V
+from [JohnSalazar_Needles].[dbo].[value_Indexed] V
 inner join [sma_TRN_cases] CAS
 	on CAS.cassCaseNumber = CONVERT(VARCHAR, V.case_id)
 inner join [IndvOrgContacts_Indexed] IOC

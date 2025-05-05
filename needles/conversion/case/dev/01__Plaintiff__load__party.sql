@@ -1,4 +1,4 @@
-use [SA]
+use [JohnSalazar_SA]
 go
 
 alter table [sma_TRN_Plaintiff] disable trigger all

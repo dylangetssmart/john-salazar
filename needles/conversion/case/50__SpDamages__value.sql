@@ -1,4 +1,4 @@
-use [SA]
+use [JohnSalazar_SA]
 go
 
 /* ------------------------------------------------------------------------------
@@ -85,7 +85,7 @@ insert into [value_tab_spDamages_Helper]
 		IOC.AID		   as ProviderAID,
 		CAS.casnCaseID as casnCaseID,
 		null		   as PlaintiffID
-	from [VanceLawFirm_Needles].[dbo].[value_Indexed] V
+	from [[JohnSalazar_Needles]].[dbo].[value_Indexed] V
 	join [sma_TRN_cases] CAS
 		on CAS.cassCaseNumber = CONVERT(VARCHAR, V.case_id)
 	join IndvOrgContacts_Indexed IOC
@@ -122,7 +122,7 @@ select
 	V.value_id as vid,
 	T.plnnPlaintiffID
 into value_tab_Multi_Party_Helper_Temp
-from [VanceLawFirm_Needles].[dbo].[value_Indexed] V
+from [[JohnSalazar_Needles]].[dbo].[value_Indexed] V
 join [sma_TRN_cases] CAS
 	on CAS.cassCaseNumber = CONVERT(VARCHAR, V.case_id)
 join [IndvOrgContacts_Indexed] IOC
@@ -166,7 +166,7 @@ select
 			and plnbIsPrimary = 1
 	)		   as plnnPlaintiffID
 into value_tab_Multi_Party_Helper_Temp
-from [VanceLawFirm_Needles].[dbo].[value_Indexed] V
+from [[JohnSalazar_Needles]].[dbo].[value_Indexed] V
 join [sma_TRN_cases] CAS
 	on CAS.cassCaseNumber = CONVERT(VARCHAR, V.case_id)
 join [IndvOrgContacts_Indexed] IOC
@@ -229,7 +229,7 @@ insert into sma_MST_SpecialDamageSubType
 		vc.[description],
 		GETDATE(),
 		368
-	from [VanceLawFirm_Needles]..value_code vc
+	from [[JohnSalazar_Needles]]..value_code vc
 	where
 		code in (
 			select
@@ -308,8 +308,8 @@ insert into [sma_TRN_SpDamages]
 		null			as [source_id],
 		null			as [source_db],
 		'value'			as [source_ref]
-	from [VanceLawFirm_Needles].[dbo].[value_Indexed] V
-	join [VanceLawFirm_Needles].[dbo].[value_Code] VC
+	from [[JohnSalazar_Needles]].[dbo].[value_Indexed] V
+	join [[JohnSalazar_Needles]].[dbo].[value_Code] VC
 		on V.code = VC.code
 	join [value_tab_spDamages_Helper] SDH
 		on V.value_id = SDH.value_id

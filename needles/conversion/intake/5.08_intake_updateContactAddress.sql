@@ -1,10 +1,10 @@
-USE KurtYoung_SA
+USE [JohnSalazar_SA]
 GO
 
 /*
 --CHECK FOR SSN
 select prefix, suffix, sex, Date_of_Birth, Ss_Number
-from KurtYoung_Needles..case_intake c
+from [JohnSalazar_Needles]..case_intake c
 JOIN IndvOrgContacts_Indexed ioc on ioc.saga = c.name_id
 JOIN sma_MST_IndvContacts ind on ind.cinnContactID= ioc.cid and ind.cinnContactCtg = ioc.CTG
 where isnull(ss_number,'') <> ''
@@ -12,7 +12,7 @@ and isnull(ind.cinsSSNNo, '') = ''
 
 --CHECK FOR DOB
 select prefix, suffix, sex, Date_of_Birth, Ss_Number
-from KurtYoung_Needles..case_intake c
+from [JohnSalazar_Needles]..case_intake c
 JOIN IndvOrgContacts_Indexed ioc on ioc.saga = c.name_id
 JOIN sma_MST_IndvContacts ind on ind.cinnContactID= ioc.cid and ind.cinnContactCtg = ioc.CTG
 where isnull(Date_of_Birth,'') <> ''
@@ -20,7 +20,7 @@ and isnull(ind.cindBirthDate, '') = ''
 
 --CHECK FOR SEX
 select prefix, suffix, sex, Date_of_Birth, Ss_Number
-from KurtYoung_Needles..case_intake c
+from [JohnSalazar_Needles]..case_intake c
 JOIN IndvOrgContacts_Indexed ioc on ioc.saga = c.name_id
 JOIN sma_MST_IndvContacts ind on ind.cinnContactID= ioc.cid and ind.cinnContactCtg = ioc.CTG
 where isnull(sex,'') <> ''
@@ -36,7 +36,7 @@ go
 ---------------------------------------------------------
 -- UPDATE ind
 -- SET cinsSSNNo = ss_number
--- FROM KurtYoung_Needles..case_intake c
+-- FROM [JohnSalazar_Needles]..case_intake c
 -- JOIN IndvOrgContacts_Indexed ioc on ioc.saga = c.name_id
 -- JOIN sma_MST_IndvContacts ind on ind.cinnContactID= ioc.cid and ind.cinnContactCtg = ioc.CTG
 -- WHERE isnull(ss_number,'') <> ''
@@ -44,7 +44,7 @@ go
 
 -- UPDATE ind
 -- SET cindDateOfDeath = Date_of_Death
--- FROM KurtYoung_Needles..case_intake c
+-- FROM [JohnSalazar_Needles]..case_intake c
 -- JOIN IndvOrgContacts_Indexed ioc on ioc.saga = c.name_id
 -- JOIN sma_MST_IndvContacts ind on ind.cinnContactID= ioc.cid and ind.cinnContactCtg = ioc.CTG
 -- WHERE isnull(Date_of_Death,'') <> ''
@@ -52,7 +52,7 @@ go
 
 --UPDATE ind
 --SET cindBirthDate = Date_of_Birth
---FROM KurtYoung_Needles..case_intake c
+--FROM [JohnSalazar_Needles]..case_intake c
 --JOIN IndvOrgContacts_Indexed ioc on ioc.saga = c.name_id
 --JOIN sma_MST_IndvContacts ind on ind.cinnContactID= ioc.cid and ind.cinnContactCtg = ioc.CTG
 --WHERE isnull(Date_of_Birth,'') <> ''
@@ -61,7 +61,7 @@ go
 --UPDATE ind
 --SET cinnGender = case when [sex]='M' then 1
 --					when [sex]='F' then 2 end
---FROM KurtYoung_Needles..case_intake c
+--FROM [JohnSalazar_Needles]..case_intake c
 --JOIN IndvOrgContacts_Indexed ioc on ioc.saga = c.name_id
 --JOIN sma_MST_IndvContacts ind on ind.cinnContactID= ioc.cid and ind.cinnContactCtg = ioc.CTG
 --WHERE isnull(sex,'') <> ''
@@ -71,7 +71,7 @@ go
 -- SET cinsNickName = 	isnull( nullif(convert(Varchar,AKA_First)+' ','') ,'') +
 -- 				isnull( nullif(convert(Varchar,AKA_Last)+' ','') ,'') +
 -- 				isnull( nullif(convert(Varchar,AKA_Role_Party)+' ','') ,'') + ''
--- FROM KurtYoung_Needles..case_intake c
+-- FROM [JohnSalazar_Needles]..case_intake c
 -- JOIN IndvOrgContacts_Indexed ioc on ioc.saga = c.name_id
 -- JOIN sma_MST_IndvContacts ind on ind.cinnContactID= ioc.cid and ind.cinnContactCtg = ioc.CTG
 -- WHERE (isnull(AKA_First,'') <> '' or isnull(aka_last,'') <>'' or isnull(aka_role_party,'') <> '')
@@ -83,7 +83,7 @@ go
 -- UPDATE ind
 -- SET [cinnContactSubCtgID] = (Select cscncontactSubCtgID FROM sma_MST_contactSubCategory where cscsDscrptn = 'Infant')
 -- --select minor, [cinnContactSubCtgID]
--- FROM KurtYoung_Needles..case_intake c
+-- FROM [JohnSalazar_Needles]..case_intake c
 -- JOIN IndvOrgContacts_Indexed ioc on ioc.saga = c.name_id
 -- JOIN sma_MST_IndvContacts ind on ind.cinnContactID= ioc.cid and ind.cinnContactCtg = ioc.CTG
 -- WHERE isnull(minor,'') = 'Y'
@@ -92,7 +92,7 @@ go
 -- UPDATE ind
 -- SET [cinnContactSubCtgID] = (Select cscncontactSubCtgID FROM sma_MST_contactSubCategory where cscsDscrptn = 'Deceased')
 -- --select Deceased, [cinnContactSubCtgID]
--- FROM KurtYoung_Needles..case_intake c
+-- FROM [JohnSalazar_Needles]..case_intake c
 -- JOIN IndvOrgContacts_Indexed ioc on ioc.saga = c.name_id
 -- JOIN sma_MST_IndvContacts ind on ind.cinnContactID= ioc.cid and ind.cinnContactCtg = ioc.CTG
 -- WHERE isnull(Deceased,'') = 'Y'
@@ -133,7 +133,7 @@ SELECT
 		368					as addnModifyUserID,
 		getdate()			as adddDtModified,
 		null,null,null,null,null
-FROM KurtYoung_Needles..case_intake c
+FROM [JohnSalazar_Needles]..case_intake c
 JOIN IndvOrgContacts_Indexed ioc on ioc.saga = c.name_id
 LEFT JOIN sma_MST_Address a on a.addnContactID = ioc.cid and a.addnContactCtgID = ioc.CTG and a.addsAddress1 = home_address
 JOIN [sma_MST_AddressTypes] T on T.addnContactCategoryID = ioc.CTG and T.addsCode='HM'
@@ -174,7 +174,7 @@ SELECT
 		368					as addnModifyUserID,
 		getdate()			as adddDtModified,
 		null,null,null,null,null
-FROM KurtYoung_Needles..case_intake c
+FROM [JohnSalazar_Needles]..case_intake c
 JOIN IndvOrgContacts_Indexed ioc on ioc.saga = c.name_id
 LEFT JOIN sma_MST_Address a on a.addnContactID = ioc.cid and a.addnContactCtgID = ioc.CTG and a.addsAddress1 = business_address
 JOIN [sma_MST_AddressTypes] T on T.addnContactCategoryID = ioc.CTG and T.addsDscrptn = 'Office' 
@@ -200,7 +200,7 @@ and a.addnAddressID IS NULL
 		null,
 		NULL				as saga -- indicate email
 --select c.Home_Email
-FROM KurtYoung_Needles..case_intake c
+FROM [JohnSalazar_Needles]..case_intake c
 JOIN IndvOrgContacts_Indexed ioc on ioc.saga = c.name_id
 LEFT JOIN sma_MST_EmailWebsite e on e.cewnContactID = ioc.cid and e.cewnContactCtgID = ioc.ctg and c.Home_Email = e.cewsEmailWebSite
 WHERE cewsEmailWebsiteFlag = 'E'
@@ -224,7 +224,7 @@ and e.cewnEmlWSID IS NULL
 		null,
 		NULL				as saga -- indicate email
 --select c.business_email
-FROM KurtYoung_Needles..case_intake c
+FROM [JohnSalazar_Needles]..case_intake c
 JOIN IndvOrgContacts_Indexed ioc on ioc.saga = c.name_id
 LEFT JOIN sma_MST_EmailWebsite e on e.cewnContactID = ioc.cid and e.cewnContactCtgID = ioc.ctg and c.Business_Email = e.cewsEmailWebSite
 WHERE cewsEmailWebsiteFlag = 'E'
@@ -253,7 +253,7 @@ INSERT INTO [sma_MST_ContactNumbers] (
 		getdate()				as cnndDtModified,
 		null,null
 --SELECT c.home_phone,dbo.FormatPhone(c.home_phone)
-FROM KurtYoung_Needles..case_intake c
+FROM [JohnSalazar_Needles]..case_intake c
 JOIN IndvOrgContacts_Indexed ioc on ioc.saga = c.name_id
 LEFT JOIN sma_MST_ContactNumbers cn on cn.cnnnContactID = ioc.CID and cn.cnnnContactCtgID = ioc.CTG and cnnsContactNumber = dbo.FormatPhone(c.home_phone)
 WHERE isnull(c.home_phone,'') <> ''
@@ -279,7 +279,7 @@ INSERT INTO [sma_MST_ContactNumbers] (
 		getdate()				as cnndDtModified,
 		null,null
 --SELECT c.mobile_phone,dbo.FormatPhone(c.mobile_phone)
-FROM KurtYoung_Needles..case_intake c
+FROM [JohnSalazar_Needles]..case_intake c
 JOIN IndvOrgContacts_Indexed ioc on ioc.saga = c.name_id
 LEFT JOIN sma_MST_ContactNumbers cn on cn.cnnnContactID = ioc.CID and cn.cnnnContactCtgID = ioc.CTG and cnnsContactNumber = dbo.FormatPhone(c.mobile_phone)
 WHERE isnull(c.mobile_phone,'') <> ''

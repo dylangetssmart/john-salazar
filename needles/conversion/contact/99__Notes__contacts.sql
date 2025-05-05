@@ -4,7 +4,7 @@ order: 70
 description: Update contact types for attorneys
 ---*/
 
-use VanceLawFirm_SA
+use [JohnSalazar_SA]
 go
 
 alter table [sma_TRN_Notes] disable trigger all
@@ -46,7 +46,7 @@ insert into sma_TRN_Notes
 		null			 as [source_id],
 		'needles'		 as [source_db],
 		'party'			 as [source_ref]
-	from VanceLawFirm_Needles.[dbo].[party] P
+	from [JohnSalazar_Needles].[dbo].[party] P
 	join sma_MST_IndvContacts I
 		on I.saga = P.party_id
 
@@ -85,7 +85,7 @@ insert into sma_TRN_Notes
 		null			 as [source_id],
 		'needles'		 as [source_db],
 		'party'			 as [source_ref]
-	from VanceLawFirm_Needles.[dbo].[party] P
+	from [JohnSalazar_Needles].[dbo].[party] P
 	join sma_MST_IndvContacts I
 		on I.saga = P.party_id
 
@@ -117,7 +117,7 @@ insert into sma_TRN_Notes
 		null			 as [source_id],
 		'needles'		 as [source_db],
 		'provider_notes' as [source_ref]
-	from VanceLawFirm_Needles.[dbo].[provider_notes] PN
+	from [JohnSalazar_Needles].[dbo].[provider_notes] PN
 	join IndvOrgContacts_Indexed IOC
 		on IOC.SAGA = PN.name_id
 

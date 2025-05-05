@@ -1,4 +1,4 @@
-use [SA]
+use [JohnSalazar_SA]
 go
 
 insert into [sma_TRN_ReferredOut]
@@ -48,7 +48,7 @@ insert into [sma_TRN_ReferredOut]
 		1			   as rfonreferred,
 		0			   as rfoncocouncil,
 		0			   as rfonislawfirmupdatetosend
-	from [VanceLawFirm_Needles].[dbo].[cases_indexed] c
+	from [[JohnSalazar_Needles]].[dbo].[cases_indexed] c
 	join [sma_TRN_cases] cas
 		on cas.cassCaseNumber = convert(varchar,c.casenum)
 	join [IndvOrgContacts_Indexed] ioc
