@@ -1,0 +1,66 @@
+# 2_Case
+
+| Script Name | Description | Dependencies |
+|-------------|-------------|-------------|
+| 2.01__case_utility.sql | No metadata found | No metadata found |
+| 2.02__case_types.sql | No metadata found | No metadata found |
+| 2.03__case_roles.sql | No metadata found | No metadata found |
+| 2.04__Cases.sql | No metadata found | No metadata found |
+| 2.05__CaseStaff.sql | No metadata found | No metadata found |
+| 2.06__CaseValue.sql | No metadata found | No metadata found |
+| 2.07__CaseStatus.sql | Create case statues from needles..class | ['2.02_std_Cases.sql'] |
+| 2.08__Plaintiff.sql | No metadata found | No metadata found |
+| 2.09__PlaintiffDeath.sql | No metadata found | No metadata found |
+| 2.10__Defendant.sql | No metadata found | No metadata found |
+| 2.11a__Insurance__utility.sql | No metadata found | No metadata found |
+| 2.11b__Insurance__plaintiff.sql | No metadata found | No metadata found |
+| 2.11c__Insurance__defendant.sql | No metadata found | No metadata found |
+| 2.11d__Insurance__adjuster.sql | No metadata found | No metadata found |
+| 2.12__Incident.sql | No metadata found | No metadata found |
+| 2.13a__Attorney__schema.sql | No metadata found | No metadata found |
+| 2.13b__Attorney__plaintiff.sql | No metadata found | No metadata found |
+| 2.13c__Attorney__defendant.sql | No metadata found | No metadata found |
+| 2.13d__Attorney__appendix.sql | No metadata found | No metadata found |
+| 2.14a__Court__schema.sql | No metadata found | No metadata found |
+| 2.14b__Court.sql | No metadata found | No metadata found |
+| 2.15__CriticalComments.sql | No metadata found | No metadata found |
+| 2.16a__CriticalDeadlines.sql | No metadata found | No metadata found |
+| 2.16b__CriticalDeadlines_SOL.sql | No metadata found | No metadata found |
+| 2.17__Negotiations.sql | No metadata found | No metadata found |
+| 2.18a__Referral__ReferredOut.sql | No metadata found | No metadata found |
+| 2.18b__Referral__OtherReferral.sql | No metadata found | No metadata found |
+| 2.19a__Notes.sql | No metadata found | No metadata found |
+| 2.19b__Notes__from_value.sql | Create note records from needles..value_notes | ['sma_TRN_Cases', 'sma_MST_users'] |
+| 2.20__Calendar.sql | No metadata found | No metadata found |
+| 2.21a__Investigations__PoliceReport.sql | No metadata found | No metadata found |
+| 2.23__Investigations__Witnesses.sql | No metadata found | No metadata found |
+| 2.25_SOLChecklist.sql | No metadata found | No metadata found |
+| 2.54a__MedicalProviders__schema.sql | No metadata found | No metadata found |
+| 2.54b__MedicalProviders__helper.sql | No metadata found | No metadata found |
+| 2.54c__MedicalProviders__hospitals_from_value.sql | No metadata found | No metadata found |
+| 2.54d__MedicalProviders__hospitals_from_user_case.sql | No metadata found | No metadata found |
+| 2.54f__MedicalProviders__bills_from_value.sql | No metadata found | No metadata found |
+| 2.60a__SpecialDamages__schema.sql | No metadata found | No metadata found |
+| 2.60b__SpecialDamages__helper.sql | No metadata found | No metadata found |
+| 2.60c__SpecialDamages__from_value.sql | No metadata found | No metadata found |
+| 2.61a__LienTracking__schema.sql | No metadata found | No metadata found |
+| 2.61b__LienTracking__helpers.sql | No metadata found | No metadata found |
+| 2.61c__LienTracking__lienors.sql | No metadata found | No metadata found |
+| 2.61d__LienTracking__lien_details.sql | No metadata found | No metadata found |
+| 2.62a__Disbursements__schema.sql | No metadata found | No metadata found |
+| 2.62b__Disbursements__helpers.sql | No metadata found | No metadata found |
+| 2.62c__Disbursements.sql | No metadata found | No metadata found |
+| 2.63a__settlements__schema.sql | No metadata found | No metadata found |
+| 2.63b__settlements__helpers.sql | No metadata found | No metadata found |
+| 2.63c__settlements__load.sql | No metadata found | No metadata found |
+| Step_11.3_Checklist_Task.SQL | No metadata found | No metadata found |
+| Step_11.4_Checklist_SOL.SQL | No metadata found | No metadata found |
+| dev_2.54_value_MedicalProviders.sql | No metadata found | No metadata found |
+| dev_2.55_value_disbursement.sql | No metadata found | No metadata found |
+| dev_2.56_value_Employment.sql | No metadata found | No metadata found |
+| dev_2.70_value_lien_tracking.sql | No metadata found | No metadata found |
+| dev_2.73_value_settlements.sql | No metadata found | No metadata found |
+| dev_Insurance.sql | No metadata found | No metadata found |
+| dev_MedicalProviders.sql | No metadata found | No metadata found |
+| dev_attorney.sql | No metadata found | No metadata found |
+| emails.sql | No metadata found | No metadata found |

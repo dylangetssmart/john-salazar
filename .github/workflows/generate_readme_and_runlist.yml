@@ -1,0 +1,66 @@
+name: Generate README and _runlist
+
+on:
+  push:
+    paths:
+      - 'sql/**'
+  workflow_dispatch:
+
+jobs:
+  generate_readme:
+    name: Generate README files
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - name: Install dependencies
+        run: |
+          pip install --upgrade pip
+          pip install pyyaml
+          pip install chardet
+
+      - name: Generate README
+        run: python _lib/generate_readmes.py
+
+      - name: Commit README changes
+        run: |
+          git config --local user.name "github-actions[bot]"
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "Update README with SQL scripts" || echo "No README changes to commit"
+          git push
+
+  generate_runlist:
+    name: Generate _runlist.txt files
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - name: Install dependencies
+        run: |
+          pip install --upgrade pip
+
+      - name: Generate _runlist.txt
+        run: python _lib/handle_generate_runlist.py
+
+      - name: Commit runlist changes
+        run: |
+          git config --local user.name "github-actions[bot]"
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "Update _runlist.txt files" || echo "No runlist changes to commit"
+          git push

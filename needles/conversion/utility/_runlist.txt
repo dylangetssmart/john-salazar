@@ -1,0 +1,8 @@
+# Auto-generated runlist
+0.00_conversion_schema.sql
+0.01_create_functions.sql
+0.10_CaseTypeMixture.sql
+0.20_CaseValueMapping.sql
+0.30_imp_user_map.sql
+0.40_NeedlesUserFields.sql
+0.50_PartyRole.sql

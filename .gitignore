@@ -1,0 +1,28 @@
+# Ignore default directories
+_backups/
+!_backups/.gitkeep
+_venv/*
+_trans/*
+!_trans/.gitkeep
+
+# Ignore database backup files
+backups/*
+!backups/.gitkeep
+*.bak
+*.backup
+
+# Python cache files
+**__pycache__/
+lib/__pycache__/
+*.pyc
+
+# Ignore any files related to SSMS projects/solutions
+vsworkspacestate.json
+.ssms_suo
+slnx.sqlite
+/.vs
+/.vs/*
+/.vs/VSWorkspaceState.json
+
+# Ignore data directories
+_data/*
