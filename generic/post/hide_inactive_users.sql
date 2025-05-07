@@ -1,4 +1,4 @@
-use ShinerSA
+use JohnSalazar_SA
 go
 
 update sma_mst_users 

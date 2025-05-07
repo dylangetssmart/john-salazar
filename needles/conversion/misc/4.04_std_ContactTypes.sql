@@ -11,106 +11,179 @@ requires_mapping:
 */
 
 use [JohnSalazar_SA]
-GO
+go
 
 ------
-ALTER TABLE sma_MST_OrgContacts DISABLE TRIGGER ALL
-GO
-ALTER TABLE sma_MST_IndvContacts DISABLE TRIGGER ALL
-GO
+alter table sma_MST_OrgContacts disable trigger all
+go
+
+alter table sma_MST_IndvContacts disable trigger all
+go
+
 -----
 
 ----(0)----
 
-UPDATE [sma_MST_IndvContacts] SET cinnContactTypeID=(SELECT octnOrigContactTypeID FROM [sma_MST_OriginalContactTypes] WHERE octsDscrptn='Adjuster' and octnContactCtgID=1)
-WHERE cinnContactID in
-(
-SELECT DISTINCT incnAdjContactId 
-FROM [sma_TRN_InsuranceCoverage] INS
-WHERE incnAdjContactId is not null
-) 
-
-GO
-
-UPDATE [sma_MST_OrgContacts] SET connContactTypeID=(SELECT octnOrigContactTypeID FROM [sma_MST_OriginalContactTypes] WHERE octsDscrptn='Insurance Company' and octnContactCtgID=2)
-WHERE connContactID in
-(
-SELECT DISTINCT incnInsContactID
-FROM [sma_TRN_InsuranceCoverage] INS
-WHERE incnInsContactID is not null
+update [sma_MST_IndvContacts]
+set cinnContactTypeID = (
+	select
+		octnOrigContactTypeID
+	from [sma_MST_OriginalContactTypes]
+	where octsDscrptn = 'Adjuster'
+		and octnContactCtgID = 1
 )
-GO
+where cinnContactID in (
+	select distinct
+		incnAdjContactId
+	from [sma_TRN_InsuranceCoverage] INS
+	where incnAdjContactId is not null
+)
+
+go
+
+update [sma_MST_OrgContacts]
+set connContactTypeID = (
+	select
+		octnOrigContactTypeID
+	from [sma_MST_OriginalContactTypes]
+	where octsDscrptn = 'Insurance Company'
+		and octnContactCtgID = 2
+)
+where connContactID in (
+	select distinct
+		incnInsContactID
+	from [sma_TRN_InsuranceCoverage] INS
+	where incnInsContactID is not null
+)
+go
 
 
 ----(1)----
 
-UPDATE [sma_MST_IndvContacts] SET cinnContactTypeID=(SELECT octnOrigContactTypeID FROM [sma_MST_OriginalContactTypes] WHERE octsDscrptn='Doctor' and octnContactCtgID=1)
-WHERE cinnContactID in
-(
-SELECT DISTINCT hosnContactID 
-from [sma_TRN_Hospitals] HOS
-WHERE hosnContactID is not null
-and hosnContactCtg=1
-) 
-GO
-
-UPDATE [sma_MST_OrgContacts] SET connContactTypeID=(SELECT octnOrigContactTypeID FROM [sma_MST_OriginalContactTypes] WHERE octsDscrptn='Medical Office' and octnContactCtgID=2)
-WHERE connContactID in
-(
-SELECT DISTINCT hosnContactID 
-FROM [sma_TRN_Hospitals] HOS
-WHERE hosnContactID is not null
-and hosnContactCtg=2
+update [sma_MST_IndvContacts]
+set cinnContactTypeID = (
+	select
+		octnOrigContactTypeID
+	from [sma_MST_OriginalContactTypes]
+	where octsDscrptn = 'Doctor'
+		and octnContactCtgID = 1
 )
-GO
+where cinnContactID in (
+	select distinct
+		hosnContactID
+	from [sma_TRN_Hospitals] HOS
+	where hosnContactID is not null
+		and hosnContactCtg = 1
+)
+go
+
+update [sma_MST_OrgContacts]
+set connContactTypeID = (
+	select
+		octnOrigContactTypeID
+	from [sma_MST_OriginalContactTypes]
+	where octsDscrptn = 'Medical Office'
+		and octnContactCtgID = 2
+)
+where connContactID in (
+	select distinct
+		hosnContactID
+	from [sma_TRN_Hospitals] HOS
+	where hosnContactID is not null
+		and hosnContactCtg = 2
+)
+go
 
 
 
 ----(2)----
 
-UPDATE [sma_MST_IndvContacts] SET cinnContactTypeID=(SELECT octnOrigContactTypeID FROM [sma_MST_OriginalContactTypes] WHERE octsDscrptn='Attorney' and octnContactCtgID=1)
-WHERE cinnContactID in
-(
-SELECT DISTINCT planAtorneyContactID FROM [sma_TRN_PlaintiffAttorney]
-WHERE planAtorneyContactID is not null
-) 
+update [sma_MST_IndvContacts]
+set cinnContactTypeID = (
+	select
+		octnOrigContactTypeID
+	from [sma_MST_OriginalContactTypes]
+	where octsDscrptn = 'Attorney'
+		and octnContactCtgID = 1
+)
+where cinnContactID in (
+	select distinct
+		planAtorneyContactID
+	from [sma_TRN_PlaintiffAttorney]
+	where planAtorneyContactID is not null
+)
 
-UPDATE [sma_MST_OrgContacts] SET connContactTypeID=(SELECT octnOrigContactTypeID FROM [sma_MST_OriginalContactTypes] WHERE octsDscrptn='Law Firm' and octnContactCtgID=2)
-WHERE connContactID in
-(
-SELECT DISTINCT planLawfrmContactID FROM [sma_TRN_PlaintiffAttorney]
-WHERE planLawfrmContactID is not null
+update [sma_MST_OrgContacts]
+set connContactTypeID = (
+	select
+		octnOrigContactTypeID
+	from [sma_MST_OriginalContactTypes]
+	where octsDscrptn = 'Law Firm'
+		and octnContactCtgID = 2
+)
+where connContactID in (
+	select distinct
+		planLawfrmContactID
+	from [sma_TRN_PlaintiffAttorney]
+	where planLawfrmContactID is not null
 )
 
 
 ----(3)----
 
-UPDATE [sma_MST_IndvContacts] SET cinnContactTypeID=(SELECT octnOrigContactTypeID FROM [sma_MST_OriginalContactTypes] WHERE octsDscrptn='Attorney' and octnContactCtgID=1)
-WHERE cinnContactID in
-(
-SELECT DISTINCT lwfnAttorneyContactID from [sma_TRN_LawFirms]
-WHERE lwfnAttorneyContactID is not null
+update [sma_MST_IndvContacts]
+set cinnContactTypeID = (
+	select
+		octnOrigContactTypeID
+	from [sma_MST_OriginalContactTypes]
+	where octsDscrptn = 'Attorney'
+		and octnContactCtgID = 1
+)
+where cinnContactID in (
+	select distinct
+		lwfnAttorneyContactID
+	from [sma_TRN_LawFirms]
+	where lwfnAttorneyContactID is not null
 )
 
-UPDATE [sma_MST_OrgContacts] SET connContactTypeID=(SELECT octnOrigContactTypeID FROM [sma_MST_OriginalContactTypes] WHERE octsDscrptn='Law Firm' and octnContactCtgID=2)
-WHERE connContactID in
-(
-SELECT DISTINCT lwfnLawFirmContactID FROM [sma_TRN_LawFirms]
-WHERE lwfnLawFirmContactID is not null
+update [sma_MST_OrgContacts]
+set connContactTypeID = (
+	select
+		octnOrigContactTypeID
+	from [sma_MST_OriginalContactTypes]
+	where octsDscrptn = 'Law Firm'
+		and octnContactCtgID = 2
+)
+where connContactID in (
+	select distinct
+		lwfnLawFirmContactID
+	from [sma_TRN_LawFirms]
+	where lwfnLawFirmContactID is not null
 )
 
 
 ----(4)----
-UPDATE [sma_MST_IndvContacts] SET cinnContactTypeID=(SELECT octnOrigContactTypeID FROM [sma_MST_OriginalContactTypes] WHERE octsDscrptn='Judge')
-FROM
-( SELECT DISTINCT judge_link FROM TestNeedles.[dbo].[cases] ) A
-WHERE A.judge_link=saga and isnull(saga,0)<>0 
+update [sma_MST_IndvContacts]
+set cinnContactTypeID = (
+	select
+		octnOrigContactTypeID
+	from [sma_MST_OriginalContactTypes]
+	where octsDscrptn = 'Judge'
+)
+from (
+	select distinct
+		judge_link
+	from JohnSalazar_Needles.[dbo].[cases]
+) A
+where A.judge_link = saga
+and ISNULL(saga, 0) <> 0
 
 
 
 ------
-ALTER TABLE sma_MST_OrgContacts ENABLE TRIGGER ALL
-GO
-ALTER TABLE sma_MST_IndvContacts ENABLE TRIGGER ALL
-GO
+alter table sma_MST_OrgContacts enable trigger all
+go
+
+alter table sma_MST_IndvContacts enable trigger all
+go
 -----

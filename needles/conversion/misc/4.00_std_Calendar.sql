@@ -1,15 +1,3 @@
-/* ######################################################################################
-description:
-steps:
-	-
-usage_instructions:
-dependencies:
-notes:
-requires_mapping:
-	- 
-#########################################################################################
-*/
-
 use [JohnSalazar_SA]
 GO
 
@@ -117,7 +105,7 @@ SELECT
 		end					  as [ToDate]
 	,(
 		select ID
-		FROM [JohnSalazar_Needles].[dbo].[sma_MST_CalendarAppointmentType]
+		FROM [sma_MST_CalendarAppointmentType]
 		where AppointmentType = 'Non-Case related Office'
 	)							as [AppointmentTypeID]
 	,case -- ActivityTypeID

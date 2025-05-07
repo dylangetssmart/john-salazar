@@ -248,7 +248,7 @@ insert into [sma_TRN_Cases]
 		null													 as [ngage],
 		null													 as [casnclientrecovereddt],
 		0														 as [closereason]
-	select *
+	--select *
 	from [JohnSalazar_Needles].[dbo].[Case_intake] c
 	left join [CaseTypeMixture] mix
 		on mix.matcode = REPLACE(c.matcode, ' ', '')

@@ -15,7 +15,7 @@ notes:
 #########################################################################################
 */
 
-USE [Needles]
+USE JohnSalazar_Needles
 GO
 
 IF EXISTS (select * from sys.objects where name='value_Indexed' and type='U')

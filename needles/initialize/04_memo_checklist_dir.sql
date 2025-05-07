@@ -15,7 +15,7 @@ notes:
 #########################################################################################
 */
 
-USE [Needles]
+USE JohnSalazar_Needles
 GO
 
 IF EXISTS (select * from sys.objects where name='checklist_dir_indexed' and type='U')
