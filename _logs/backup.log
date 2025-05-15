@@ -1,0 +1,5 @@
+2025-05-14 10:26:54,588 - DEBUG - backup.py - add_backup_parser - 18 - Loaded environment config: {'SERVER': 'DylanS\\MSSQLSERVER2022', 'TARGET_DB': 'JohnSalazar_SA'}
+2025-05-14 10:27:01,799 - DEBUG - backup.py - add_backup_parser - 18 - Loaded environment config: {'SERVER': 'DylanS\\MSSQLSERVER2022', 'TARGET_DB': 'JohnSalazar_SA'}
+2025-05-14 10:27:06,969 - DEBUG - backup.py - add_backup_parser - 18 - Loaded environment config: {'SERVER': 'DylanS\\MSSQLSERVER2022', 'TARGET_DB': 'JohnSalazar_SA'}
+2025-05-14 10:27:34,339 - DEBUG - backup.py - add_backup_parser - 18 - Loaded environment config: {'SERVER': 'DylanS\\MSSQLSERVER2022', 'TARGET_DB': 'JohnSalazar_SA'}
+2025-05-14 10:31:42,948 - DEBUG - validate_dir.py - validate_dir - 36 - Input directory exists: C:\Users\dsmith\Downloads\EliSchmulik\EliSchmulik

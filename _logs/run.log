@@ -885,3 +885,7 @@ Invalid object name 'conversion.office'.
 2025-05-06 14:47:33,186 - DEBUG - run.py - execute_scripts - 35 - Running 5.09_intake_Plaintiffs.sql (6/6)
 2025-05-06 14:47:33,467 - INFO - run.py - execute_scripts - 44 - PASS: 5.09_intake_Plaintiffs.sql
 2025-05-06 14:47:33,467 - INFO - run.py - execute_scripts - 48 - Completed all scripts in D:\john-salazar\needles\conversion\intake.
+2025-05-14 10:26:54,592 - DEBUG - run.py - add_run_parser - 16 - Loaded environment config: {'SERVER': 'DylanS\\MSSQLSERVER2022', 'TARGET_DB': 'JohnSalazar_SA'}
+2025-05-14 10:27:01,803 - DEBUG - run.py - add_run_parser - 16 - Loaded environment config: {'SERVER': 'DylanS\\MSSQLSERVER2022', 'TARGET_DB': 'JohnSalazar_SA'}
+2025-05-14 10:27:06,973 - DEBUG - run.py - add_run_parser - 16 - Loaded environment config: {'SERVER': 'DylanS\\MSSQLSERVER2022', 'TARGET_DB': 'JohnSalazar_SA'}
+2025-05-14 10:27:34,344 - DEBUG - run.py - add_run_parser - 16 - Loaded environment config: {'SERVER': 'DylanS\\MSSQLSERVER2022', 'TARGET_DB': 'JohnSalazar_SA'}

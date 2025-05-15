@@ -1,0 +1,4 @@
+2025-05-14 10:26:54,590 - DEBUG - restore.py - add_restore_parser - 152 - Loaded environment config: {'SERVER': 'DylanS\\MSSQLSERVER2022', 'TARGET_DB': 'JohnSalazar_SA'}
+2025-05-14 10:27:01,800 - DEBUG - restore.py - add_restore_parser - 152 - Loaded environment config: {'SERVER': 'DylanS\\MSSQLSERVER2022', 'TARGET_DB': 'JohnSalazar_SA'}
+2025-05-14 10:27:06,971 - DEBUG - restore.py - add_restore_parser - 152 - Loaded environment config: {'SERVER': 'DylanS\\MSSQLSERVER2022', 'TARGET_DB': 'JohnSalazar_SA'}
+2025-05-14 10:27:34,342 - DEBUG - restore.py - add_restore_parser - 152 - Loaded environment config: {'SERVER': 'DylanS\\MSSQLSERVER2022', 'TARGET_DB': 'JohnSalazar_SA'}
