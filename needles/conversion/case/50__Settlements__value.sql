@@ -32,9 +32,17 @@ begin
 			code
 		)
 		values
-		('MP'),
-		('PTC'),
-		('SET');
+		/*
+		Insert applicable value codes from mapping spreadsheet
+		*/
+		('DTF'),
+		('FEES'),
+		('PD SET'),
+		('PIP/MEDPAY'),
+		('SETTLEMENT'),
+		('UIM SET'),
+		('UM SET');
+
 end
 
 ---(0)---

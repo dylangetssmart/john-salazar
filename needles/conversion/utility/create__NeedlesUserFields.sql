@@ -51,7 +51,7 @@ insert into NeedlesUserFields
 		end,
 		Mini_Dir_Title,
 		case
-			when field_Type in ('name', 'alpha', 'state', 'valuecode', 'staff')
+			when field_Type in ('alpha', 'state', 'valuecode', 'staff')
 				then 'Text'
 			when field_Type in ('number', 'money')
 				then 'Number'
@@ -63,10 +63,12 @@ insert into NeedlesUserFields
 				then 'Date'
 			when field_Type = 'Time'
 				then 'Time'
+			when field_Type = 'name'
+				then 'Contact'
 			else field_Type
 		end
 	--Select *
-	from Skolrood_Needles..[user_case_fields]
+	from JohnSalazar_Needles..[user_case_fields]
 
 
 -----------------------------------------------------
@@ -92,8 +94,8 @@ select
 	IDENTITY(INT, 1, 1) as Number,
 	gd.code
 into #values
-from Skolrood_Needles..mini_general_dir gd
-join Skolrood_Needles..mini_dir_list dl
+from JohnSalazar_Needles..mini_general_dir gd
+join JohnSalazar_Needles..mini_dir_list dl
 	on gd.num_assigned = dl.dir_key
 where
 	dir_name = @miniDir
