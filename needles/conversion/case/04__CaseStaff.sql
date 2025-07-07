@@ -1,83 +1,208 @@
-/* ###################################################################################
-Script Name: Update Contact Types for Attorneys
-Group: load
-Order: 5
+﻿/*******************************************************
+ CASE STAFF INSERT SCRIPT  -  STAFF_1 .. STAFF_10
 
-Description:
-This script populates staff roles and assigns them to cases in the target system.
+ HOW TO USE
+ 1. Copy the SmartAdvocate Role column from Excel.
+ 2. Paste it below inside the @pastedRoles string.
+ 3. Run the script.
+    * You can paste fewer than 10 lines; only those slots load.
+    * Blank lines are ignored.
+*******************************************************/
 
-Steps:
-  1. Insert sub-role codes into [sma_MST_SubRoleCode] based on values from the source spreadsheet.
-      You must uncomment the INSERT block for [sma_MST_SubRoleCode] and ensure the `srcsDscrptn` values match the descriptions in your mapping spreadsheet.
-  2. For each staff column (staff_1 through staff_10), insert role "Staff" into [sma_TRN_caseStaff] using dynamic SQL.
-  3. (Optional) Use the static INSERT blocks for staff_1 through staff_4 if more precise role mapping is needed:
-      Uncomment each applicable block and update the subquery filtering `sbrsDscrptn` to reflect the correct role (e.g., 'Assigned Attorney', 'Case Manager', etc.).
-
-Usage Instructions:
-  - Ensure the target database context (e.g., [JohnSalazar_SA]) is correct.
-  - Update hardcoded values as needed (e.g., user IDs, date handling).
-  - Replace 'Staff' or other role descriptions in the subqueries with the appropriate role text from your role mappings.
-  - The source data is expected to be in [JohnSalazar_Needles].[dbo].[cases_Indexed] and mapped via [sma_MST_Users].
-
-Dependencies:
-  - [conversion].[office] (update if needed)
-  - Role ID 10 must exist in [sma_MST_SubRole]
-  - Source fields like `staff_1`, `staff_2`, etc., must map to `source_id` in [sma_MST_Users]
-
-Notes:
-  - Trigger disabling is included to avoid side effects; ensure triggers are re-enabled afterward if needed.
-  - Use dynamic inserts for general "Staff" assignments and static inserts for mapped role specificity.
-  - Contact your data mapping analyst if sub-role names differ from spreadsheet.
-################################################################################### */
-
-
-use [JohnSalazar_SA]
+use JohnSalazar_SA;
 go
 
-/* ------------------------------------------------------------------------------
-Create necessary staff roles
-- Update srcsDscrptn values with SmartAdvocate Roles from the mapping spreadsheet
-*/ ------------------------------------------------------------------------------
+/* ---------- 1. PASTE ROLES HERE ---------- */
+declare @pastedRoles VARCHAR(MAX) = '
+Primary Case Handler
+Secondary Case Handler
+Review Attorney
+Negotiator
+Closing Specialist
+Evidence Coordinator
+Staff
+Staff
+File Custodian
+Office Location
+';
+/* ------------------------------------------ */
 
-insert into [sma_MST_SubRoleCode]
+/* 2. Ensure staging table exists, then clear it */
+if OBJECT_ID('conversion.CaseStaffRoleMap', 'U') is null
+begin
+	create table conversion.CaseStaffRoleMap (
+		StaffCol SYSNAME	  not null,
+		RoleDesc VARCHAR(100) not null,
+		RoleID	 INT		  not null
+	);
+end
+else
+	truncate table conversion.CaseStaffRoleMap;
+
+	/* 3. Load pasted roles into the staging table */
+	;
+
+with Split
+as
+(
+	select
+		ROW_NUMBER() over (order by (
+			select
+				null
+		))					as RowNum,
+		LTRIM(RTRIM(value)) as RoleDesc
+	from STRING_SPLIT(@pastedRoles, CHAR(10))
+	where LTRIM(RTRIM(value)) <> ''
+)
+insert into conversion.CaseStaffRoleMap
+	(
+		StaffCol,
+		RoleDesc,
+		RoleID
+	)
+	select
+		'staff_' + CAST(RowNum as VARCHAR(2)) as StaffCol,
+		RoleDesc,
+		10									  as RoleID
+	from Split
+	where
+		RowNum <= 10;   -- staff_1 through staff_10 only
+
+/* 4. Insert any missing sub‑role codes */
+insert into sma_MST_SubRoleCode
 	(
 		srcsDscrptn,
 		srcnRoleID
 	)
-	(
-	select
-		'Assigned Attorney',
-		10
-	union all
-	select
-		'Case Manager',
-		10
-	union all
-	select
-		'Secondary Case Manager',
-		10
-	union all
-	select
-		'Litigation Staff',
-		10
-	union all
-	select
-		'Managing Attorney',
-		10
-	)
+	select distinct
+		RoleDesc,
+		RoleID
+	from conversion.CaseStaffRoleMap
 	except
 	select
 		srcsDscrptn,
 		srcnRoleID
-	from [sma_MST_SubRoleCode]
-
-
-alter table [sma_TRN_caseStaff] disable trigger all
+	from sma_MST_SubRoleCode;
 go
 
+
+/* 5. Bulk insert case‑staff records */
+alter table sma_TRN_caseStaff disable trigger all;
+go
+
+insert into sma_TRN_caseStaff
+	(
+		cssnCaseID,
+		cssnStaffID,
+		cssnRoleID,
+		csssComments,
+		cssdFromDate,
+		cssdToDate,
+		cssnRecUserID,
+		cssdDtCreated,
+		cssnModifyUserID,
+		cssdDtModified,
+		cssnLevelNo
+	)
+	select
+		cas.casnCaseID,
+		u.usrnContactID,
+		sr.sbrnSubRoleId,
+		null,
+		null,
+		null,
+		368,               -- modify if needed
+		GETDATE(),
+		null,
+		null,
+		0
+	from JohnSalazar_Needles.dbo.cases_Indexed as c
+	join sma_TRN_cases as cas
+		on cas.cassCaseNumber = CONVERT(VARCHAR(50), c.casenum)
+	cross apply (
+	values
+	('staff_1', c.staff_1),
+	('staff_2', c.staff_2),
+	('staff_3', c.staff_3),
+	('staff_4', c.staff_4),
+	('staff_5', c.staff_5),
+	('staff_6', c.staff_6),
+	('staff_7', c.staff_7),
+	('staff_8', c.staff_8),
+	('staff_9', c.staff_9),
+	('staff_10', c.staff_10)
+	) as x (StaffCol, SourceID)
+	join conversion.CaseStaffRoleMap as map
+		on map.StaffCol = x.StaffCol
+	join sma_MST_Users as u
+		on u.source_id = x.SourceID
+	join sma_MST_SubRole as sr
+		on sr.sbrsDscrptn = map.RoleDesc
+			and sr.sbrnRoleID = map.RoleID
+	where
+		x.SourceID is not null;   -- ignore empty staff slots
+go
+
+alter table sma_TRN_caseStaff enable trigger all;
+go
+
+/* 6. (Optional) clear staging table for next run
+TRUNCATE TABLE conversion.CaseStaffRoleMap;
+GO
+*/
+
+
+
+
+
+
+
+
+
+
+
 /* ------------------------------------------------------------------------------
-Use this block to hardcode staff_1 through staff_10 with "Staff"
-*/ ------------------------------------------------------------------------------
+Create staff roles if they do not exist
+*/
+--insert into [sma_MST_SubRoleCode]
+--	(
+--		srcsDscrptn,
+--		srcnRoleID
+--	)
+--	(
+--	SELECT 'Primary Case Handler', 10 UNION all			-- staff_1
+--	SELECT 'Secondary Case Handler', 10 UNION all		-- staff_2
+--	SELECT 'Review Attorney ', 10 UNION all				-- staff_3
+--	SELECT 'Negotiator ', 10 UNION all					-- staff_4
+--	SELECT 'Closing Specialist ', 10 UNION all			-- staff_5
+--	SELECT 'Evidence Coordinator ', 10 UNION all		-- staff_6
+--	SELECT 'Staff ', 10 UNION all						-- staff_7
+--	SELECT 'Staff', 10 UNION all						-- staff_8
+--	SELECT 'File Custodian ', 10 UNION all				-- staff_9
+--	SELECT 'Office Location', 10						-- staff_10
+--	)
+--	except
+--	select
+--		srcsDscrptn,
+--		srcnRoleID
+--	from [sma_MST_SubRoleCode]
+
+
+--alter table [sma_TRN_caseStaff] disable trigger all
+--go
+
+/* ------------------------------------------------------------------------------
+- Dynamic SQL that assigns case staff as per their needles assignment in staff_1 through staff_10
+- Staff Role is assigned from the users "Default case role" in User Maintenance
+- If you wish to instead hardcode staff_1 through staff_10 with role = "Staff", use the block below
+
+	(
+		select sbrnSubRoleId
+		from sma_MST_SubRole
+		where sbrsDscrptn=''Staff'' and sbrnRoleID=10
+	 )                           as [cssnRoleID],
+
+*/
 
 ---- Declare variables
 --DECLARE @i INT = 1;
@@ -111,8 +236,8 @@ Use this block to hardcode staff_1 through staff_10 with "Staff"
 --        U.usrnContactID             as [cssnStaffID],
 --        (
 --            select sbrnSubRoleId
---            from sma_MST_SubRole
---            where sbrsDscrptn=''Staff'' and sbrnRoleID=10
+--            from sma_MST_SubRole sr
+--            where sr.sbrnSubRoleId = u.usrnRoleID  and sbrnRoleID=10
 --        )                           as [cssnRoleID],
 --        null                        as [csssComments],
 --        null                        as cssdFromDate,
@@ -135,8 +260,11 @@ Use this block to hardcode staff_1 through staff_10 with "Staff"
 --END
 --GO
 
+
+
+
 /* ------------------------------------------------------------------------------
-staff_1 = 
+Use this block for manual inserts
 */ ------------------------------------------------------------------------------
 
 --insert into sma_TRN_caseStaff
@@ -161,7 +289,7 @@ staff_1 =
 --			select
 --				sbrnSubRoleId
 --			from sma_MST_SubRole
---			where sbrsDscrptn = 'Assigned Attorney'
+--			where sbrsDscrptn = 'Assigned Attorney'		-- fill out the correct role
 --				and sbrnRoleID = 10
 --		)				as [cssnRoleID],
 --		null			as [csssComments],
@@ -177,350 +305,8 @@ staff_1 =
 --		on CAS.cassCaseNumber = C.casenum
 --	inner join [sma_MST_Users] U
 --		on (U.source_id = C.staff_1)
+--go
 
-/* ------------------------------------------------------------------------------
-staff_2 = 
-*/ ------------------------------------------------------------------------------
-
---insert into sma_TRN_caseStaff
---	(
---		[cssnCaseID],
---		[cssnStaffID],
---		[cssnRoleID],
---		[csssComments],
---		[cssdFromDate],
---		[cssdToDate],
---		[cssnRecUserID],
---		[cssdDtCreated],
---		[cssnModifyUserID],
---		[cssdDtModified],
---		[cssnLevelNo]
---	)
---	select
---		CAS.casnCaseID  as [cssnCaseID],
---		U.usrnContactID as [cssnStaffID]
---		,
---		(
---			select
---				sbrnSubRoleId
---			from sma_MST_SubRole
---			where sbrsDscrptn = 'Case Manager'
---				and sbrnRoleID = 10
---		)				as [cssnRoleID],
---		null			as [csssComments],
---		null			as cssdFromDate,
---		null			as cssdToDate,
---		368				as cssnRecUserID,
---		GETDATE()		as [cssdDtCreated],
---		null			as [cssnModifyUserID],
---		null			as [cssdDtModified],
---		0				as cssnLevelNo
---	from [JohnSalazar_Needles].[dbo].[cases_Indexed] C
---	join [sma_TRN_cases] CAS
---		on CAS.cassCaseNumber = C.casenum
---	join [sma_MST_Users] U
---		on (U.source_id = C.staff_2)
-
-/* ------------------------------------------------------------------------------
-staff_3 = 
-*/ ------------------------------------------------------------------------------
-
---insert into sma_TRN_caseStaff
---	(
---		[cssnCaseID],
---		[cssnStaffID],
---		[cssnRoleID],
---		[csssComments],
---		[cssdFromDate],
---		[cssdToDate],
---		[cssnRecUserID],
---		[cssdDtCreated],
---		[cssnModifyUserID],
---		[cssdDtModified],
---		[cssnLevelNo]
---	)
---	select
---		CAS.casnCaseID  as [cssnCaseID],
---		U.usrnContactID as [cssnStaffID]
---		,
---		(
---			select
---				sbrnSubRoleId
---			from sma_MST_SubRole
---			where sbrsDscrptn = 'Secondary Case Manager'
---				and sbrnRoleID = 10
---		)				as [cssnRoleID],
---		null			as [csssComments],
---		null			as cssdFromDate,
---		null			as cssdToDate,
---		368				as cssnRecUserID,
---		GETDATE()		as [cssdDtCreated],
---		null			as [cssnModifyUserID],
---		null			as [cssdDtModified],
---		0				as cssnLevelNo
---	from [JohnSalazar_Needles].[dbo].[cases_Indexed] C
---	join [sma_TRN_cases] CAS
---		on CAS.cassCaseNumber = C.casenum
---	join [sma_MST_Users] U
---		on (U.source_id = C.staff_3)
-
-/* ------------------------------------------------------------------------------
-staff_4 = 
-*/ ------------------------------------------------------------------------------
-
---insert into sma_TRN_caseStaff
---	(
---		[cssnCaseID],
---		[cssnStaffID],
---		[cssnRoleID],
---		[csssComments],
---		[cssdFromDate],
---		[cssdToDate],
---		[cssnRecUserID],
---		[cssdDtCreated],
---		[cssnModifyUserID],
---		[cssdDtModified],
---		[cssnLevelNo]
---	)
---	select
---		CAS.casnCaseID  as [cssnCaseID],
---		U.usrnContactID as [cssnStaffID],
---		(
---			select
---				sbrnSubRoleId
---			from sma_MST_SubRole
---			where sbrsDscrptn = 'Litigation Staff'
---				and sbrnRoleID = 10
---		)				as [cssnRoleID],
---		null			as [csssComments],
---		null			as cssdFromDate,
---		null			as cssdToDate,
---		368				as cssnRecUserID,
---		GETDATE()		as [cssdDtCreated],
---		null			as [cssnModifyUserID],
---		null			as [cssdDtModified],
---		0				as cssnLevelNo
---	from [JohnSalazar_Needles].[dbo].[cases_Indexed] C
---	inner join [sma_TRN_cases] CAS
---		on CAS.cassCaseNumber = C.casenum
---	inner join [sma_MST_Users] U
---		on (U.source_id = C.staff_4)
-
-/* ------------------------------------------------------------------------------
-staff_5 = 
-*/ ------------------------------------------------------------------------------
-
---insert into sma_TRN_caseStaff 
---(
---       [cssnCaseID]
---      ,[cssnStaffID]
---      ,[cssnRoleID]
---      ,[csssComments]
---      ,[cssdFromDate]
---      ,[cssdToDate]
---      ,[cssnRecUserID]
---      ,[cssdDtCreated]
---      ,[cssnModifyUserID]
---      ,[cssdDtModified]
---      ,[cssnLevelNo]
---)
---select 
---	CAS.casnCaseID			  as [cssnCaseID],
---	U.usrnContactID		  as [cssnStaffID],
---	(select sbrnSubRoleId from sma_MST_SubRole where sbrsDscrptn='Staff' and sbrnRoleID=10 )	 as [cssnRoleID],
---	null					  as [csssComments],
---	null					  as cssdFromDate,
---	null					  as cssdToDate,
---	368					  as cssnRecUserID,
---	getdate()				  as [cssdDtCreated],
---	null					  as [cssnModifyUserID],
---	null					  as [cssdDtModified],
---	0					  as cssnLevelNo
---FROM [JohnSalazar_Needles].[dbo].[cases_Indexed] C
---inner join [JohnSalazar_SA].[dbo].[sma_TRN_cases] CAS on CAS.cassCaseNumber = C.casenum
---inner join [JohnSalazar_SA].[dbo].[sma_MST_Users] U on ( U.saga = C.staff_5 )
---*/
-
-/* ------------------------------------------------------------------------------
-staff_6 = Managing Attorney
-*/ ------------------------------------------------------------------------------
-
---insert into sma_TRN_caseStaff
---	(
---		[cssnCaseID],
---		[cssnStaffID],
---		[cssnRoleID],
---		[csssComments],
---		[cssdFromDate],
---		[cssdToDate],
---		[cssnRecUserID],
---		[cssdDtCreated],
---		[cssnModifyUserID],
---		[cssdDtModified],
---		[cssnLevelNo]
---	)
---	select
---		CAS.casnCaseID  as [cssnCaseID],
---		U.usrnContactID as [cssnStaffID],
---		(
---			select
---				sbrnSubRoleId
---			from sma_MST_SubRole
---			where sbrsDscrptn = 'Managing Attorney'
---				and sbrnRoleID = 10
---		)				as [cssnRoleID],
---		null			as [csssComments],
---		null			as cssdFromDate,
---		null			as cssdToDate,
---		368				as cssnRecUserID,
---		GETDATE()		as [cssdDtCreated],
---		null			as [cssnModifyUserID],
---		null			as [cssdDtModified],
---		0				as cssnLevelNo
---	from [JohnSalazar_Needles].[dbo].[cases_Indexed] C
---	join [sma_TRN_cases] CAS
---		on CAS.cassCaseNumber = C.casenum
---	join [sma_MST_Users] U
---		on (U.source_id = C.staff_6)
-
-
-/* ------------------------------------------------------------------------------
-staff_7 = 
-*/ ------------------------------------------------------------------------------
-
---insert into sma_TRN_caseStaff 
---(
---       [cssnCaseID]
---      ,[cssnStaffID]
---      ,[cssnRoleID]
---      ,[csssComments]
---      ,[cssdFromDate]
---      ,[cssdToDate]
---      ,[cssnRecUserID]
---      ,[cssdDtCreated]
---      ,[cssnModifyUserID]
---      ,[cssdDtModified]
---      ,[cssnLevelNo]
---)
---select 
---	CAS.casnCaseID			  as [cssnCaseID],
---	U.usrnContactID		  as [cssnStaffID],
---	(select sbrnSubRoleId from sma_MST_SubRole where sbrsDscrptn='Staff' and sbrnRoleID=10 )	 as [cssnRoleID],
---	null					  as [csssComments],
---	null					  as cssdFromDate,
---	null					  as cssdToDate,
---	368					  as cssnRecUserID,
---	getdate()				  as [cssdDtCreated],
---	null					  as [cssnModifyUserID],
---	null					  as [cssdDtModified],
---	0					  as cssnLevelNo
---FROM [JohnSalazar_Needles].[dbo].[cases_Indexed] C
---inner join [JohnSalazar_SA].[dbo].[sma_TRN_cases] CAS on CAS.cassCaseNumber = C.casenum
---inner join [JohnSalazar_SA].[dbo].[sma_MST_Users] U on ( U.saga = C.staff_7 )
-
-
-/* ------------------------------------------------------------------------------
-staff_8 = 
-*/ ------------------------------------------------------------------------------
-
---insert into sma_TRN_caseStaff 
---(
---       [cssnCaseID]
---      ,[cssnStaffID]
---      ,[cssnRoleID]
---      ,[csssComments]
---      ,[cssdFromDate]
---      ,[cssdToDate]
---      ,[cssnRecUserID]
---      ,[cssdDtCreated]
---      ,[cssnModifyUserID]
---      ,[cssdDtModified]
---      ,[cssnLevelNo]
---)
---select 
---	CAS.casnCaseID			  as [cssnCaseID],
---	U.usrnContactID		  as [cssnStaffID],
---	(select sbrnSubRoleId from sma_MST_SubRole where sbrsDscrptn='Staff' and sbrnRoleID=10 )	 as [cssnRoleID],
---	null					  as [csssComments],
---	null					  as cssdFromDate,
---	null					  as cssdToDate,
---	368					  as cssnRecUserID,
---	getdate()				  as [cssdDtCreated],
---	null					  as [cssnModifyUserID],
---	null					  as [cssdDtModified],
---	0					  as cssnLevelNo
---FROM [JohnSalazar_Needles].[dbo].[cases_Indexed] C
---inner join [JohnSalazar_SA].[dbo].[sma_TRN_cases] CAS on CAS.cassCaseNumber = C.casenum
---inner join [JohnSalazar_SA].[dbo].[sma_MST_Users] U on ( U.saga = C.staff_8 )
---*/
-
-/* ------------------------------------------------------------------------------
-staff_9 = 
-*/ ------------------------------------------------------------------------------
-
---INSERT INTO sma_TRN_caseStaff 
---(
---       [cssnCaseID]
---      ,[cssnStaffID]
---      ,[cssnRoleID]
---      ,[csssComments]
---      ,[cssdFromDate]
---      ,[cssdToDate]
---      ,[cssnRecUserID]
---      ,[cssdDtCreated]
---      ,[cssnModifyUserID]
---      ,[cssdDtModified]
---      ,[cssnLevelNo]
---)
---SELECT 
---	CAS.casnCaseID			  as [cssnCaseID],
---	U.usrnContactID		  as [cssnStaffID],
---	(select sbrnSubRoleId from sma_MST_SubRole where sbrsDscrptn='Intake Paralegal' and sbrnRoleID=10 )	 as [cssnRoleID],
---	null					  as [csssComments],
---	null					  as cssdFromDate,
---	null					  as cssdToDate,
---	368					  as cssnRecUserID,
---	getdate()				  as [cssdDtCreated],
---	null					  as [cssnModifyUserID],
---	null					  as [cssdDtModified],
---	0					  as cssnLevelNo
---FROM [JohnSalazar_Needles].[dbo].[cases_Indexed] C
---JOIN sma_TRN_cases CAS on CAS.cassCaseNumber = C.casenum
---JOIN sma_MST_Users U on ( U.saga = C.staff_9 )
-
-/* ------------------------------------------------------------------------------
-staff_10 = 
-*/ ------------------------------------------------------------------------------
-
---insert into sma_TRN_caseStaff 
---(
---       [cssnCaseID]
---      ,[cssnStaffID]
---      ,[cssnRoleID]
---      ,[csssComments]
---      ,[cssdFromDate]
---      ,[cssdToDate]
---      ,[cssnRecUserID]
---      ,[cssdDtCreated]
---      ,[cssnModifyUserID]
---      ,[cssdDtModified]
---      ,[cssnLevelNo]
---)
---select 
---	CAS.casnCaseID			  as [cssnCaseID],
---	U.usrnContactID		  as [cssnStaffID],
---	(select sbrnSubRoleId from sma_MST_SubRole where sbrsDscrptn='Staff' and sbrnRoleID=10 )	 as [cssnRoleID],
---	null					  as [csssComments],
---	null					  as cssdFromDate,
---	null					  as cssdToDate,
---	368					  as cssnRecUserID,
---	getdate()				  as [cssdDtCreated],
---	null					  as [cssnModifyUserID],
---	null					  as [cssdDtModified],
---	0					  as cssnLevelNo
---FROM [JohnSalazar_Needles].[dbo].[cases_Indexed] C
---inner join [JohnSalazar_SA].[dbo].[sma_TRN_cases] CAS on CAS.cassCaseNumber = C.casenum
---inner join [JohnSalazar_SA].[dbo].[sma_MST_Users] U on ( U.saga = C.staff_10 )
 
 alter table [sma_TRN_caseStaff] enable trigger all
 go
