@@ -1,35 +1,21 @@
-/* ######################################################################################
-description: Create note records from needles..value_notes
-
-steps:
-	- create note types from distinct instances of value_notes.topic
-	- insert trn_notes
-
-dependencies:
-	- sma_TRN_Cases
-	- sma_MST_users
-
-notes:
-	- value_notes appears to contain comments about specific value transactions using key value_num
-	- value transactions may be mapped to disbursements, lien tracking, etc
-	- each of those locations may or may not have a comment/description field large enough to hold the data from value_notes
-	- therefore it is cleaner & easier to import these as TRN_Notes instead
-	- but it technically should be possible/feasible to use value_notes to update a comment or description field for the associated value transaction
-
-#########################################################################################
-*/
-
-use [JohnSalazar_SA]
+use JohnSalazar_SA
 go
 
 /* ------------------------------------------------------------------------------
-Note Types
+Create Note Types
 */
 insert into [sma_MST_NoteTypes]
 	(
 		nttsDscrptn,
 		nttsNoteText
 	)
+	-- from [case_notes].[topic]
+	select distinct
+		topic as nttsdscrptn,
+		topic as nttsnotetext
+	from [JohnSalazar_Needles].[dbo].[case_notes_Indexed]
+	union all
+	-- from [value_notes].[topic]
 	select distinct
 		vn.topic,
 		vn.topic
@@ -39,21 +25,85 @@ insert into [sma_MST_NoteTypes]
 		nttsDscrptn,
 		nttsNoteText
 	from [sma_MST_NoteTypes]
+go
 
-
----
+/* ------------------------------------------------------------------------------
+Insert Notes 
+*/
 alter table [sma_TRN_Notes] disable trigger all
 go
 
----
---SELECT nttsDscrptn, count(*)
---FROM [sma_MST_NoteTypes]
---group by nttsDscrptn
---having count(*) > 1
-
-/* ------------------------------------------------------------------------------
-Insert Notes
-*/
+-- from [case_notes_indexed]
+insert into [sma_TRN_Notes]
+	(
+		[notnCaseID],
+		[notnNoteTypeID],
+		[notmDescription],
+		[notmPlainText],
+		[notnContactCtgID],
+		[notnContactId],
+		[notsPriority],
+		[notnFormID],
+		[notnRecUserID],
+		[notdDtCreated],
+		[notnModifyUserID],
+		[notdDtModified],
+		[notnLevelNo],
+		[notdDtInserted],
+		[WorkPlanItemId],
+		[notnSubject],
+		[saga],
+		[source_id],
+		[source_db],
+		[source_ref]
+	)
+	select
+		casnCaseID						as [notncaseid],
+		(
+			select
+				MIN(nttnNoteTypeID)
+			from [sma_MST_NoteTypes]
+			where nttsDscrptn = n.topic
+		)								as [notnnotetypeid],
+		note							as [notmdescription],
+		REPLACE(note, CHAR(10), '<br>') as [notmplaintext],
+		0								as [notncontactctgid],
+		null							as [notncontactid],
+		null							as [notspriority],
+		null							as [notnformid],
+		u.usrnUserID					as [notnrecuserid],
+		case
+			when n.note_date between '1900-01-01' and '2079-06-06' and
+				CONVERT(TIME, ISNULL(n.note_time, '00:00:00')) <> CONVERT(TIME, '00:00:00')
+				then CAST(CAST(n.note_date as DATETIME) + CAST(n.note_time as DATETIME) as DATETIME)
+			when n.note_date between '1900-01-01' and '2079-06-06' and
+				CONVERT(TIME, ISNULL(n.note_time, '00:00:00')) = CONVERT(TIME, '00:00:00')
+				then CAST(CAST(n.note_date as DATETIME) + CAST('00:00:00' as DATETIME) as DATETIME)
+			else '1900-01-01'
+		end								as notddtcreated,
+		null							as [notnmodifyuserid],
+		null							as notddtmodified,
+		null							as [notnlevelno],
+		null							as [notddtinserted],
+		null							as [workplanitemid],
+		null							as [notnsubject],
+		note_key						as saga,
+		null							as [source_id],
+		'needles'						as [source_db],
+		'case_notes_indexed'			as [source_ref]
+	--select *
+	from [JohnSalazar_Needles].[dbo].[case_notes_Indexed] n
+	join [sma_TRN_Cases] c
+		on c.cassCaseNumber = CONVERT(VARCHAR, n.case_num)
+	left join [sma_MST_Users] u
+		on u.source_id = n.staff_id
+	left join [sma_TRN_Notes] ns
+		on ns.saga = note_key
+	where
+		ns.notnNoteID is null
+go
+-------------------------------------------------
+-- from [value_notes]
 insert into [sma_TRN_Notes]
 	(
 		[notnCaseID],
@@ -122,9 +172,9 @@ go
 alter table [sma_TRN_Notes] enable trigger all
 go
 
------------------------------------------
---INSERT RELATED TO FIELD FOR NOTES
------------------------------------------
+/* ------------------------------------------------------------------------------
+Insert "Related To"
+*/ ------------------------------------------------------------------------------
 insert into sma_TRN_NoteContacts
 	(
 		NoteID,
