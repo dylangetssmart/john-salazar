@@ -1,20 +1,3 @@
-/* ######################################################################################
-description: Creates an indexed version of needles..case_notes
-
-steps:
-	-
-
-usage_instructions:
-	-
-
-dependencies:
-	- 
-
-notes:
-	-
-#########################################################################################
-*/
-
 USE JohnSalazar_Needles
 GO
 
