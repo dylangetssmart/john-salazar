@@ -1,10 +1,3 @@
-/*---
-priority: 1
-sequence: 1
-description: Create office record
-data-source:
----*/
-
 use [JohnSalazar_SA]
 go
 
@@ -83,13 +76,14 @@ insert into conversion.insurance_contacts_helper
 	left join IndvOrgContacts_Indexed ioc2
 		on ioc2.saga = ins.adjuster_id
 			and ISNULL(ins.adjuster_id, 0) <> 0
-	join [sma_MST_IndvContacts] i
+	LEFT join [sma_MST_IndvContacts] i
 		on i.cinsLastName = ins.insured
 			and i.source_id = ins.insured
 			and i.source_ref = 'insurance'
-	join [sma_MST_AllContactInfo] info
+	LEFT join [sma_MST_AllContactInfo] info
 		on info.ContactId = i.cinnContactID
 			and info.ContactCtg = i.cinnContactCtg
+	--where ins.case_num = 213581
 go
 
 dbcc dbreindex ('conversion.insurance_contacts_helper', ' ', 90) with no_infomsgs
