@@ -1,9 +1,3 @@
-/*---
-group: load
-order: 70
-description: Update contact types for attorneys
----*/
-
 use [JohnSalazar_SA]
 go
 
@@ -93,7 +87,22 @@ insert into sma_TRN_Notes
 ---(3)--- 
 insert into sma_TRN_Notes
 	(
-	notnCaseID, notnNoteTypeID, notmDescription, notmPlainText, notnContactCtgID, notnContactId, notsPriority, notnFormID, notnRecUserID, notdDtCreated, notnModifyUserID, notdDtModified, saga, [source_id], [source_db], [source_ref]
+		notnCaseID,
+		notnNoteTypeID,
+		notmDescription,
+		notmPlainText,
+		notnContactCtgID,
+		notnContactId,
+		notsPriority,
+		notnFormID,
+		notnRecUserID,
+		notdDtCreated,
+		notnModifyUserID,
+		notdDtModified,
+		saga,
+		[source_id],
+		[source_db],
+		[source_ref]
 	)
 	select
 		0				 as notnCaseID,
@@ -109,8 +118,15 @@ insert into sma_TRN_Notes
 		IOC.CID			 as notnContactId,
 		'Normal'		 as notsPriority,
 		0				 as notnFormID,
-		368				 as notnRecUserID,
-		GETDATE()		 as notdDtCreated,
+		-- fall back to 368 when staff_id not found in users
+		COALESCE((
+			select
+				u.usrnUserID
+			from sma_MST_Users u
+			where u.source_id = pn.staff_id
+		), 368)			 
+		as notnRecUserID,
+		pn.note_date	 as notdDtCreated,
 		null			 as notnModifyUserID,
 		null			 as notdDtModified,
 		pn.note_key		 as saga,
@@ -124,7 +140,3 @@ insert into sma_TRN_Notes
 ---
 alter table [sma_TRN_Notes] enable trigger all
 go
----
-
-
-
