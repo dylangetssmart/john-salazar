@@ -1,10 +1,3 @@
-/*---
-priority: 1
-sequence: 1
-description: Create office record
-data-source:
----*/
-
 use [JohnSalazar_SA]
 go
 

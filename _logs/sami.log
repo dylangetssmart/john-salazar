@@ -67,3 +67,14 @@
 2025-05-14 10:27:34,344 - DEBUG - user_config.py - load_user_config - 47 - keys_and_prompts={'SERVER': 'Enter the SQL Server name', 'TARGET_DB': 'Enter the SQL database name'}
 2025-05-14 10:27:34,344 - DEBUG - user_config.py - get_or_prompt_env - 24 - SERVER : DylanS\MSSQLSERVER2022
 2025-05-14 10:27:34,344 - DEBUG - user_config.py - get_or_prompt_env - 24 - TARGET_DB : JohnSalazar_SA
+2025-07-08 11:01:46,520 - DEBUG - user_config.py - <module> - 11 - ENV_PATH: D:\john-salazar\.env
+2025-07-08 11:02:38,999 - DEBUG - user_config.py - <module> - 11 - ENV_PATH: D:\john-salazar\.env
+2025-07-08 11:03:01,928 - DEBUG - user_config.py - <module> - 11 - ENV_PATH: D:\john-salazar\.env
+2025-07-08 11:03:19,091 - DEBUG - user_config.py - <module> - 11 - ENV_PATH: D:\john-salazar\.env
+2025-07-08 11:16:30,164 - DEBUG - user_config.py - <module> - 11 - ENV_PATH: D:\john-salazar\.env
+2025-07-08 11:47:52,030 - DEBUG - user_config.py - <module> - 11 - ENV_PATH: D:\john-salazar\.env
+2025-07-08 11:53:52,040 - DEBUG - user_config.py - <module> - 11 - ENV_PATH: D:\john-salazar\.env
+2025-07-08 11:55:14,074 - DEBUG - user_config.py - <module> - 11 - ENV_PATH: D:\john-salazar\.env
+2025-07-08 11:56:38,961 - DEBUG - user_config.py - <module> - 11 - ENV_PATH: D:\john-salazar\.env
+2025-07-08 12:02:20,316 - DEBUG - user_config.py - <module> - 11 - ENV_PATH: D:\john-salazar\.env
+2025-07-08 12:04:39,845 - DEBUG - user_config.py - <module> - 11 - ENV_PATH: D:\john-salazar\.env

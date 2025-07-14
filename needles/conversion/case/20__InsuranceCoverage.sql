@@ -76,14 +76,14 @@ insert into conversion.insurance_contacts_helper
 	left join IndvOrgContacts_Indexed ioc2
 		on ioc2.saga = ins.adjuster_id
 			and ISNULL(ins.adjuster_id, 0) <> 0
-	LEFT join [sma_MST_IndvContacts] i
+	left join [sma_MST_IndvContacts] i
 		on i.cinsLastName = ins.insured
 			and i.source_id = ins.insured
 			and i.source_ref = 'insurance'
-	LEFT join [sma_MST_AllContactInfo] info
+	left join [sma_MST_AllContactInfo] info
 		on info.ContactId = i.cinnContactID
 			and info.ContactCtg = i.cinnContactCtg
-	--where ins.case_num = 213581
+--where ins.case_num = 213581
 go
 
 dbcc dbreindex ('conversion.insurance_contacts_helper', ' ', 90) with no_infomsgs
@@ -247,6 +247,15 @@ insert into [sma_TRN_InsuranceCoverage]
 		ins.policy				 as [incspolicyno],
 		ins.claim				 as [incsclaimno],
 		null					 as [incnstackedtimes],
+		--''						 as [incscomments],
+		ISNULL('Dec Sheet:' + NULLIF(CAST(ud.Dec_Sheet as VARCHAR), '') + CHAR(13), '') +
+		ISNULL('Policy:' + NULLIF(CAST(ud.Policy as VARCHAR), '') + CHAR(13), '') +
+		ISNULL('Photos:' + NULLIF(CAST(ud.Photos as VARCHAR), '') + CHAR(13), '') +
+		ISNULL('Recorded Stmt:' + NULLIF(CAST(ud.Recorded_Stmt as VARCHAR), '') + CHAR(13), '') +
+		ISNULL('Payment Ledger:' + NULLIF(CAST(ud.Payment_Ledger as VARCHAR), '') + CHAR(13), '') +
+		ISNULL('Ins Info:' + NULLIF(CAST(ud.Ins_Info as VARCHAR), '') + CHAR(13), '') +
+		ISNULL('Contract Signed:' + NULLIF(CAST(ud.Contract_Signed as VARCHAR), '') + CHAR(13), '') +
+		ISNULL('Paid Amount:' + NULLIF(CAST(ud.Paid_Amount as VARCHAR), '') + CHAR(13), '') +
 		''						 as [incscomments],
 		map.incninsured			 as [incninsured],
 		ins.actual				 as [incncovgamt],
@@ -282,6 +291,7 @@ insert into [sma_TRN_InsuranceCoverage]
 	from [JohnSalazar_Needles].[dbo].[insurance_Indexed] ins
 	left join [JohnSalazar_Needles].[dbo].[user_insurance_data] ud
 		on ins.insurance_id = ud.insurance_id
+			and ins.case_num = ud.casenum
 	--LEFT JOIN InsuranceLimMap LIM on LIM.case_num = ins.case_num and LIM.insurer_ID = ins.insurer_id
 	join conversion.insurance_contacts_helper map
 		on ins.insurance_id = map.insurance_id
@@ -354,6 +364,15 @@ insert into [sma_TRN_InsuranceCoverage]
 		ins.policy				 as [incspolicyno],
 		ins.claim				 as [incsclaimno],
 		null					 as [incnstackedtimes],
+		--''						 as [incscomments],
+		ISNULL('Dec Sheet:' + NULLIF(CAST(ud.Dec_Sheet as VARCHAR), '') + CHAR(13), '') +
+		ISNULL('Policy:' + NULLIF(CAST(ud.Policy as VARCHAR), '') + CHAR(13), '') +
+		ISNULL('Photos:' + NULLIF(CAST(ud.Photos as VARCHAR), '') + CHAR(13), '') +
+		ISNULL('Recorded Stmt:' + NULLIF(CAST(ud.Recorded_Stmt as VARCHAR), '') + CHAR(13), '') +
+		ISNULL('Payment Ledger:' + NULLIF(CAST(ud.Payment_Ledger as VARCHAR), '') + CHAR(13), '') +
+		ISNULL('Ins Info:' + NULLIF(CAST(ud.Ins_Info as VARCHAR), '') + CHAR(13), '') +
+		ISNULL('Contract Signed:' + NULLIF(CAST(ud.Contract_Signed as VARCHAR), '') + CHAR(13), '') +
+		ISNULL('Paid Amount:' + NULLIF(CAST(ud.Paid_Amount as VARCHAR), '') + CHAR(13), '') +
 		''						 as [incscomments],
 		map.incninsured			 as [incninsured],
 		ins.actual				 as [incncovgamt],
@@ -387,6 +406,7 @@ insert into [sma_TRN_InsuranceCoverage]
 	from [JohnSalazar_Needles].[dbo].[insurance_Indexed] ins
 	left join [JohnSalazar_Needles].[dbo].[user_insurance_data] ud
 		on ins.insurance_id = ud.insurance_id
+			and ins.case_num = ud.casenum
 	--LEFT JOIN InsuranceLimMap LIM on LIM.case_num = ins.case_num and LIM.insurer_ID = ins.insurer_id
 	join conversion.insurance_contacts_helper map
 		on ins.insurance_id = map.insurance_id
