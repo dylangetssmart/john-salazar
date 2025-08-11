@@ -20,11 +20,11 @@ Step 1: Create helper table to collect data required for inserts
 --------------------------------------------------------------------------- */
 --- [value_tab_Lien_Helper]
 if exists (
-		select
-			*
-		from sys.objects
-		where name = 'user_tab_Lien_Helper'
-			and TYPE = 'U'
+	 select
+		 *
+	 from sys.objects
+	 where name = 'user_tab_Lien_Helper'
+		 and TYPE = 'U'
 	)
 begin
 	drop table user_tab_Lien_Helper
@@ -67,8 +67,7 @@ insert into user_tab_Lien_Helper
 		casnCaseID,
 		PlaintiffID,
 		Paid
-	)
-	select
+	) select
 		d.case_id	   as case_id,		-- needles case
 		d.tab_id	   as tab_id,		-- needles records TAB item
 		n.user_name	   as ProviderNameId,
@@ -85,10 +84,10 @@ insert into user_tab_Lien_Helper
 		on N.tab_id = D.tab_id
 			and N.user_name <> 0
 			and N.ref_num = (
-				select top 1
-					M.ref_num
-				from [JohnSalazar_Needles].[dbo].[user_tab3_matter] M
-				where M.field_title = 'Lienholder Name'
+			 select top 1
+				 M.ref_num
+			 from [JohnSalazar_Needles].[dbo].[user_tab3_matter] M
+			 where M.field_title = 'Lienholder Name'
 			)
 	join [IndvOrgContacts_Indexed] IOC
 		on IOC.SAGA = N.user_name
@@ -134,8 +133,7 @@ insert into sma_MST_LienType
 	(
 		[lntsCode],
 		[lntsDscrptn]
-	)
-	select distinct
+	) select distinct
 		'CONVERSION',
 		utd.Type_of_Lien
 	from JohnSalazar_Needles..user_tab3_data utd
@@ -207,31 +205,30 @@ insert into [sma_TRN_Lienors]
 		[source_id],
 		[source_db],
 		[source_ref]
-	)
-	select
-		MAP.casnCaseID							 as [lnrnCaseID],
+	) select
+		MAP.casnCaseID							as [lnrnCaseID],
 		(
-			select top 1
-				lntnLienTypeID
-			from [sma_MST_LienType]
-			where lntsDscrptn = (
-				utd.Type_of_Lien
-				)
-		)										 as [lnrnLienorTypeID],
-		MAP.ProviderCTG							 as [lnrnLienorContactCtgID],
-		MAP.ProviderCID							 as [lnrnLienorContactID],
-		MAP.ProviderAID							 as [lnrnLienorAddressID],
-		0										 as [lnrnLienorRelaContactID],
+		 select top 1
+			 lntnLienTypeID
+		 from [sma_MST_LienType]
+		 where lntsDscrptn = (
+			 utd.Type_of_Lien
+			 )
+		)										as [lnrnLienorTypeID],
+		MAP.ProviderCTG							as [lnrnLienorContactCtgID],
+		MAP.ProviderCID							as [lnrnLienorContactID],
+		MAP.ProviderAID							as [lnrnLienorAddressID],
+		0										as [lnrnLienorRelaContactID],
 		(
-			select
-				plnnPlaintiffID
-			from [sma_TRN_Plaintiff]
-			where plnnCaseID = casnCaseID
-				and plnbIsPrimary = 1
-		)										 as [lnrnPlaintiffID],
+		 select
+			 plnnPlaintiffID
+		 from [sma_TRN_Plaintiff]
+		 where plnnCaseID = casnCaseID
+			 and plnbIsPrimary = 1
+		)										as [lnrnPlaintiffID],
 		CAST(utd.Lien_Amount as NUMERIC(18, 2)) as [lnrnUnCnfrmdLienAmount],
-		0										 as [lnrnCnfrmdLienAmount],
-		0										 as [lnrnNegLienAmount],
+		0										as [lnrnCnfrmdLienAmount],
+		0										as [lnrnNegLienAmount],
 		ISNULL('County: ' + ISNULL(utd.County, '') + CHAR(13), '') +
 		ISNULL('State: ' + ISNULL(utd.State, '') + CHAR(13), '') +
 		ISNULL('FUp Notes: ' + ISNULL(utd.FUp_Notes, '') + CHAR(13), '') +
@@ -239,15 +236,15 @@ insert into [sma_TRN_Lienors]
 		ISNULL('Lien Filed w County: ' + ISNULL(utd.Lien_Filed_w_County, '') + CHAR(13), '') +
 		ISNULL('Date Lien Filed w County: ' + ISNULL(CONVERT(VARCHAR, utd.Date_Lien_Filed_w_County), '') + CHAR(13), '') +
 		ISNULL('Value Code: ' + ISNULL(utd.Value_Code, '') + CHAR(13), '') +
-		''										 as [lnrsComments],
-		368										 as [lnrnRecUserID],
-		GETDATE()								 as [lnrdDtCreated],
-		0										 as [lnrnFinal],
-		utd.Lien_Notice_Received				 as [lnrdNoticeDate],
-		null									 as [saga],
-		null									 as [source_id],
-		'needles'								 as [source_db],
-		'user_tab3_data'						 as [source_ref]
+		''										as [lnrsComments],
+		368										as [lnrnRecUserID],
+		GETDATE()								as [lnrdDtCreated],
+		0										as [lnrnFinal],
+		utd.Lien_Notice_Received				as [lnrdNoticeDate],
+		null									as [saga],
+		null									as [source_id],
+		'needles'								as [source_db],
+		'user_tab3_data'						as [source_ref]
 	--select *
 	from [JohnSalazar_Needles].[dbo].user_tab3_data utd
 	--from [JohnSalazar_Needles].[dbo].[value_Indexed] V
@@ -269,18 +266,19 @@ insert into [sma_TRN_LienDetails]
 	(
 		lndnLienorID,
 		lndnLienTypeID,
+		lndnUnCnfrmdLienAmount,
 		lndnCnfrmdLienAmount,
 		lndsRefTable,
 		lndnRecUserID,
 		lnddDtCreated
-	)
-	select
-		lnrnLienorID		 as lndnLienorID, --> same as lndnRecordID
-		lnrnLienorTypeID	 as lndnLienTypeID,
-		lnrnCnfrmdLienAmount as lndnCnfrmdLienAmount,
-		'sma_TRN_Lienors'	 as lndsRefTable,
-		368					 as lndnRecUserID,
-		GETDATE()			 as lnddDtCreated
+	) select
+		lnrnLienorID			 as lndnLienorID, --> same as lndnRecordID
+		lnrnLienorTypeID		 as lndnLienTypeID,
+		[lnrnUnCnfrmdLienAmount] as lndnUnCnfrmdLienAmount,
+		lnrnCnfrmdLienAmount	 as lndnCnfrmdLienAmount,
+		'sma_TRN_Lienors'		 as lndsRefTable,
+		368						 as lndnRecUserID,
+		GETDATE()				 as lnddDtCreated
 	from [sma_TRN_Lienors]
 
 alter table [sma_TRN_LienDetails] enable trigger all

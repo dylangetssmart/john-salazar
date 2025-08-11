@@ -1,6 +1,16 @@
 use JohnSalazar_SA
 go
 
+---
+alter table [sma_TRN_SpDamages] disable trigger all
+go
+
+alter table [sma_TRN_SpecialDamageAmountPaid] disable trigger all
+go
+
+---
+
+
 /* ------------------------------------------------------------------------------
 helper tables
 */ ------------------------------------------------------------------------------
@@ -27,11 +37,11 @@ end
 
 --- [value_tab_spDamages_Helper]
 if exists (
-		select
-			*
-		from sys.objects
-		where name = 'value_tab_spDamages_Helper'
-			and type = 'U'
+	 select
+		 *
+	 from sys.objects
+	 where name = 'value_tab_spDamages_Helper'
+		 and type = 'U'
 	)
 begin
 	drop table value_tab_spDamages_Helper
@@ -72,8 +82,7 @@ insert into [value_tab_spDamages_Helper]
 		ProviderAID,
 		casnCaseID,
 		PlaintiffID
-	)
-	select
+	) select
 		V.case_id	   as case_id,	        -- needles case
 		V.value_id	   as tab_id,		    -- needles records TAB item
 		V.provider	   as ProviderNameId,
@@ -90,11 +99,7 @@ insert into [value_tab_spDamages_Helper]
 		on IOC.SAGA = V.provider
 			and ISNULL(V.provider, 0) <> 0
 	where
-		code in (
-			select
-				code
-			from conversion.value_specialDamage vd
-		)
+		code in (select code from conversion.value_specialDamage vd)
 
 ---
 dbcc dbreindex ('value_tab_spDamages_Helper', ' ', 90) with no_infomsgs
@@ -103,10 +108,10 @@ go
 
 --- value_tab_Multi_Party_Helper_Temp
 if exists (
-		select
-			*
-		from sys.objects
-		where Name = 'value_tab_Multi_Party_Helper_Temp'
+	 select
+		 *
+	 from sys.objects
+	 where Name = 'value_tab_Multi_Party_Helper_Temp'
 	)
 begin
 	drop table value_tab_Multi_Party_Helper_Temp
@@ -141,10 +146,10 @@ go
 
 ---
 if exists (
-		select
-			*
-		from sys.objects
-		where Name = 'value_tab_Multi_Party_Helper_Temp'
+	 select
+		 *
+	 from sys.objects
+	 where Name = 'value_tab_Multi_Party_Helper_Temp'
 	)
 begin
 	drop table value_tab_Multi_Party_Helper_Temp
@@ -157,11 +162,11 @@ select
 	V.case_id  as cid,
 	V.value_id as vid,
 	(
-		select
-			plnnPlaintiffID
-		from [sma_TRN_Plaintiff]
-		where plnnCaseID = CAS.casnCaseID
-			and plnbIsPrimary = 1
+	 select
+		 plnnPlaintiffID
+	 from [sma_TRN_Plaintiff]
+	 where plnnCaseID = CAS.casnCaseID
+		 and plnbIsPrimary = 1
 	)		   as plnnPlaintiffID
 into value_tab_Multi_Party_Helper_Temp
 from [JohnSalazar_Needles].[dbo].[value_Indexed] V
@@ -189,10 +194,10 @@ Damage Types [sma_MST_SpecialDamageType]
 
 -- Create Special Damage Type "Other" if it doesn't exist
 if (
-		select
-			COUNT(*)
-		from sma_MST_SpecialDamageType
-		where SpDamageTypeDescription = 'Other'
+	 select
+		 COUNT(*)
+	 from sma_MST_SpecialDamageType
+	 where SpDamageTypeDescription = 'Other'
 	) = 0
 begin
 	insert into sma_MST_SpecialDamageType
@@ -201,8 +206,7 @@ begin
 			IsEditableType,
 			SpDamageTypeCreatedUserID,
 			SpDamageTypeDtCreated
-		)
-		select
+		) select
 			'Other',
 			1,
 			368,
@@ -216,30 +220,23 @@ insert into sma_MST_SpecialDamageSubType
 		SpDamageSubTypeDescription,
 		SpDamageSubTypeDtCreated,
 		SpDamageSubTypeCreatedUserID
-	)
-	select
+	) select
 		(
-			select
-				spdamagetypeid
-			from sma_MST_SpecialDamageType
-			where SpDamageTypeDescription = 'Other'
+		 select
+			 spdamagetypeid
+		 from sma_MST_SpecialDamageType
+		 where SpDamageTypeDescription = 'Other'
 		),
 		vc.[description],
 		GETDATE(),
 		368
 	from [JohnSalazar_Needles]..value_code vc
 	where
-		code in (
-			select
-				code
-			from conversion.value_specialDamage
-		)
+		code in (select code from conversion.value_specialDamage)
 
 /* ------------------------------------------------------------------------------
 Insert Special Damages [sma_TRN_SpDamages]
 */ ------------------------------------------------------------------------------
-alter table [sma_TRN_SpDamages] disable trigger all
-go
 
 insert into [sma_TRN_SpDamages]
 	(
@@ -260,43 +257,40 @@ insert into [sma_TRN_SpDamages]
 		source_id,
 		source_db,
 		source_ref
-	)
-	select distinct
+	) select distinct
 		'CustomDamage'  as spdsRefTable,
 		null			as spdnRecordID,
 		SDH.casnCaseID  as spddCaseID,
 		SDH.PlaintiffID as spddPlaintiff,
 		(
-			select top 1
-				spdamagetypeid
-			from sma_MST_SpecialDamageType
-			where SpDamageTypeDescription = 'Other'
+		 select top 1
+			 spdamagetypeid
+		 from sma_MST_SpecialDamageType
+		 where SpDamageTypeDescription = 'Other'
 		)				as spddDamageType,
 		(
-			select top 1
-				SpDamageSubTypeID
-			from sma_MST_SpecialDamageSubType
-			where SpDamageSubTypeDescription = VC.[description]
-				and spdamagetypeid = (
-					select
-						spdamagetypeid
-					from sma_MST_SpecialDamageType
-					where SpDamageTypeDescription = 'Other'
-				)
+		 select top 1
+			 SpDamageSubTypeID
+		 from sma_MST_SpecialDamageSubType
+		 where SpDamageSubTypeDescription = VC.[description]
+			 and spdamagetypeid = (
+			  select
+				  spdamagetypeid
+			  from sma_MST_SpecialDamageType
+			  where SpDamageTypeDescription = 'Other'
+			 )
 		)				as spddDamageSubType,
 		368				as spdnRecUserID,
 		GETDATE()		as spddDtCreated,
 		0				as spdnLevelNo,
 		V.total_value   as spdnBillAmt,
 		case
-			when V.[start_date] between '1900-01-01' and '2079-06-01'
-				then V.[start_date]
-			else null
+				when V.[start_date] between '1900-01-01' and '2079-06-01' then V.[start_date]
+				else null
 		end				as spddDateFrom,
 		case
-			when V.stop_date between '1900-01-01' and '2079-06-01'
-				then V.stop_date
-			else null
+				when V.stop_date between '1900-01-01' and '2079-06-01' then V.stop_date
+				else null
 		end				as spddDateTo,
 		'Provider: '
 		+ SDH.[ProviderName]
@@ -312,13 +306,137 @@ insert into [sma_TRN_SpDamages]
 	join [value_tab_spDamages_Helper] SDH
 		on V.value_id = SDH.value_id
 	where
-		V.code in (
-			select
-				code
-			from conversion.value_specialDamage
-		)
+		V.code in (select code from conversion.value_specialDamage)
 go
 
+
+/* ------------------------------------------------------------------------------
+Insert Special Damages [user_value_data]
+*/ ------------------------------------------------------------------------------
+
+
+insert into [sma_TRN_SpDamages]
+	(
+		spdsRefTable,
+		spdnRecordID,
+		spddCaseID,
+		spddPlaintiff,
+		spddDamageType,
+		spddDamageSubType,
+		spdnRecUserID,
+		spddDtCreated,
+		spdnLevelNo,
+		spdnBillAmt,
+		spddNegotiatedBillAmt,
+		spddDateFrom,
+		spddDateTo,
+		spdsComments,
+		spdsAccntNo,
+		saga,
+		source_id,
+		source_db,
+		source_ref
+	) select distinct
+		'CustomDamage'		 as spdsRefTable,
+		null				 as spdnRecordID,
+		stc.casnCaseID		 as spddCaseID,
+		(
+		 select
+			 stp.plnnPlaintiffID
+		 from sma_TRN_Plaintiff stp
+		 where stp.plnbIsPrimary = 1
+		)					 as spddPlaintiff,
+		(
+		 select top 1
+			 spdamagetypeid
+		 from sma_MST_SpecialDamageType
+		 where SpDamageTypeDescription = 'Other'
+		)					 as spddDamageType,
+		null				 as spddDamageSubType,
+		368					 as spdnRecUserID,
+		GETDATE()			 as spddDtCreated,
+		0					 as spdnLevelNo,
+		null				 as spdnBillAmt,
+		uvd.Proposed_Balance as spddNegotiatedBillAmt,
+		null				 as spddDateFrom,
+		null				 as spddDateTo,
+		uvd.Comments		 as spdsComments,
+		uvd.Account_#		 as spdsAccntNo,
+		uvd.value_id		 as [saga],
+		'needles'			 as [source_id],
+		null				 as [source_db],
+		'user_value_data'	 as [source_ref]
+	--select *
+	from JohnSalazar_Needles..user_value_data uvd
+	join sma_TRN_Cases stc
+		on stc.cassCaseNumber = CONVERT(VARCHAR, uvd.case_id)
+
+	join [JohnSalazar_Needles].[dbo].[value_Indexed] V
+		on uvd.value_id = v.value_id
+	where
+		v.code = 'CEX'
+go
+
+/* ------------------------------------------------------------------------------
+Special Damage Payments from [user_value_data]
+*/ ------------------------------------------------------------------------------
+
+insert into [dbo].[sma_TRN_SpecialDamageAmountPaid]
+	(
+		[AmountPaidDamageReferenceID],
+		[AmountPaidCollateralType],
+		[AmountPaidPaidByID],
+		[AmountPaidTotal],
+		[AmountPaidClaimSubmittedDt],
+		[AmountPaidDate],
+		[AmountPaidRecUserID],
+		[AmountPaidDtCreated],
+		[AmountPaidModifyUserID],
+		[AmountPaidDtModified],
+		[AmountPaidLevelNo],
+		[AmountPaidAdjustment],
+		[AmountPaidComments]
+	) select
+		spd.spdnSpDamageID								 as AmountPaidDamageReferenceID,
+		(
+		 select
+			 cltnCollateralTypeID
+		 from [dbo].[sma_MST_CollateralType]
+		 where cltsDscrptn = 'Other'
+		)												 as AmountPaidCollateralType,
+		null											 as AmountPaidPaidByID,
+		COALESCE(uvd.Amount_Approved, vp.payment_amount) as AmountPaidTotal,
+		null											 as AmountPaidClaimSubmittedDt,
+		uvd.Date_of_Approval							 as AmountPaidDate,
+		368												 as [AmountPaidRecUserID],
+		GETDATE()										 as [AmountPaidDtCreated],
+		null											 as AmountPaidModifyUserID,
+		null											 as AmountPaidDtModified,
+		null											 as AmountPaidLevelNo,
+		null											 as AmountPaidAdjustment,
+		ISNULL('paid by:' + NULLIF(VP.paid_by, '') + CHAR(13), '')
+		+ ISNULL('paid to:' + NULLIF(VP.paid_to, '') + CHAR(13), '')
+		+ ''											 as [AmountPaidComments]
+	from JohnSalazar_Needles..user_value_data uvd
+	join sma_TRN_Cases stc
+		on stc.cassCaseNumber = CONVERT(VARCHAR, uvd.case_id)
+	join [JohnSalazar_Needles].[dbo].[value_Indexed] V
+		on uvd.value_id = v.value_id
+	join [JohnSalazar_Needles].[dbo].[value_payment] VP
+		on VP.value_id = uvd.value_id
+	join JohnSalazar_SA..sma_TRN_SpDamages spd
+		on spd.saga = uvd.value_id
+	where
+		v.code = 'CEX'
+go
+
+
+
+
+---
 alter table [sma_TRN_SpDamages] enable trigger all
 go
 
+alter table [sma_TRN_SpecialDamageAmountPaid] enable trigger all
+go
+---
