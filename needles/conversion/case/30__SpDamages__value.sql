@@ -32,7 +32,7 @@ begin
 			code
 		)
 		values
-		('CEX')
+				('CEX')
 end
 
 --- [value_tab_spDamages_Helper]
@@ -285,12 +285,14 @@ insert into [sma_TRN_SpDamages]
 		0				as spdnLevelNo,
 		V.total_value   as spdnBillAmt,
 		case
-				when V.[start_date] between '1900-01-01' and '2079-06-01' then V.[start_date]
-				else null
+			when V.[start_date] between '1900-01-01' and '2079-06-01'
+				then V.[start_date]
+			else null
 		end				as spddDateFrom,
 		case
-				when V.stop_date between '1900-01-01' and '2079-06-01' then V.stop_date
-				else null
+			when V.stop_date between '1900-01-01' and '2079-06-01'
+				then V.stop_date
+			else null
 		end				as spddDateTo,
 		'Provider: '
 		+ SDH.[ProviderName]
@@ -314,7 +316,6 @@ go
 Insert Special Damages [user_value_data]
 */ ------------------------------------------------------------------------------
 
-
 insert into [sma_TRN_SpDamages]
 	(
 		spdsRefTable,
@@ -337,35 +338,35 @@ insert into [sma_TRN_SpDamages]
 		source_db,
 		source_ref
 	) select distinct
-		'CustomDamage'		 as spdsRefTable,
-		null				 as spdnRecordID,
-		stc.casnCaseID		 as spddCaseID,
+		'CustomDamage'			as spdsRefTable,
+		null					as spdnRecordID,
+		stc.casnCaseID			as spddCaseID,
 		(
-		 select
+		 select top 1
 			 stp.plnnPlaintiffID
 		 from sma_TRN_Plaintiff stp
 		 where stp.plnbIsPrimary = 1
-		)					 as spddPlaintiff,
+		)						as spddPlaintiff,
 		(
 		 select top 1
 			 spdamagetypeid
 		 from sma_MST_SpecialDamageType
 		 where SpDamageTypeDescription = 'Other'
-		)					 as spddDamageType,
-		null				 as spddDamageSubType,
-		368					 as spdnRecUserID,
-		GETDATE()			 as spddDtCreated,
-		0					 as spdnLevelNo,
-		null				 as spdnBillAmt,
-		uvd.Proposed_Balance as spddNegotiatedBillAmt,
-		null				 as spddDateFrom,
-		null				 as spddDateTo,
-		uvd.Comments		 as spdsComments,
-		uvd.Account_#		 as spdsAccntNo,
-		uvd.value_id		 as [saga],
-		'needles'			 as [source_id],
-		null				 as [source_db],
-		'user_value_data'	 as [source_ref]
+		)						as spddDamageType,
+		null					as spddDamageSubType,
+		368						as spdnRecUserID,
+		GETDATE()				as spddDtCreated,
+		0						as spdnLevelNo,
+		null					as spdnBillAmt,
+		uvd.Proposed_Balance	as spddNegotiatedBillAmt,
+		null					as spddDateFrom,
+		null					as spddDateTo,
+		uvd.Comments			as spdsComments,
+		LEFT(uvd.Account_#, 25) as spdsAccntNo,
+		uvd.value_id			as [saga],
+		'needles'				as [source_id],
+		null					as [source_db],
+		'user_value_data'		as [source_ref]
 	--select *
 	from JohnSalazar_Needles..user_value_data uvd
 	join sma_TRN_Cases stc

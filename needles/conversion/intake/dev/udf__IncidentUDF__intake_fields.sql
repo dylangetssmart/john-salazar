@@ -39,7 +39,7 @@ insert into #ExcludedColumns
 --	('a_field_to_exclude')
 go
 
--- Fetch all columns from [user_case_data] for unpivoting
+-- Fetch all columns from [user_case_intake_matter] for unpivoting
 declare @sql NVARCHAR(MAX) = N'';
 select
 	@sql = STRING_AGG(CONVERT(VARCHAR(MAX),
@@ -54,8 +54,12 @@ where
 			column_name
 		from #ExcludedColumns
 	);
+	
+	SELECT * FROM JohnSalazar_Needles.dbo.user_case_intake_matter ucim
+		--	select * from [JohnSalazar_Needles].INFORMATION_SCHEMA.COLUMNS where TABLE_NAME = 'user_case_intake_matter'
+		SELECT * FROM JohnSalazar_Needles..case_intake ci
 
-
+print @sql
 -- Dynamically create the UNPIVOT list
 declare @unpivot_list NVARCHAR(MAX) = N'';
 select
@@ -69,7 +73,7 @@ where
 			column_name
 		from #ExcludedColumns
 	);
-
+print @unpivot_list
 
 -- Generate the dynamic SQL for creating the pivot table
 set @sql = N'
@@ -83,7 +87,7 @@ FROM (
     JOIN sma_TRN_Cases cas ON cas.cassCaseNumber = CONVERT(VARCHAR, ud.casenum)
 ) pv
 UNPIVOT (FieldVal FOR FieldTitle IN (' + @unpivot_list + N')) AS unpvt;';
-
+print @sql
 exec sp_executesql @sql;
 go
 
