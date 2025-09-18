@@ -1,15 +1,9 @@
-# Ignore default directories
-_backups/
-!_backups/.gitkeep
-_venv/*
-_trans/*
-!_trans/.gitkeep
+.venv/
 
-# Ignore database backup files
-backups/*
-!backups/.gitkeep
-*.bak
-*.backup
+# Ignore default directories
+workspace/backups/
+!workspace/backups/.gitkeep
+workspace/logs/*
 
 # Python cache files
 **__pycache__/
@@ -25,4 +19,7 @@ slnx.sqlite
 /.vs/VSWorkspaceState.json
 
 # Ignore data directories
-_data/*
+workspace/source_data/*
+workspace/logs/*
+
+*.egg-info/
