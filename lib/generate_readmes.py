@@ -1,8 +1,8 @@
 import os
 from read_yaml_metadata import read_yaml_metadata
-from sa_conversion_utils.utilities.setup_logger import setup_logger
+# from sa_conversion_utils.utilities.setup_logger import setup_logger
 
-logger = setup_logger(__name__, log_file="actions.log")
+# logger = setup_logger(__name__, log_file="actions.log")
 
 def generate_readmes_for_sql_files(sql_dir):
     """
