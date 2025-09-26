@@ -2,7 +2,7 @@
 
 # Ignore default directories
 /backups/*
-/source_data/*
+/data/*
 /logs/*
 
 # Python cache files

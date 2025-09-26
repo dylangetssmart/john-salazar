@@ -17,8 +17,10 @@ go
 ---
 alter table [sma_TRN_CalendarAppointments] disable trigger all
 go
+
 exec AddBreadcrumbsToTable 'sma_TRN_CalendarAppointments'
 go
+
 set quoted_identifier on;
 ---
 
@@ -294,8 +296,8 @@ insert into [sma_TRN_CalendarAppointments]
 		null,
 		null												as [saga],
 		'Case-related:' + CONVERT(VARCHAR, cal.calendar_id) as [source_id],
-		null												as [source_db],
-		null												as [source_ref]
+		'needles'											as [source_db],
+		'calendar'											as [source_ref]
 	--select *
 	from [JohnSalazar_Needles].[dbo].[calendar] cal
 	join [sma_TRN_Cases] cas

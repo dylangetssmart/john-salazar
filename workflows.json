@@ -1,0 +1,75 @@
+{
+  "workflows": {
+    "discovered": {
+      "timestamp": "2025-09-26T11:43:12.203115",
+      "path": "D:\\john-salazar"
+    },
+    "structure": {
+      "scripts": {
+        "generic": {
+          "post": {
+            "dev": {
+              "scripts": 1
+            },
+            "scripts": 6
+          },
+          "contact": {
+            "scripts": 3
+          },
+          "wipe-data": {
+            "scripts": 1
+          },
+          "utility": {
+            "scripts": 2
+          }
+        },
+        "needles": {
+          "convert": {
+            "1_contact": {
+              "scripts": 22,
+              "user_tab": {
+                "scripts": 2
+              }
+            },
+            "2_case": {
+              "user_tab": {
+                "scripts": 2
+              },
+              "scripts": 45,
+              "dev": {
+                "scripts": 25
+              }
+            },
+            "3_misc": {
+              "scripts": 7,
+              "dev": {
+                "scripts": 2
+              }
+            },
+            "4_intake": {
+              "scripts": 7,
+              "dev": {
+                "scripts": 1
+              }
+            }
+          },
+          "init": {
+            "scripts": 2,
+            "sa": {
+              "scripts": 8
+            },
+            "dev": {
+              "scripts": 22
+            },
+            "needles": {
+              "scripts": 9
+            }
+          },
+          "map": {
+            "scripts": 20
+          }
+        }
+      }
+    }
+  }
+}

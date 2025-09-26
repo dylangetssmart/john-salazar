@@ -9,6 +9,8 @@ go
 
 ---
 alter table [sma_MST_ContactNumbers] disable trigger all
+go
+
 exec AddBreadcrumbsToTable 'sma_MST_ContactNumbers'
 go
 ---

@@ -75,5 +75,5 @@ insert into [sma_MST_OrgContacts]
 	where n.[person] <> 'Y'
 go
 
-alter table [sma_MST_OrgContacts] disable trigger all
+alter table [sma_MST_OrgContacts] enable trigger all
 go
