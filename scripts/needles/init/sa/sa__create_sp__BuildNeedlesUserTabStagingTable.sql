@@ -47,7 +47,7 @@ BEGIN
             ON nuf.field_num = utm.ref_num
         WHERE nuf.table_name = @tbl
           AND nuf.column_name IN (' + @InClause + ')';
-	print @MappingSQL
+	--print @MappingSQL
     EXEC sp_executesql @MappingSQL, N'@tbl SYSNAME', @tbl=@DataTableName;
 	--Select * from #Mapping m
 

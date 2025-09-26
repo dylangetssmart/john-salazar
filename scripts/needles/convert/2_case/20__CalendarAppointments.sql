@@ -19,6 +19,7 @@ alter table [sma_TRN_CalendarAppointments] disable trigger all
 go
 exec AddBreadcrumbsToTable 'sma_TRN_CalendarAppointments'
 go
+set quoted_identifier on;
 ---
 
 ----(0)----

@@ -16,42 +16,41 @@ go
 /* ------------------------------------------------------------------------------
 Create conversion schema table to store office related variables
 */ ------------------------------------------------------------------------------
+
+if OBJECT_ID('conversion.office', 'U') is not null
 begin
+	drop table conversion.office
+end
 
-	if OBJECT_ID('conversion.office', 'U') is not null
-	begin
-		drop table conversion.office
-	end
-
-	create table conversion.office (
-		OfficeName	   NVARCHAR(255),
-		StateName	   NVARCHAR(100),
-		PhoneNumber	   NVARCHAR(50),
-		CaseGroup	   NVARCHAR(100),
-		VenderCaseType NVARCHAR(25)
-	);
-	insert into conversion.office
+create table conversion.office (
+	OfficeName	   NVARCHAR(255),
+	StateName	   NVARCHAR(100),
+	PhoneNumber	   NVARCHAR(50),
+	CaseGroup	   NVARCHAR(100),
+	VenderCaseType NVARCHAR(25)
+);
+insert into conversion.office
+	(
+		OfficeName,
+		StateName,
+		PhoneNumber,
+		CaseGroup,
+		VenderCaseType
+	)
+	select
+		smo.office_name	  as OfficeName,
 		(
-			OfficeName,
-			StateName,
-			PhoneNumber,
-			CaseGroup,
-			VenderCaseType
-		)
-		select
-			smo.office_name	  as OfficeName,
-			(
-				select
-					sttsDescription
-				from sma_MST_States
-				where sttnStateID = smo.state_id
-			)				  as StateName,
-			smo.PhoneNumber	  as PhoneNumber,
-			'Needles'		  as CaseGroup,
-			'SalazarCaseType' as VenderCaseType
-		from sma_mst_offices smo
-		where
-			smo.is_default = 1
+		 select
+			 sttsDescription
+		 from sma_MST_States
+		 where sttnStateID = smo.state_id
+		)				  as StateName,
+		smo.PhoneNumber	  as PhoneNumber,
+		'Needles'		  as CaseGroup,
+		'SalazarCaseType' as VenderCaseType
+	from sma_mst_offices smo
+	where
+		smo.is_default = 1
 --values (
 --'Vance Law Firm',
 --'Virginia',
@@ -59,7 +58,6 @@ begin
 --'Needles',
 --'SalazarCaseType'
 --);
-end
 
 
 --select

@@ -19,11 +19,11 @@ go
 ---
 alter table [sma_TRN_Hospitals] disable trigger all
 go
-
-alter table [sma_TRN_MedicalProviderRequest] disable trigger all
+alter table [sma_TRN_MedicalProviderRequest] disable trigger all		
 go
-
-exec AddBreadcrumbsToTable @tableName = N'sma_trn_MedicalProviderRequest'
+exec AddBreadcrumbsToTable 'sma_TRN_MedicalProviderRequest'
+exec AddBreadcrumbsToTable 'sma_TRN_Hospitals'
+go
 
 exec dbo.BuildNeedlesUserTabStagingTable @SourceDatabase = 'JohnSalazar_Needles',
 										 @TargetDatabase = 'JohnSalazar_SA',
@@ -49,7 +49,6 @@ LOP_Sent,
 Aff_filed_in_court,
 LOP';
 go
-
 ---
 
 
