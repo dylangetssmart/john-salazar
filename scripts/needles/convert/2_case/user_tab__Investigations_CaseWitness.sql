@@ -43,9 +43,7 @@ Video_Value_Code'
 go
 ---
 
---select
---	*
---from JohnSalazar_SA..staging_witnesses
+select * from JohnSalazar_SA..staging_witnesses
 
 --select
 --	*
