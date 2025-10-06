@@ -95,6 +95,3 @@ INSERT INTO [sma_TRN_Plaintiff]
 		ON CIO.SAGA = c.name_id
 	WHERE ISNULL(name_id, 0) <> 0
 		AND cas.cassCaseNumber LIKE 'Intake%'
-
-
-

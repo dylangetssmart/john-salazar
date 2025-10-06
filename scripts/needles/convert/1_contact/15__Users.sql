@@ -23,6 +23,9 @@ go
 exec AddBreadcrumbsToTable 'sma_MST_Users'
 go
 
+set quoted_identifier on
+go
+
 ---------------------------------------------------
 -- aadmin
 ---------------------------------------------------
@@ -351,4 +354,7 @@ where usrsLoginID = 'aadmin'
 update Account_UsersInRoles
 set role_id = 1
 where user_id = 368 
+go
+
+set quoted_identifier off
 go

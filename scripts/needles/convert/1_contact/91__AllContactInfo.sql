@@ -13,11 +13,8 @@ delete from [dbo].[sma_MST_AllContactInfo]
 dbcc checkident ('[dbo].[sma_MST_AllContactInfo]', reseed, 0);
 alter table [dbo].[sma_MST_AllContactInfo] enable trigger all
 
-set ansi_padding off
-go
 
 --insert org contacts
-
 insert into [dbo].[sma_MST_AllContactInfo]
 	(
 	[UniqueContactId],

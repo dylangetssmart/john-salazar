@@ -1,0 +1,1 @@
+SELECT * FROM JohnSalazar_Needles..user_tab_map

@@ -26,36 +26,33 @@ insert into [sma_TRN_Incidents]
 		[DtModified]
 	)
 	select
-		cas.casnCaseID as caseid,
+		cas.casnCaseID		 as caseid,
 		case
-			when (c.[date_of_incident] between '1900-01-01' and '2079-06-06')
-				then CONVERT(DATE, c.[date_of_incident])
+			when (c.[date_of_incident] between '1900-01-01' and '2079-06-06') then CONVERT(DATE, c.[date_of_incident])
 			else null
-		end			   as incidentdate,
+		end					 as incidentdate,
 		(
-			select
-				sttnStateID
-			from sma_MST_States
-			where sttsDescription = (
-					select
-						StateName
-					from conversion.office
-				)
-		)			   as [stateid],
-		0			   as liabilitycodeid,
+		 select
+			 sttnStateID
+		 from sma_MST_States
+		 where sttsCode = utd.State
+		)					 as [stateid],
+		0					 as liabilitycodeid,
 		c.synopsis + CHAR(13) +
 		--isnull('Description of Accident:' + nullif(u.Description_of_Accident,'') + CHAR(13),'') + 
-		''			   as incidentfacts,
-		''			   as [mergedfacts],
-		null		   as [comments],
-		null		   as [incidenttime],
-		368			   as [recuserid],
-		GETDATE()	   as [dtcreated],
-		null		   as [modifyuserid],
-		null		   as [dtmodified]
+		''					 as incidentfacts,
+		''					 as [mergedfacts],
+		null				 as [comments],
+		utd.Time_of_Accident as [incidenttime],
+		368					 as [recuserid],
+		GETDATE()			 as [dtcreated],
+		null				 as [modifyuserid],
+		null				 as [dtmodified]
 	from [JohnSalazar_Needles].[dbo].[cases_Indexed] c
 	join [sma_TRN_cases] cas
 		on cas.cassCaseNumber = CONVERT(VARCHAR, c.casenum)
+	left join JohnSalazar_Needles..user_tab10_data utd
+		on utd.case_id = c.casenum
 
 update CAS
 set CAS.casdIncidentDate = INC.IncidentDate,

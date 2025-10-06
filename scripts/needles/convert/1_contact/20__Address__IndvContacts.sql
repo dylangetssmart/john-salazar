@@ -1,9 +1,3 @@
-/*---
-group: load
-order: 
-description: Update contact types for attorneys
----*/
-
 use [JohnSalazar_SA]
 go
 

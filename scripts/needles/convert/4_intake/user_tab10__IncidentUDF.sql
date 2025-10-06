@@ -1,5 +1,5 @@
 /*---
-description:
+description: Base script to collect data from [user_tab_data]
 steps:
 	1. Pivot the EAV table and add context fields
 	2. Create UDF Definitions
@@ -8,7 +8,7 @@ usage_instructions:
     1a. Fill out variables
 	1b. Define excluded columns
 	1e. Explicitly select fields as required
-	1g. Add [user_name] from the associated [name] table
+	2.  Construct [pivoted_enriched] with necessary fields 
 dependencies:
     - [NeedlesUserFields]
     - [sma_TRN_Cases]
@@ -30,7 +30,7 @@ go
 ----------------------------------------------------------------------
 declare @DatabaseName SYSNAME = 'JohnSalazar_Needles';
 declare @SchemaName SYSNAME = 'dbo';
-declare @TableName SYSNAME = 'user_party_data';
+declare @TableName SYSNAME = 'case_intake';
 declare @OutputTable SYSNAME = 'pivoted_data';
 
 declare @DropSQL NVARCHAR(MAX) = 'IF OBJECT_ID(''' + @OutputTable + ''') IS NOT NULL DROP TABLE ' + @OutputTable + ';';
@@ -53,10 +53,14 @@ insert into #ExcludedColumns
 		column_name
 	)
 	values
-		('party_id'),
-		('case_id'),
+		('intake_taken'),
+		('tab_id'),
+		('tab_id_location'),
 		('party_id_location'),
-		('modified_timestamp');
+		('modified_timestamp'),
+		('show_on_status_tab'),
+		('case_status_attn'),
+		('case_status_client');
 
 -- 1c. Build the dynamic SQL
 --	CROSS APPLY to pivot the table
@@ -69,7 +73,7 @@ declare @SQL NVARCHAR(MAX);
 ----------------------------------------------------------------------
 select
 	@UnpivotValueList = STRING_AGG(
-	'(''' + column_name + ''', CONVERT(VARCHAR(MAX), ' + QUOTENAME(column_name) + '))',
+	CAST('(''' + column_name + ''', CONVERT(VARCHAR(MAX), ' + QUOTENAME(column_name) + '))' as NVARCHAR(MAX)),
 	', '
 	)
 from [JohnSalazar_Needles].INFORMATION_SCHEMA.COLUMNS
@@ -87,8 +91,8 @@ where
 ----------------------------------------------------------------------
 set @SQL = '
 SELECT 
-    t.party_id, 
-    t.case_id, 
+    t.ROW_ID, 
+	--t.tab_id,
     v.Attribute, 
     v.Value
 INTO ' + @OutputTable + ' 
@@ -96,21 +100,23 @@ FROM ' + QUOTENAME(@DatabaseName) + '.' + QUOTENAME(@SchemaName) + '.' + QUOTENA
 CROSS APPLY (VALUES ' + @UnpivotValueList + ') AS v(Attribute, Value)
 WHERE isnull(v.Value, '''') <> ''''
 ORDER BY 
-    t.case_id, 
-	t.party_id,
+    t.ROW_ID, 
+	--t.tab_id,
     v.Attribute;
 ';
 
 print @SQL;
 exec sp_executesql @SQL;
 
-select * from pivoted_data
+-- 2. Select the key columns and the few desired pivot columns
+select * from pivoted_data order by attribute
 go
+
 
 /* ------------------------------------------------------------------------------
 2. Create [pivoted_enriched]
 ------------------------------------------------------------------------------- */
-declare @TableName SYSNAME = 'user_party_data';
+declare @TableName SYSNAME = 'case_intake';
 declare @EnrichedTable SYSNAME = 'pivoted_enriched';
 
 -- Drop the new enriched table first
@@ -118,12 +124,12 @@ declare @DropEnrichedSQL NVARCHAR(MAX) = 'IF OBJECT_ID(''' + @EnrichedTable + ''
 exec sp_executesql @DropEnrichedSQL;
 
 -- Consolidate all enrichment joins into a single SELECT INTO operation
-select distinct
-	pv.case_id,
+select
+	pv.ROW_ID,
+	--pv.tab_id,
 	pv.Attribute,
 	pv.Value,
-	upm.party_role,
-	upn.user_name,
+	cin.user_name,
 	nuf.field_title,
 	nuf.field_num,
 	nuf.UDFType,
@@ -134,18 +140,13 @@ select distinct
 	nuf.DropDownValues
 into pivoted_enriched
 from pivoted_data pv
-join JohnSalazar_Needles..NeedlesUserFields nuf
+join [JohnSalazar_Needles].[dbo].NeedlesUserFields_intake nuf
 	on nuf.column_name = pv.Attribute
 		and nuf.table_name = @TableName -- Use the base table variable
-join JohnSalazar_Needles..user_party_matter upm
-	on upm.ref_num = nuf.field_num
-join PartyRoles pr
-	on pr.[Needles Roles] = upm.party_role
-left join JohnSalazar_Needles..user_party_name upn
-	on upn.case_id = pv.case_id
-		and upn.party_id = pv.party_id
-		and upn.ref_num = nuf.field_num
-		and upn.user_name <> 0
+left join [JohnSalazar_Needles].[dbo].case_intake_name cin
+	on cin.field_title = pv.Attribute
+		and cin.ref_num = nuf.field_num
+		and cin.user_name <> 0;
 go
 
 select * from pivoted_enriched;
@@ -157,6 +158,7 @@ if OBJECT_ID('pivoted_data') is not null
 -- Cleanup temp table
 if OBJECT_ID('tempdb..#ExcludedColumns') is not null
 	drop table #ExcludedColumns;
+
 
 
 /* ------------------------------------------------------------------------------
@@ -179,33 +181,37 @@ insert into [sma_MST_UDFDefinition]
 		[udfnSortOrder]
 	)
 	select distinct
-		'C'											as [udfsUDFCtg],
-		cas.casnOrgCaseTypeID						as [udfnRelatedPK],
+		'I'											as [udfsUDFCtg],
+		cg.IncidentTypeID							as [udfnRelatedPK],
 		pe.field_title								as [udfsUDFName],
-		'Defendant'									as [udfsScreenName],
+		'Incident Wizard'							as [udfsScreenName],
 		pe.UDFType									as [udfsType],
 		pe.field_len								as [udfsLength],
 		1											as [udfbIsActive],
-		pe.table_name + '.' + pe.column_name		as [udfshortName],
+		pe.table_name + '.' + pe.Attribute			as [udfshortName],
 		pe.DropDownValues							as [udfsNewValues],
 		DENSE_RANK() over (order by pe.field_title) as udfnSortOrder
 	--select *
 	from pivoted_enriched pe
 	join sma_TRN_Cases cas
-		on cas.saga = pe.case_id
+		on cas.saga = pe.ROW_ID
+			and cas.source_ref = 'case_intake'
+	join sma_MST_CaseType ct
+		on ct.cstnCaseTypeID = cas.casnOrgCaseTypeID
+	join sma_MST_CaseGroup cg
+		on cg.cgpnCaseGroupID = ct.cstnGroupID
 	left join [sma_MST_UDFDefinition] def
 		on def.[udfnRelatedPK] = cas.casnOrgCaseTypeID
 			and def.[udfsUDFName] = pe.field_title
-			and def.[udfsScreenName] = 'Defendant'
+			and def.[udfsScreenName] = 'Incident Wizard'
 			and def.[udfsType] = pe.field_type
 			and def.udfnUDFID is null
-	where
-		pe.party_role = 'Defendant'
 	order by pe.field_title
 go
 
 alter table [sma_MST_UDFDefinition] enable trigger all
 go
+
 
 /* ------------------------------------------------------------------------------
 3. Insert UDF Values
@@ -229,10 +235,10 @@ insert into [sma_TRN_UDFValues]
 	)
 	select
 		def.udfnUDFID	  as [udvnUDFID],
-		'Defendant'		  as [udvsScreenName],
-		'C'				  as [udvsUDFCtg],
-		cas.casnCaseID	  as [udvnRelatedID],
-		d.defnDefendentID as [udvnSubRelatedID],
+		'Incident Wizard' as [udvsScreenName],
+		'I'				  as [udvsUDFCtg],
+		cg.IncidentTypeID as [udvnRelatedID],
+		0				  as [udvnSubRelatedID],
 		case
 			when pe.field_type = 'name' then CONVERT(VARCHAR(MAX), ioci.UNQCID)
 			else pe.Value
@@ -242,20 +248,20 @@ insert into [sma_TRN_UDFValues]
 		null			  as [udvnModifyUserID],
 		null			  as [udvdDtModified],
 		null			  as [udvnLevelNo]
-	--select *
 	from pivoted_enriched pe
 	join sma_TRN_Cases cas
-		on cas.saga = pe.case_id
-	join sma_TRN_Defendants d
-		on d.defnCaseID = cas.casnCaseID
+		on cas.saga = pe.ROW_ID
+			and cas.source_ref = 'case_intake'
+	join sma_MST_CaseType ct
+		on ct.cstnCaseTypeID = cas.casnOrgCaseTypeID
+	join sma_MST_CaseGroup cg
+		on cg.cgpnCaseGroupID = ct.cstnGroupID
 	join IndvOrgContacts_Indexed ioci
 		on ioci.SAGA = pe.user_name -- Joins on the populated user_name column in pivoted_data
 	left join sma_MST_UDFDefinition def
 		on def.udfnRelatedPK = cas.casnOrgCaseTypeID
 			and def.udfsUDFName = pe.field_title
-			and def.udfsScreenName = 'Defendant'
-	where
-		pe.party_role = 'Defendant'
+			and def.udfsScreenName = 'Incident Wizard'
 go
 
 alter table sma_trn_udfvalues enable trigger all

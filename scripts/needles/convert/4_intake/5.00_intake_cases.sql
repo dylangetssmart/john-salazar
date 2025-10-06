@@ -15,11 +15,11 @@ go
 
 insert into [dbo].[CaseTypeMixture]
 	(
-	[matcode],
-	[header],
-	[description],
-	[SmartAdvocate Case Type],
-	[SmartAdvocate Case Sub Type]
+		[matcode],
+		[header],
+		[description],
+		[SmartAdvocate Case Type],
+		[SmartAdvocate Case Sub Type]
 	)
 	select
 		'',
@@ -80,98 +80,97 @@ insert into [dbo].[CaseTypeMixture]
 
 insert into [sma_TRN_Cases]
 	(
-	[cassCaseNumber],
-	[casbAppName],
-	[cassCaseName],
-	[casnCaseTypeID],
-	[casnState],
-	[casdStatusFromDt],
-	[casnStatusValueID],
-	[casdsubstatusfromdt],
-	[casnSubStatusValueID],
-	[casdOpeningDate],
-	[casdClosingDate],
-	[casnCaseValueID],
-	[casnCaseValueFrom],
-	[casnCaseValueTo],
-	[casnCurrentCourt],
-	[casnCurrentJudge],
-	[casnCurrentMagistrate],
-	[casnCaptionID],
-	[cassCaptionText],
-	[casbMainCase],
-	[casbCaseOut],
-	[casbSubOut],
-	[casbWCOut],
-	[casbPartialOut],
-	[casbPartialSubOut],
-	[casbPartiallySettled],
-	[casbInHouse],
-	[casbAutoTimer],
-	[casdExpResolutionDate],
-	[casdIncidentDate],
-	[casnTotalLiability],
-	[cassSharingCodeID],
-	[casnStateID],
-	[casnLastModifiedBy],
-	[casdLastModifiedDate],
-	[casnRecUserID],
-	[casdDtCreated],
-	[casnModifyUserID],
-	[casdDtModified],
-	[casnLevelNo],
-	[cassCaseValueComments],
-	[casbRefIn],
-	[casbDelete],
-	[casbIntaken],
-	[casnOrgCaseTypeID],
-	[CassCaption],
-	[cassMdl],
-	[office_id],
-	[saga],
-	[LIP],
-	[casnSeriousInj],
-	[casnCorpDefn],
-	[casnWebImporter],
-	[casnRecoveryClient],
-	[cas],
-	[ngage],
-	[casnClientRecoveredDt],
-	[CloseReason]
+		[cassCaseNumber],
+		[casbAppName],
+		[cassCaseName],
+		[casnCaseTypeID],
+		[casnState],
+		[casdStatusFromDt],
+		[casnStatusValueID],
+		[casdsubstatusfromdt],
+		[casnSubStatusValueID],
+		[casdOpeningDate],
+		[casdClosingDate],
+		[casnCaseValueID],
+		[casnCaseValueFrom],
+		[casnCaseValueTo],
+		[casnCurrentCourt],
+		[casnCurrentJudge],
+		[casnCurrentMagistrate],
+		[casnCaptionID],
+		[cassCaptionText],
+		[casbMainCase],
+		[casbCaseOut],
+		[casbSubOut],
+		[casbWCOut],
+		[casbPartialOut],
+		[casbPartialSubOut],
+		[casbPartiallySettled],
+		[casbInHouse],
+		[casbAutoTimer],
+		[casdExpResolutionDate],
+		[casdIncidentDate],
+		[casnTotalLiability],
+		[cassSharingCodeID],
+		[casnStateID],
+		[casnLastModifiedBy],
+		[casdLastModifiedDate],
+		[casnRecUserID],
+		[casdDtCreated],
+		[casnModifyUserID],
+		[casdDtModified],
+		[casnLevelNo],
+		[cassCaseValueComments],
+		[casbRefIn],
+		[casbDelete],
+		[casbIntaken],
+		[casnOrgCaseTypeID],
+		[CassCaption],
+		[cassMdl],
+		[office_id],
+		[saga],
+		[LIP],
+		[casnSeriousInj],
+		[casnCorpDefn],
+		[casnWebImporter],
+		[casnRecoveryClient],
+		[cas],
+		[ngage],
+		[casnClientRecoveredDt],
+		[CloseReason],
+		[source_ref]
 	)
 	select distinct
 		'Intake ' + RIGHT('00000' + CONVERT(VARCHAR, ROW_ID), 5) as [casscasenumber],
 		''														 as [casbappname],
 		''														 as [casscasename],
 		(
-			select top 1
-				cstnCaseSubTypeID
-			from [sma_MST_CaseSubType] st
-			where st.cstnGroupID = cst.cstnCaseTypeID
-				and st.cstsDscrptn = mix.[SmartAdvocate Case Sub Type]
+		 select top 1
+			 cstnCaseSubTypeID
+		 from [sma_MST_CaseSubType] st
+		 where st.cstnGroupID = cst.cstnCaseTypeID
+			 and st.cstsDscrptn = mix.[SmartAdvocate Case Sub Type]
 		)														 as [casncasetypeid],
 		(
-			select
-				[sttnStateID]
-			from [sma_MST_States]
-			where [sttsDescription] = (
-					select
-						o.StateName
-					from conversion.office o
-				)
+		 select
+			 [sttnStateID]
+		 from [sma_MST_States]
+		 where [sttsDescription] = (
+			  select
+				  o.StateName
+			  from conversion.office o
+			 )
 		)														 as [casnstate],
 		ISNULL(date_rejected, GETDATE())						 as [casdstatusfromdt],
 		null													 as [casnstatusvalueid],
 		null													 as [casdsubstatusfromdt],
 		null													 as [casnsubstatusvalueid],
 		case
-			when (c.intake_taken not between '1900-01-01' and '2079-12-31')
-				then GETDATE()
+			when (c.intake_taken not between '1900-01-01' and '2079-12-31') then GETDATE()
 			else c.intake_taken
 		end														 as [casdopeningdate],
 		case
-			when (c.date_rejected between '1900-01-01' and '2079-12-31')
-				then c.date_rejected
+			when (c.date_rejected between '1900-01-01' and '2079-12-31') then c.date_rejected
 			else null
 		end														 as [casdclosingdate],
 		null													 as [casncasevalueid],
@@ -196,26 +195,25 @@ insert into [sma_TRN_Cases]
 		null													 as [casntotalliability],
 		null													 as [casssharingcodeid],
 		(
-			select
-				[sttnStateID]
-			from [sma_MST_States]
-			where [sttsDescription] = (
-					select
-						o.StateName
-					from conversion.office o
-				)
+		 select
+			 [sttnStateID]
+		 from [sma_MST_States]
+		 where [sttsDescription] = (
+			  select
+				  o.StateName
+			  from conversion.office o
+			 )
 		)														 as [casnstateid],
 		null													 as [casnlastmodifiedby],
 		null													 as [casdlastmodifieddate],
 		(
-			select
-				usrnUserID
-			from sma_MST_Users
-			where saga = c.taken_by
+		 select
+			 usrnUserID
+		 from sma_MST_Users
+		 where source_id = c.taken_by
 		)														 as [casnrecuserid],
 		case
-			when (c.intake_taken between '1900-01-01' and '2079-06-06')
-				then c.intake_taken
+			when (c.intake_taken between '1900-01-01' and '2079-06-06') then c.intake_taken
 			else null
 		end														 as [casddtcreated],
 		null													 as [casnmodifyuserid],
@@ -229,14 +227,10 @@ insert into [sma_TRN_Cases]
 		''														 as [casscaption],
 		0														 as [cassmdl],
 		(
-			select
-				office_id
-			from sma_MST_Offices
-			where office_name = (
-					select
-						o.OfficeName
-					from conversion.office o
-				)
+		 select
+			 office_id
+		 from sma_MST_Offices
+		 where office_name = (select o.OfficeName from conversion.office o)
 		)														 as [office_id],
 		ROW_ID													 as [saga],
 		null													 as [lip],
@@ -247,15 +241,17 @@ insert into [sma_TRN_Cases]
 		null													 as [cas],
 		null													 as [ngage],
 		null													 as [casnclientrecovereddt],
-		0														 as [closereason]
+		0														 as [closereason],
+		'case_intake'											 as [source_ref]
 	--select *
 	from [JohnSalazar_Needles].[dbo].[Case_intake] c
 	left join [CaseTypeMixture] mix
 		on mix.matcode = REPLACE(c.matcode, ' ', '')
 	left join sma_MST_CaseType cst
 		on ISNULL(cst.cstsType, '') = ISNULL(mix.[SmartAdvocate Case Type], '')
-	where ISNULL(name_ID, '') <> ''
-		and ISNULL(c.date_opened, '') <> ''
+	where
+		ISNULL(name_ID, '') <> ''
+--and ISNULL(c.date_opened, '') <> ''
 
 
 --select * FROM [JohnSalazar_Needles].[dbo].[Case_intake] C
@@ -265,53 +261,50 @@ insert into [sma_TRN_Cases]
 ------------------------------------------
 insert into [sma_TRN_CaseStatus]
 	(
-	[cssnCaseID],
-	[cssnStatusTypeID],
-	[cssnStatusID],
-	[cssnExpDays],
-	[cssdFromDate],
-	[cssdToDt],
-	[csssComments],
-	[cssnRecUserID],
-	[cssdDtCreated],
-	[cssnModifyUserID],
-	[cssdDtModified],
-	[cssnLevelNo],
-	[cssnDelFlag]
+		[cssnCaseID],
+		[cssnStatusTypeID],
+		[cssnStatusID],
+		[cssnExpDays],
+		[cssdFromDate],
+		[cssdToDt],
+		[csssComments],
+		[cssnRecUserID],
+		[cssdDtCreated],
+		[cssnModifyUserID],
+		[cssdDtModified],
+		[cssnLevelNo],
+		[cssnDelFlag]
 	)
 	select
 		cas.casnCaseID,
 		(
-			select
-				stpnStatusTypeID
-			from sma_MST_CaseStatusType
-			where stpsStatusType = 'Status'
+		 select
+			 stpnStatusTypeID
+		 from sma_MST_CaseStatusType
+		 where stpsStatusType = 'Status'
 		)	 as [cssnstatustypeid],
 		case
-			when c.date_rejected between '1900-01-01' and '2079-06-06'
-				then (
-						select
-							cssnstatusid
-						from sma_MST_CaseStatus
-						where csssDescription = 'Closed Case'
+			when c.date_rejected between '1900-01-01' and '2079-06-06' then (
+					 select
+						 cssnstatusid
+					 from sma_MST_CaseStatus
+					 where csssDescription = 'Closed Case'
 					)
 			else (
-					select
-						cssnstatusid
-					from sma_MST_CaseStatus
-					where csssDescription = 'Presign - Not scheduled for Sign Up'
+				 select
+					 cssnstatusid
+				 from sma_MST_CaseStatus
+				 where csssDescription = 'Presign - Not scheduled for Sign Up'
 				)
 		end	 as [cssnstatusid],
 		''	 as [cssnexpdays],
 		case
-			when c.date_rejected between '1900-01-01' and '2079-06-06'
-				then CONVERT(DATE, c.date_rejected)
+			when c.date_rejected between '1900-01-01' and '2079-06-06' then CONVERT(DATE, c.date_rejected)
 			else GETDATE()
 		end	 as [cssdfromdate],
 		null as [cssdtodt],
 		case
-			when date_rejected is not null
-				then 'Rejected'
+			when date_rejected is not null then 'Rejected'
 			else ''
 		end	 as [cssscomments],
 		368,

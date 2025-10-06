@@ -132,7 +132,7 @@ GO
             WHEN F.field_type='Date' THEN 'Date'
             WHEN F.field_type='Time' THEN 'Time'
             WHEN F.field_type='name' THEN 'Contact'
-            ELSE F.field_type
+            ELSE 'Text'
         END AS UDFType,
         '' AS DropDownValues,
         M.table_name,
