@@ -23,11 +23,7 @@ jobs:
       - name: Install dependencies
         run: |
           pip install --upgrade pip
-          pip install pyyaml
-          pip install chardet
-          pip install pandas
-          pip install argparse
-          pip install tabulate
+          pip install chardet pandas argparse openpyxl tabulate
 
       - name: Run python script to generate table mapping
         run: python lib/build_table_mapping.py
