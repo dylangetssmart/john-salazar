@@ -106,7 +106,7 @@ def export_registry_to_markdown(df: pd.DataFrame, output_base_path: Path):
 def process_multiple_folders(base_folder: Path, recursive: bool):
     """
     Scans the base_folder (e.g., './scripts') for subfolders,
-    excludes 'shared', and generates mapping for each.
+    excludes 'shared', and generates mapping for each in the root directory.
     """
     print(f"Scanning base directory: {base_folder}")
     
@@ -136,12 +136,10 @@ def process_multiple_folders(base_folder: Path, recursive: bool):
         if sort_cols:
             df = df.sort_values(by=sort_cols, na_position="last")
         
-        # 3. Define output path: e.g., mapping_reports/folder_name/mapping_registry
-        output_dir = Path("mapping_reports") / folder.name
-        output_base = output_dir / "mapping_registry"
-        
-        # Ensure output directory exists
-        output_dir.mkdir(parents=True, exist_ok=True)
+        # 3. Define output path in the root directory: e.g., 'needles_schema_mapping_registry'
+        # The base path is the current directory (root)
+        output_base_name = f"{folder.name}_schema_mapping_registry"
+        output_base = Path(output_base_name) 
         
         # 4. Execute both exports
         export_registry_to_excel(df, output_base)
