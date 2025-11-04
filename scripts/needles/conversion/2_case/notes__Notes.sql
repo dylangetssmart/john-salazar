@@ -1,20 +1,18 @@
 /*---
-description: Insert Notes
-steps:
-    - Disable triggers, add breadcrumbs
-    - Create note types
-	- Insert [sma_TRN_Notes] from [case_notes_indexed]
-	- Insert [sma_TRN_Notes] from [value_notes]
-	- Insert [sma_TRN_NoteContacts]
-	- Enable triggers
-usage_instructions:
-    - 
-dependencies:
-    - [case_notes_Indexed]
-    - [value_Indexed]
-notes: >
-    a
-    
+description: >
+  Insert Notes
+source_tables:
+  - [case_notes]
+  - [value_notes]
+target_tables:
+  - [sma_MST_NoteTypes]
+  - [sma_TRN_Notes]
+  - [sma_TRN_NoteContacts]
+target_screen:
+  - Notes
+depends_on:
+  - [case_notes_Indexed]
+  - [value_Indexed]
 ---*/
 
 use [JohnSalazar_SA]

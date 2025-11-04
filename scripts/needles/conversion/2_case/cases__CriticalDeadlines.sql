@@ -1,8 +1,13 @@
 /*---
-priority: 1
-sequence: 1
-description: Create office record
-data-source:
+description: >
+  Insert Critical Deadlines and SOLs
+source_tables:
+  - [cases]
+target_tables:
+  - [sma_TRN_CriticalDeadlines]
+target_screen:
+  - Critical Deadlines
+depends_on:
 ---*/
 
 use [JohnSalazar_SA]

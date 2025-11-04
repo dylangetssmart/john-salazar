@@ -1,16 +1,13 @@
 /*---
-description: Insert [sma_TRN_Negotiations] from [negotiation]
-steps:
-    - 
-    - 
-usage_instructions:
-    - 
-dependencies:
-    - [conversion].[Insurance_Contacts_Helper]
-    - 
-notes: >
-    a
-    
+description: >
+  Insert Negotiations
+source_tables:
+  - [negotiation]
+target_tables:
+  - [sma_TRN_Negotiations]
+target_screen:
+  - Negotiation/Settlement: Negotiation
+depends_on:
 ---*/
 
 use [JohnSalazar_SA]

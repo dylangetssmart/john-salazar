@@ -1,7 +1,17 @@
 /*---
-group: misc
-order: 1
-description: Update contact types for attorneys
+description: >
+  Insert plaintiff and defendant attorneys
+source_tables:
+  - [counsel]
+  - [user_counsel_data]
+target_tables:
+  - [sma_TRN_PlaintiffAttorney]
+  - [sma_TRN_LawFirmAttorneys]
+  - [sma_TRN_LawFirms]
+  - [sma_TRN_LawFirmAttorneys]
+target_screen:
+  - Attorneys
+depends_on:
 ---*/
 
 use [JohnSalazar_SA]

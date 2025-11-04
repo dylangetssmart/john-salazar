@@ -1,14 +1,13 @@
 /*---
-description: Insert [sma_TRN_CalendarAppointments] from [calendar]
-steps:
-    - 
-    - 
-usage_instructions:
-    - 
-dependencies:
-    - 
-    - 
-notes: >
+description: >
+  Insert case-related calendar appointments
+source_tables:
+  - [calendar]
+target_tables:
+  - [sma_TRN_CalendarAppointments]
+target_screen:
+  - Case Calendar
+depends_on:
 ---*/
 
 use JohnSalazar_SA

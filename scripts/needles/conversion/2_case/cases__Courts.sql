@@ -1,3 +1,15 @@
+/*---
+description: >
+  Insert Courts, Dockets, and Judges
+source_tables:
+  - [cases]
+target_tables:
+  - [sma_TRN_Courts]
+target_screen:
+  - Courts
+depends_on:
+---*/
+
 use [JohnSalazar_SA]
 go
 

@@ -1,8 +1,13 @@
 /*---
-priority: 1
-sequence: 1
-description: Create office record
-data-source:
+description: >
+  Insert Critical Comments
+source_tables:
+  - [cases]
+target_tables:
+  - [sma_TRN_CriticalComments]
+target_screen:
+  - Critical Comments
+depends_on:
 ---*/
 
 use [JohnSalazar_SA]

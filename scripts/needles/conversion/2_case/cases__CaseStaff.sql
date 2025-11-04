@@ -1,4 +1,16 @@
-﻿/*******************************************************
+﻿/*---
+description: >
+  Insert case staff
+source_tables:
+  - [cases]
+target_tables:
+  - [sma_TRN_caseStaff]
+target_screen:
+  - Case Summary
+depends_on:
+---*/
+
+/*******************************************************
  CASE STAFF INSERT SCRIPT  -  STAFF_1 .. STAFF_10
 
  HOW TO USE

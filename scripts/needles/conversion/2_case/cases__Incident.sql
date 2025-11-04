@@ -1,3 +1,15 @@
+/*---
+description: >
+  Insert incident information
+source_tables:
+  - [cases]
+target_tables:
+  - [sma_TRN_Incidents]
+target_screen:
+  - Incident
+depends_on:
+---*/
+
 use [JohnSalazar_SA]
 go
 

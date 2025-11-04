@@ -1,16 +1,13 @@
 /*---
-description:
-steps:
-    - 
-    - 
-usage_instructions:
-    - 
-dependencies:
-    - 
-    - 
-notes: >
-    a
-    
+description: >
+  Insert plaintiff and defendant insurance
+source_tables:
+  - [insurance]
+target_tables:
+  - [sma_TRN_InsuranceCoverage]
+target_screen:
+  - Insurance
+depends_on:
 ---*/
 
 use [JohnSalazar_SA]

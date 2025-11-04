@@ -1,14 +1,14 @@
-/* ###################################################################################
-Author: Dylan Smith | dylans@smartadvocate.com
-Date: 2024-09-12
-Description: Create users and contacts
-
-replace:
-'OfficeName'
-'StateDescription'
-'VenderCaseType'
-##########################################################################################################################
-*/
+/*---
+description: >
+  Insert Investigations: Police Reports
+source_tables:
+  - [police]
+target_tables:
+  - [sma_TRN_PoliceReports]
+target_screen:
+  - Investigations
+depends_on:
+---*/
 
 use [JohnSalazar_SA]
 go

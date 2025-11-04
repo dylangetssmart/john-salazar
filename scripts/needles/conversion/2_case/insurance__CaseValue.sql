@@ -1,8 +1,13 @@
 /*---
-priority: 1
-sequence: 1
-description: Create office record
-data-source:
+description: >
+  Insert case values
+source_tables:
+  - [insurance]
+target_tables:
+  - [sma_trn_Casevalue]
+target_screen:
+  - Case Summary
+depends_on:
 ---*/
 
 USE [JohnSalazar_SA]

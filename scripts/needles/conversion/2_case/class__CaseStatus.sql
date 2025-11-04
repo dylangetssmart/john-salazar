@@ -1,26 +1,14 @@
 /*---
-group: load
-order: 6
-description: Update contact types for attorneys
+description: >
+  Insert case statuses
+source_tables:
+  - [class]
+target_tables:
+  - [sma_TRN_CaseStatus]
+target_screen:
+  - Case Summary
+depends_on:
 ---*/
-
-/* ######################################################################################
-description: Create case statues from needles..class
-
-steps:
-	- create case status types
-	- create case statuses
-	- update statuses on cases
-
-usage_instructions:
-
-dependencies:
-	- 2.02_std_Cases.sql
-
-notes:
-
-#########################################################################################
-*/
 
 use [JohnSalazar_SA]
 go

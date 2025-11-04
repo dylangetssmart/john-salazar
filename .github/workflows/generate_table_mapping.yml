@@ -1,0 +1,43 @@
+name: Generate Table Mapping Files
+
+on:
+  push:
+    paths:
+      - 'scripts/**'
+  workflow_dispatch:
+
+jobs:
+  generate_table_mapping:
+    name: Generate Table Mapping Files
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - name: Install dependencies
+        run: |
+          pip install --upgrade pip
+          pip install pyyaml
+          pip install chardet
+          pip install pandas
+          pip install argparse
+          pip install tabulate
+
+      - name: Run python script to generate table mapping
+        run: python _lib/build_table_mapping.py
+
+      - name: Commit README changes
+        run: |
+          git config --local user.name "github-actions[bot]"
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "Add Table Mapping.md" || echo "No new table mapping to commit"
+          git push
+
+  
