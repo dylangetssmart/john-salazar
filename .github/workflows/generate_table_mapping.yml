@@ -30,7 +30,7 @@ jobs:
           pip install tabulate
 
       - name: Run python script to generate table mapping
-        run: python _lib/build_table_mapping.py
+        run: python lib/build_table_mapping.py
 
       - name: Commit README changes
         run: |
