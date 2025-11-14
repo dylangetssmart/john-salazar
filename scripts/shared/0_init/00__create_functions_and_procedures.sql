@@ -17,7 +17,7 @@
  *  dbo.ValidDate
  **************************************************/
 
-use [JohnSalazar_SA]
+USE [JohnSalazar_SA]
 go
 
 -----

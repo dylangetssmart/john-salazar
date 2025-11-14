@@ -15,7 +15,7 @@ notes:
 ######################################################################################
 */
 
-use [BrachEichler_SA]
+USE [JohnSalazar_SA]
 go
 
 set ansi_padding on

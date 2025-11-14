@@ -1,4 +1,4 @@
-use JohnSalazar_SA
+USE [JohnSalazar_SA]
 go
 
 update sma_mst_users 

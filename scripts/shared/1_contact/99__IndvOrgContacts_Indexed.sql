@@ -23,7 +23,7 @@ notes: >
   
 ---*/
 
-use [BrachEichler_SA]
+USE [JohnSalazar_SA]
 go
 
 if exists (

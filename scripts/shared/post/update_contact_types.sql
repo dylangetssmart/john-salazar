@@ -27,7 +27,7 @@ notes:
   - Triggers are disabled/enabled during update to prevent side effects
 */
 
-use [JohnSalazar_SA]
+use [BrachEichler_SA]
 go
 
 ------
