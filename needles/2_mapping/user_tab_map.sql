@@ -1,0 +1,1 @@
+SELECT * FROM [Needles]..user_tab_map
