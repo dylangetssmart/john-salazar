@@ -19,36 +19,38 @@ go
 ---
 alter table [sma_TRN_Hospitals] disable trigger all
 go
-alter table [sma_TRN_MedicalProviderRequest] disable trigger all		
+
+alter table [sma_TRN_MedicalProviderRequest] disable trigger all
 go
+
 exec AddBreadcrumbsToTable 'sma_TRN_MedicalProviderRequest'
 exec AddBreadcrumbsToTable 'sma_TRN_Hospitals'
 go
 
-exec dbo.BuildNeedlesUserTabStagingTable @SourceDatabase = 'JohnSalazar_Needles',
-										 @TargetDatabase = 'JohnSalazar_SA',
-										 @DataTableName	 = 'user_tab2_data',
-										 @StagingTable	 = 'staging_medical_requests',
-										 @ColumnList	 = '
-Date_Received,
-Date_Requested,
-Name,
-Date_Range,
-FUp_Notes,
-Fax,
-Value_Code,
-Latest_FollowUp,
-Info_Type,
-Staff_Rcvd,
-Aff_Rcvd,
-Billing_Company,
-Collection_Company,
-Billing_Exp,
-Collection_Exp,
-LOP_Sent,
-Aff_filed_in_court,
-LOP';
-go
+--exec dbo.BuildNeedlesUserTabStagingTable @SourceDatabase = 'JohnSalazar_Needles',
+--										 @TargetDatabase = 'JohnSalazar_SA',
+--										 @DataTableName	 = 'user_tab2_data',
+--										 @StagingTable	 = 'staging_medical_requests',
+--										 @ColumnList	 = '
+--Date_Received,
+--Date_Requested,
+--Name,
+--Date_Range,
+--FUp_Notes,
+--Fax,
+--Value_Code,
+--Latest_FollowUp,
+--Info_Type,
+--Staff_Rcvd,
+--Aff_Rcvd,
+--Billing_Company,
+--Collection_Company,
+--Billing_Exp,
+--Collection_Exp,
+--LOP_Sent,
+--Aff_filed_in_court,
+--LOP';
+--go
 ---
 
 
@@ -131,6 +133,121 @@ go
 
 
 
+use JohnSalazar_SA
+go
+
+
+-------------------------------------------------------------------------------
+-- Setup variables
+-------------------------------------------------------------------------------
+declare @DatabaseName SYSNAME = 'JohnSalazar_Needles';
+declare @SchemaName SYSNAME = 'dbo';
+declare @TableName SYSNAME = 'user_tab2_data'; -- source EAV table
+declare @UnpivotValueList NVARCHAR(MAX);
+declare @SQL NVARCHAR(MAX);
+
+-- Define excluded columns for the pivot (columns NOT to be treated as EAV attributes)
+if OBJECT_ID('tempdb..#ExcludedColumns') is not null
+	drop table #ExcludedColumns;
+
+create table #ExcludedColumns (
+	column_name SYSNAME
+);
+
+insert into #ExcludedColumns
+	(
+		column_name
+	)
+	values
+		('case_id'),
+		('tab_id'),
+		('tab_id_location'),
+		('party_id_location'),
+		('modified_timestamp'),
+		('show_on_status_tab'),
+		('case_status_attn'),
+		('case_status_client');
+
+-------------------------------------------------------------------------------
+-- 2. Build the Dynamic SQL for Pivoting the EAV Table
+-------------------------------------------------------------------------------
+
+-- 2a. Build the list of columns to unpivot into (Attribute, Value) pairs
+select
+	@UnpivotValueList = STRING_AGG(
+	CAST('(''' + column_name + ''', CONVERT(VARCHAR(MAX), ' + QUOTENAME(column_name) + '))' as NVARCHAR(MAX)),
+	', '
+	)
+from [JohnSalazar_Needles].INFORMATION_SCHEMA.COLUMNS
+where
+	TABLE_SCHEMA = @SchemaName
+	and
+	table_name = @TableName
+	and
+	column_name not in (select column_name from #ExcludedColumns);
+
+
+-- 2b. Build the final SQL statement to pivot the data into a temporary table
+set @SQL = '
+SELECT 
+    t.case_id, 
+	t.tab_id,
+    v.Attribute, 
+    v.Value
+INTO ##Pivoted_Data
+FROM ' + QUOTENAME(@DatabaseName) + '.' + QUOTENAME(@SchemaName) + '.' + QUOTENAME(@TableName) + ' AS t
+CROSS APPLY (VALUES ' + @UnpivotValueList + ') AS v(Attribute, Value)
+WHERE isnull(v.Value, '''') <> ''''
+ORDER BY 
+    t.case_id, 
+	t.tab_id,
+    v.Attribute;
+';
+
+print @SQL; -- uncomment to debug
+exec sp_executesql @SQL;
+
+
+-------------------------------------------------------------------------------
+-- 3. Enrich the Pivoted Data and Create Final Output
+-------------------------------------------------------------------------------
+if OBJECT_ID('user_tab_data_pivoted') is not null
+	drop table user_tab_data_pivoted;
+
+select
+	pv.case_id,
+	pv.tab_id,
+	DENSE_RANK() over (order by pv.case_id, pv.tab_id) as ROW_ID,	-- used for UDF Grid
+	pv.Attribute,
+	pv.Value,
+	utn.user_name,
+	nuf.field_title,
+	nuf.field_num,
+	nuf.UDFType,
+	nuf.field_type,
+	nuf.field_len,
+	nuf.table_name,
+	nuf.column_name,
+	nuf.DropDownValues
+into user_tab2_data_pivoted
+from ##Pivoted_Data pv
+join [JohnSalazar_Needles].[dbo].NeedlesUserFields nuf
+	on nuf.column_name = pv.Attribute
+		and nuf.table_name = 'user_tab_data'
+left join [JohnSalazar_Needles].[dbo].user_tab2_name utn
+	on utn.case_id = pv.case_id
+		and utn.ref_num = nuf.field_num
+		and utn.tab_id = pv.tab_id
+		and utn.user_name <> 0;
+go
+--if OBJECT_ID('tempdb..##Pivoted_Data') is not null drop table ##Pivoted_Data;
+--drop table user_tab2_data_pivoted
+
+select
+	*
+from user_tab2_data_pivoted
+where
+	case_id = 215400
 
 /* ------------------------------------------------------------------------------
 RECORD REQUEST TYPES
@@ -146,7 +263,9 @@ insert into sma_MST_Request_RecordTypes
 	from staging_medical_requests smr
 	where ISNULL(smr.Info_Type, '') <> ''
 	)
-	union select 'Unspecified'
+	union
+	select
+		'Unspecified'
 	except
 	select
 		RecordType
@@ -219,15 +338,16 @@ insert into [sma_TRN_Hospitals]
 		null													 as [hosnModifyUserID],
 		null													 as [hosdDtModified],
 		null													 as [saga],
-		'user_tab2_data.tab_id = ' + CONVERT(VARCHAR, smr.tabid) as [source_id],
+		'user_tab2_data.tab_id = ' + CONVERT(VARCHAR, pe.tab_id) as [source_id],
 		'needles'												 as [source_db],
 		'user_tab2_data'										 as [source_ref]
 	--select *
-	from staging_medical_requests smr
+	from user_tab2_data_pivoted pe
 	join sma_TRN_Cases cas
-		on cas.saga = smr.caseid
+		on cas.saga = pe.case_id
 	join IndvOrgContacts_Indexed ioci
-		on ioci.saga = smr.Name_CID
+		on ioci.saga = pe.user_name
+			and pe.field_type = 'name'
 	left join [sma_TRN_Hospitals] H
 		on H.hosnCaseID = cas.casnCaseID
 			and H.hosnContactID = ioci.CID
@@ -236,7 +356,24 @@ insert into [sma_TRN_Hospitals]
 	where
 		H.hosnHospitalID is null	--only add the hospital if it does not already exist
 		and
-		ISNULL(smr.Name_CID, '') <> ''
+		ISNULL(pe.user_name, 0) <> 0
+
+--select *
+--from staging_medical_requests smr
+--where smr.caseid=215400
+--join sma_TRN_Cases cas
+--	on cas.saga = smr.caseid
+--join IndvOrgContacts_Indexed ioci
+--	on ioci.saga = smr.Name_CID
+--left join [sma_TRN_Hospitals] H
+--	on H.hosnCaseID = cas.casnCaseID
+--		and H.hosnContactID = ioci.CID
+--		and H.hosnContactCtg = ioci.CTG
+--		and H.hosnAddressID = ioci.AID
+--where
+--	H.hosnHospitalID is null	--only add the hospital if it does not already exist
+--	and
+--	ISNULL(smr.Name_CID, '') <> ''
 
 --from [JohnSalazar_Needles].[dbo].[user_tab2_data] D
 --join user_tab2_MedicalProvider_Helper MAP
@@ -318,62 +455,94 @@ insert into [sma_trn_MedicalProviderRequest]
 		[source_ref]
 	)
 	select
-		hosnCaseID																			as MedPrvCaseID,
-		hosnPlaintiffID																		as MedPrvPlaintiffID,
-		H.hosnHospitalID																	as MedPrvhosnHospitalID,
-		COALESCE(
-			(select uId from sma_MST_Request_RecordTypes where RecordType = smr.Info_Type),
-			(select uId from sma_MST_Request_RecordTypes where RecordType = 'Unspecified')
-		)																					as MedPrvRecordType,
-		dbo.ValidDate(smr.Date_Requested)													as MedPrvRequestdate,
-		(select u.usrnUserID from sma_MST_Users u where u.source_id = smr.Staff_Rcvd)		as MedPrvAssignee,
-		null																				as MedPrvAssignedBy,		-- Requested By
-		0																					as MedPrvHighPriority,		-- 1=high priority; 0=Normal
-		null																				as MedPrvFromDate,
-		null																				as MedPrvToDate,
+		hosnCaseID												  as MedPrvCaseID,
+		hosnPlaintiffID											  as MedPrvPlaintiffID,
+		H.hosnHospitalID										  as MedPrvhosnHospitalID,
+		COALESCE((
+		 select
+			 uId
+		 from sma_MST_Request_RecordTypes
+		 where RecordType = utd.Info_Type
+		), (
+		 select
+			 uId
+		 from sma_MST_Request_RecordTypes
+		 where RecordType = 'Unspecified'
+		))														  as MedPrvRecordType,
+		dbo.ValidDate(utd.Date_Requested)						  as MedPrvRequestdate,
+		--		(select u.usrnUserID from sma_MST_Users u where u.source_id = utd.Staff_Rcvd)		as MedPrvAssignee,
+		u.usrnUserID											  as MedPrvAssignee,
+		null													  as MedPrvAssignedBy,		-- Requested By
+		0														  as MedPrvHighPriority,		-- 1=high priority; 0=Normal
+		null													  as MedPrvFromDate,
+		null													  as MedPrvToDate,
 		CONCAT_WS(CHAR(13),
-			CONCAT('FUp Notes: ', NULLIF(CONVERT(VARCHAR(MAX), smr.FUp_Notes), '')),
-			CONCAT('Fax: ', NULLIF(CONVERT(VARCHAR(MAX), smr.Fax), '')),
-			CONCAT('Aff Rcvd: ', NULLIF(CONVERT(VARCHAR(MAX), smr.Aff_Rcvd), '')),
-			CONCAT('Aff filed in court: ', NULLIF(CONVERT(VARCHAR(MAX), smr.Aff_filed_in_court), '')),
-			CONCAT('Date Range: ', NULLIF(CONVERT(VARCHAR(MAX), smr.Date_Range), ''))
-		)																					as MedPrvComments,
+		CONCAT('FUp Notes: ', NULLIF(CONVERT(VARCHAR(MAX), utd.FUp_Notes), '')),
+		CONCAT('Fax: ', NULLIF(CONVERT(VARCHAR(MAX), utd.Fax), '')),
+		CONCAT('Aff Rcvd: ', NULLIF(CONVERT(VARCHAR(MAX), utd.Aff_Rcvd), '')),
+		CONCAT('Aff filed in court: ', NULLIF(CONVERT(VARCHAR(MAX), utd.Aff_filed_in_court), '')),
+		CONCAT('Date Range: ', NULLIF(CONVERT(VARCHAR(MAX), utd.Date_Range), ''))
+		)														  as MedPrvComments,
 		CONCAT_WS(CHAR(13),
-			CONCAT('LOP: ', NULLIF(CONVERT(VARCHAR(MAX), smr.LOP), '')),
-			CONCAT('LOP Sent: ', NULLIF(CONVERT(VARCHAR(MAX), smr.LOP_Sent), ''))
-		)																					as MedPrvNotes,
-		null																				as MedPrvCompleteDate,
+		CONCAT('LOP: ', NULLIF(CONVERT(VARCHAR(MAX), utd.LOP), '')),
+		CONCAT('LOP Sent: ', NULLIF(CONVERT(VARCHAR(MAX), utd.LOP_Sent), ''))
+		)														  as MedPrvNotes,
+		null													  as MedPrvCompleteDate,
 		case
-			when isnull(smr.Date_Received,'') <> ''then
-				(
-					select
-						uId
-					from [sma_MST_RequestStatus]
-					where [Status] = 'Received'
-				)
+			when ISNULL(utd.Date_Received, '') <> '' then (
+					 select
+						 uId
+					 from [sma_MST_RequestStatus]
+					 where [Status] = 'Received'
+					)
 			else null
-		end																					as MedPrvStatusId,
-		dbo.ValidDate(smr.Latest_FollowUp)													as MedPrvFollowUpDate,
-		dbo.ValidDate(smr.Date_Received)													as MedPrvStatusDate,
-		0																					as OrderAffidavit,
-		null																				as FollowUpNotes,	--Retreival Provider Notes
-		null																				as [saga],
-		'user_tab2_data.tab_id = ' + CONVERT(VARCHAR, smr.tabid)							as [source_id],
-		'needles'																			as [source_db],
-		'user_tab2_data'																	as [source_ref]
+		end														  as MedPrvStatusId,
+		dbo.ValidDate(utd.Latest_FollowUp)						  as MedPrvFollowUpDate,
+		dbo.ValidDate(utd.Date_Received)						  as MedPrvStatusDate,
+		0														  as OrderAffidavit,
+		null													  as FollowUpNotes,	--Retreival Provider Notes
+		null													  as [saga],
+		'user_tab2_data.tab_id = ' + CONVERT(VARCHAR, utd.tab_id) as [source_id],
+		'needles'												  as [source_db],
+		'user_tab2_data'										  as [source_ref]
 	--select *
-	from staging_medical_requests smr
+	from JohnSalazar_Needles..user_tab2_data utd
 	join sma_TRN_Cases cas
-		on cas.saga = smr.caseid
+		on cas.saga = utd.case_id
+	join JohnSalazar_Needles..user_tab2_name utn
+		on utn.case_id = utd.case_id
+			and utn.tab_id = utd.tab_id
+
+	left join JohnSalazar_sa..sma_MST_Users u
+		on u.source_id = utd.Staff_Rcvd
+
 	join IndvOrgContacts_Indexed ioci
-		on ioci.saga = smr.Name_CID
+		on ioci.saga = utn.user_name
+	--and pe.field_type = 'name'
 	left join [sma_TRN_Hospitals] H
 		on H.hosnCaseID = cas.casnCaseID
 			and H.hosnContactID = ioci.CID
 			and H.hosnContactCtg = ioci.CTG
 			and H.hosnAddressID = ioci.AID
-			and h.source_id = 'user_tab2_data.tab_id = ' + CONVERT(VARCHAR, smr.tabid)
-	where smr.Value_Code = 'MEDICAL'
+	where
+		H.hosnHospitalID is null	--only add the hospital if it does not already exist
+		and
+		utd.Value_Code = 'MEDICAL'
+
+
+----select *
+--from staging_medical_requests smr
+--join sma_TRN_Cases cas
+--	on cas.saga = smr.caseid
+--join IndvOrgContacts_Indexed ioci
+--	on ioci.saga = smr.Name_CID
+--left join [sma_TRN_Hospitals] H
+--	on H.hosnCaseID = cas.casnCaseID
+--		and H.hosnContactID = ioci.CID
+--		and H.hosnContactCtg = ioci.CTG
+--		and H.hosnAddressID = ioci.AID
+--		and h.source_id = 'user_tab2_data.tab_id = ' + CONVERT(VARCHAR, smr.tabid)
+--where smr.Value_Code = 'MEDICAL'
 
 --where
 --	H.hosnHospitalID is null	--only add the hospital if it does not already exist

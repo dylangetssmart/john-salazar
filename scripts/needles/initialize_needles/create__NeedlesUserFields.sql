@@ -125,14 +125,14 @@ GO
         F.mini_dir_id,
         F.mini_dir_title,
         CASE
-            WHEN F.field_type IN ('alpha','state','valuecode','staff') THEN 'Text'
+            WHEN F.field_type IN ('alpha','state','valuecode') THEN 'Text'
             WHEN F.field_type IN ('number','money') THEN 'Number'
             WHEN F.field_type IN ('boolean','checkbox') THEN 'CheckBox'
-            WHEN F.field_type='minidir' THEN 'Dropdown'
+            WHEN F.field_type='minidir' THEN 'RealDropdown'
             WHEN F.field_type='Date' THEN 'Date'
             WHEN F.field_type='Time' THEN 'Time'
-            WHEN F.field_type='name' THEN 'Contact'
-            ELSE 'Text'
+            WHEN F.field_type in ('name', 'staff') THEN 'Contact'
+            ELSE F.field_type
         END AS UDFType,
         '' AS DropDownValues,
         M.table_name,

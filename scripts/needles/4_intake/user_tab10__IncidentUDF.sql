@@ -78,7 +78,7 @@ select
 	)
 from [JohnSalazar_Needles].INFORMATION_SCHEMA.COLUMNS
 where
-	table_schema = @SchemaName
+	TABLE_SCHEMA = @SchemaName
 	and
 	table_name = @TableName
 	and
@@ -241,7 +241,16 @@ insert into [sma_TRN_UDFValues]
 		0				  as [udvnSubRelatedID],
 		case
 			when pe.field_type = 'name' then CONVERT(VARCHAR(MAX), ioci.UNQCID)
-			else pe.Value
+			when pe.field_type = 'staff' then CONVERT(VARCHAR(MAX), ioci_staff.UNQCID)
+			when pe.field_type = 'checkbox' then CONVERT(VARCHAR(1),		-- IMPORTANT: cast the INT result from this branch to ensure the entire CASE evauates to VARCHAR across all branches
+					case
+						when UPPER(LTRIM(RTRIM(pe.value))) in ('0', 'NO', 'N', 'FALSE') then 0
+						when UPPER(LTRIM(RTRIM(pe.value))) in ('1', 'YES', 'Y', 'TRUE') then 1
+					end
+					)
+			when pe.field_type = 'date' then CONVERT(VARCHAR(10), TRY_CONVERT(DATE, pe.value), 101)
+			when pe.field_type = 'time' then dbo.FormatUDFTime(pe.value)
+			else pe.value
 		end				  as [udvsUDFValue],
 		368				  as [udvnRecUserID],
 		GETDATE()		  as [udvdDtCreated],
@@ -256,8 +265,19 @@ insert into [sma_TRN_UDFValues]
 		on ct.cstnCaseTypeID = cas.casnOrgCaseTypeID
 	join sma_MST_CaseGroup cg
 		on cg.cgpnCaseGroupID = ct.cstnGroupID
-	join IndvOrgContacts_Indexed ioci
-		on ioci.SAGA = pe.user_name -- Joins on the populated user_name column in pivoted_data
+
+	-- fetch UNQCID for user_name
+	left join IndvOrgContacts_Indexed ioci
+		on ioci.SAGA = pe.user_name
+			and pe.field_type = 'name'
+
+	-- fetch UNQCID for staff record
+	left join IndvOrgContacts_Indexed ioci_staff
+		on ioci_staff.source_id = pe.Value
+			and ioci_staff.source_ref = 'staff'
+			and pe.field_type = 'staff'
+
+
 	left join sma_MST_UDFDefinition def
 		on def.udfnRelatedPK = cas.casnOrgCaseTypeID
 			and def.udfsUDFName = pe.field_title
@@ -265,4 +285,96 @@ insert into [sma_TRN_UDFValues]
 go
 
 alter table sma_trn_udfvalues enable trigger all
+go
+
+
+/* ------------------------------------------------------------------------------
+Insert [sma_MST_UDFPossibleValues] for dropdown/selection type UDFs
+*/ ------------------------------------------------------------------------------
+alter table [sma_MST_UDFPossibleValues] disable trigger all
+go
+
+-- Process each UDF definition that has dropdown values
+declare @udfnUDFID INT;
+declare @udfsType NVARCHAR(50);
+declare @DropDownValues NVARCHAR(MAX);
+declare @PossibleValue NVARCHAR(255);
+
+declare udf_cursor cursor for select distinct
+		def.udfnUDFID,
+		def.udfsType,
+		pe.DropDownValues
+	from [sma_MST_UDFDefinition] def
+	join pivoted_enriched pe
+		on def.udfsUDFName = pe.field_title
+		and def.udfsScreenName = 'Incident Wizard'
+	where def.udfsType in ('Dropdown', 'Multiselect', 'RadioButton', 'MultiselectDropDown', 'YesNoRadioButton', 'RealDropdown', 'Combobox', 'CheckBox')
+		and pe.DropDownValues is not null
+		and pe.DropDownValues <> '';
+
+open udf_cursor;
+fetch next from udf_cursor into @udfnUDFID, @udfsType, @DropDownValues;
+
+while @@FETCH_STATUS = 0
+begin
+-- Parse dropdown values and insert them
+
+if @DropDownValues is not null
+	and @DropDownValues <> ''
+begin
+	-- Create a table variable to hold parsed values
+	declare @udfsPossibleValues table (
+			PossibleValue NVARCHAR(255)
+		);
+
+	-- Parse the dropdown values (using tilde '~' as delimiter based on data format)
+	-- Split the dropdown values and insert into temp table
+	insert into @udfsPossibleValues
+		(
+			PossibleValue
+		)
+		select
+			LTRIM(RTRIM(value)) as PossibleValue
+		from STRING_SPLIT(@DropDownValues, '~')
+		where
+			LTRIM(RTRIM(value)) <> ''
+			and
+			LTRIM(RTRIM(value)) <> '~';
+
+	-- Insert into sma_MST_UDFPossibleValues
+
+	if exists (select * from @udfsPossibleValues)
+	begin
+		insert into sma_MST_UDFPossibleValues
+			(
+				UDFDefinitionId,
+				PossibleValue
+			)
+			select
+				@udfnUDFID as UDFDefinitionId,
+				pv.PossibleValue
+			from @udfsPossibleValues as pv
+			where
+				not exists (
+				 select
+					 1
+				 from sma_MST_UDFPossibleValues existing
+				 where existing.UDFDefinitionId = @udfnUDFID
+					 and existing.PossibleValue = pv.PossibleValue
+				);
+	end;
+
+	-- Clear the table variable for next iteration
+
+	delete from @udfsPossibleValues;
+end;
+
+fetch next from udf_cursor into @udfnUDFID, @udfsType, @DropDownValues;
+end;
+
+close udf_cursor;
+deallocate udf_cursor;
+go
+
+alter table [sma_MST_UDFPossibleValues] enable trigger all
 go

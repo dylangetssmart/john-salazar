@@ -16,6 +16,7 @@ go
 ---
 exec AddBreadcrumbsToTable 'sma_TRN_Courts'
 go
+
 ---
 
 /* ------------------------------------------------------------------------------
@@ -96,7 +97,8 @@ insert into [sma_TRN_CourtDocket]
 		crdnPrice,
 		crdbActiveInActive,
 		crdsEfile,
-		crdsComments
+		crdsComments,
+		crddDate
 	)
 	select
 		crtnPKCourtsID as crdncourtsid,
@@ -113,13 +115,21 @@ insert into [sma_TRN_CourtDocket]
 		0			   as crdnprice,
 		1			   as crdbactiveinactive,
 		0			   as crdsefile,
-		'Docket Number:' + LEFT(c.docket, 30)
-		as crdscomments
+		ISNULL('Docket Number: ' + NULLIF(CONVERT(VARCHAR(MAX), c.docket), '') + CHAR(13), '') +
+		ISNULL('How Resolved: ' + NULLIF(CONVERT(VARCHAR(MAX), ucd.How_Resolved), '') + CHAR(13), '') +
+		ISNULL('County of Suit: ' + NULLIF(CONVERT(VARCHAR(MAX), ucd.County_of_Suit), '') + CHAR(13), '') +
+		ISNULL('County Ct No: ' + NULLIF(CONVERT(VARCHAR(MAX), ucd.County_Ct_No), '') + CHAR(13), '') +
+		''			   as crdscomments,
+		--'Docket Number:' + LEFT(c.docket, 30) as crdscomments,
+		c.case_date_3  as crddDate		-- Filing Date
+	-- SELECT ucd.How_Resolved, ucd.County_of_Suit, ucd.County_Ct_No FROM JohnSalazar_Needles..user_case_data ucd
 	from [sma_TRN_Courts] crt
 	join [sma_TRN_cases] cas
 		on cas.casnCaseID = crt.crtnCaseID
 	join [JohnSalazar_Needles].[dbo].[cases] c
 		on cas.saga = c.casenum
+	left join JohnSalazar_Needles..user_case_data ucd
+		on ucd.casenum = c.casenum
 go
 
 alter table [sma_TRN_CourtDocket] enable trigger all

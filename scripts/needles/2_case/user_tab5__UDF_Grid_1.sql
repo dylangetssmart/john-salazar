@@ -258,7 +258,16 @@ insert into [sma_TRN_UDFValues]
 		0			   as [udvnSubRelatedID],
 		case
 			when pe.field_type = 'name' then CONVERT(VARCHAR(MAX), ioci.UNQCID)
-			else pe.Value
+			when pe.field_type = 'staff' then CONVERT(VARCHAR(MAX), ioci_staff.UNQCID)
+			when pe.field_type = 'checkbox' then CONVERT(VARCHAR(1),		-- IMPORTANT: cast the INT result from this branch to ensure the entire CASE evauates to VARCHAR across all branches
+					case
+						when UPPER(LTRIM(RTRIM(pe.value))) in ('0', 'NO', 'N', 'FALSE') then 0
+						when UPPER(LTRIM(RTRIM(pe.value))) in ('1', 'YES', 'Y', 'TRUE') then 1
+					end
+					)
+			when pe.field_type = 'date' then CONVERT(VARCHAR(10), TRY_CONVERT(DATE, pe.value), 101)
+			when pe.field_type = 'time' then dbo.FormatUDFTime(pe.value)
+			else pe.value
 		end			   as [udvsUDFValue],
 		368			   as [udvnRecUserID],
 		GETDATE()	   as [udvdDtCreated],
@@ -270,8 +279,18 @@ insert into [sma_TRN_UDFValues]
 	from pivoted_enriched pe
 	join sma_TRN_Cases cas
 		on cas.saga = pe.case_id
+
+	-- fetch UNQCID for user_name
 	left join IndvOrgContacts_Indexed ioci
-		on ioci.SAGA = pe.user_name -- Joins on the populated user_name column in pivoted_data
+		on ioci.SAGA = pe.user_name
+			and pe.field_type = 'name'
+
+	-- fetch UNQCID for staff record
+	left join IndvOrgContacts_Indexed ioci_staff
+		on ioci_staff.source_id = pe.Value
+			and ioci_staff.source_ref = 'staff'
+			and pe.field_type = 'staff'
+
 	left join sma_MST_UDFDefinition def
 		on def.udfnRelatedPK = cas.casnOrgCaseTypeID
 			and def.udfsUDFName = pe.field_title

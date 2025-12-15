@@ -289,7 +289,7 @@ insert into [sma_TRN_Settlements]
 		null			as stlnLessDisbursement,
 		-- Gross Fee
 		case
-			when v.code in ('FEE')
+			when v.code in ('FEES')
 				then v.total_value
 		end				as stlngrossattorneyfee,
 		-- Referrer
